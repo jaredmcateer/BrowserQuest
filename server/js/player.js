@@ -1,12 +1,12 @@
 
-var cls = require("./lib/class"),
-  _ = require("underscore"),
-  Messages = require("./message"),
-  Utils = require("./utils"),
-  Properties = require("./properties"),
-  Formulas = require("./formulas"),
-  check = require("./format").check,
-  Types = require("../../shared/js/gametypes");
+var cls = require('./lib/class'),
+  _ = require('underscore'),
+  Messages = require('./message'),
+  Utils = require('./utils'),
+  Properties = require('./properties'),
+  Formulas = require('./formulas'),
+  check = require('./format').check,
+  Types = require('../../shared/js/gametypes');
 
 module.exports = Player = Character.extend({
   init: function(connection, worldServer) {
@@ -15,7 +15,7 @@ module.exports = Player = Character.extend({
     this.server = worldServer;
     this.connection = connection;
 
-    this._super(this.connection.id, "player", Types.Entities.WARRIOR, 0, 0, "");
+    this._super(this.connection.id, 'player', Types.Entities.WARRIOR, 0, 0, '');
 
     this.hasEnteredGame = false;
     this.isDead = false;
@@ -27,18 +27,18 @@ module.exports = Player = Character.extend({
     this.connection.listen(function(message) {
       var action = parseInt(message[0]);
 
-      log.debug("Received: "+message);
+      log.debug('Received: '+message);
       if(!check(message)) {
-        self.connection.close("Invalid "+Types.getMessageTypeAsString(action)+" message format: "+message);
+        self.connection.close('Invalid '+Types.getMessageTypeAsString(action)+' message format: '+message);
         return;
       }
 
       if(!self.hasEnteredGame && action !== Types.Messages.HELLO) { // HELLO must be the first message
-        self.connection.close("Invalid handshake message: "+message);
+        self.connection.close('Invalid handshake message: '+message);
         return;
       }
       if(self.hasEnteredGame && !self.isDead && action === Types.Messages.HELLO) { // HELLO can be sent only once
-        self.connection.close("Cannot initiate handshake twice: "+message);
+        self.connection.close('Cannot initiate handshake twice: '+message);
         return;
       }
 
@@ -50,7 +50,7 @@ module.exports = Player = Character.extend({
         // If name was cleared by the sanitizer, give a default name.
         // Always ensure that the name is not longer than a maximum length.
         // (also enforced by the maxlength attribute of the name input element).
-        self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
+        self.name = (name === '') ? 'lorem ipsum' : name.substr(0, 15);
 
         self.kind = Types.Entities.WARRIOR;
         self.equipArmor(message[2]);
@@ -77,7 +77,7 @@ module.exports = Player = Character.extend({
         var msg = Utils.sanitize(message[1]);
 
         // Sanitized messages may become empty. No need to broadcast empty chat messages.
-        if(msg && msg !== "") {
+        if(msg && msg !== '') {
           msg = msg.substr(0, 60); // Enforce maxlength of chat input
           self.broadcastToZone(new Messages.Chat(self, msg), false);
         }
@@ -170,11 +170,11 @@ module.exports = Player = Character.extend({
               var amount;
 
               switch(kind) {
-                case Types.Entities.FLASK: 
-                  amount = 40;
+              case Types.Entities.FLASK: 
+                amount = 40;
                 break;
-                case Types.Entities.BURGER: 
-                  amount = 100;
+              case Types.Entities.BURGER: 
+                amount = 100;
                 break;
               }
 
@@ -232,7 +232,7 @@ module.exports = Player = Character.extend({
       }
     });
 
-    this.connection.sendUTF8("go"); // Notify client that the HELLO/WELCOME handshake can start
+    this.connection.sendUTF8('go'); // Notify client that the HELLO/WELCOME handshake can start
   },
 
   destroy: function() {
@@ -344,7 +344,7 @@ module.exports = Player = Character.extend({
 
   equipItem: function(item) {
     if(item) {
-      log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
+      log.debug(this.name + ' equips ' + Types.getKindAsString(item.kind));
 
       if(Types.isArmor(item.kind)) {
         this.equipArmor(item.kind);
@@ -377,7 +377,7 @@ module.exports = Player = Character.extend({
   },
 
   timeout: function() {
-    this.connection.sendUTF8("timeout");
-    this.connection.close("Player was idle for too long");
+    this.connection.sendUTF8('timeout');
+    this.connection.close('Player was idle for too long');
   }
 });

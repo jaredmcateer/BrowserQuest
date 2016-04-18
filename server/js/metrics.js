@@ -1,19 +1,19 @@
 
-var cls = require("./lib/class"),
-  _ = require("underscore");
+var cls = require('./lib/class'),
+  _ = require('underscore');
 
 module.exports = Metrics = Class.extend({
   init: function(config) {
     var self = this;
 
     this.config = config;
-    this.client = new (require("memcache")).Client(config.memcached_port, config.memcached_host);
+    this.client = new (require('memcache')).Client(config.memcached_port, config.memcached_host);
     this.client.connect();
 
     this.isReady = false;
 
     this.client.on('connect', function() {
-      log.info("Metrics enabled: memcached client connected to "+config.memcached_host+":"+config.memcached_port);
+      log.info('Metrics enabled: memcached client connected to '+config.memcached_host+':'+config.memcached_port);
       self.isReady = true;
       if(self.ready_callback) {
         self.ready_callback();
@@ -54,7 +54,7 @@ module.exports = Metrics = Class.extend({
         });
       });
     } else {
-      log.error("Memcached client not connected");
+      log.error('Memcached client not connected');
     }
   },
 

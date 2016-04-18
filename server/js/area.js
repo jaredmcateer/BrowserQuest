@@ -2,7 +2,7 @@
 var cls = require('./lib/class'),
   _ = require('underscore'),
   Utils = require('./utils'),
-  Types = require("../../shared/js/gametypes");
+  Types = require('../../shared/js/gametypes');
 
 module.exports = Area = cls.Class.extend({
   init: function(id, x, y, width, height, world) {
@@ -57,7 +57,7 @@ module.exports = Area = cls.Class.extend({
   },
 
   isEmpty: function() {
-    return !_.any(this.entities, function(entity) { return !entity.isDead });
+    return !_.any(this.entities, function(entity) { return !entity.isDead; });
   },
 
   isFull: function() {

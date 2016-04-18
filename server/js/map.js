@@ -1,5 +1,5 @@
 
-var cls = require('./lib/class')
+var cls = require('./lib/class');
 path = require('path'),
   fs = require('fs'),
   _ = require('underscore'),
@@ -14,7 +14,7 @@ module.exports = Map = cls.Class.extend({
 
     path.exists(filepath, function(exists) {
       if(!exists) {
-        log.error(filepath + " doesn't exist.");
+        log.error(filepath + ' doesn\'t exist.');
         return;
       }
 
@@ -63,7 +63,7 @@ module.exports = Map = cls.Class.extend({
         return 0;
       }
       return (num % w == 0) ? w - 1 : (num % w) - 1;
-    }
+    };
 
     tileNum -= 1;
     x = getX(tileNum + 1, this.width);

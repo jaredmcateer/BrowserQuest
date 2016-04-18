@@ -1,13 +1,13 @@
 
-var cls = require("./lib/class"),
-  _ = require("underscore"),
-  Messages = require("./message"),
-  Properties = require("./properties"),
-  Types = require("../../shared/js/gametypes");
+var cls = require('./lib/class'),
+  _ = require('underscore'),
+  Messages = require('./message'),
+  Properties = require('./properties'),
+  Types = require('../../shared/js/gametypes');
 
 module.exports = Mob = Character.extend({
   init: function(id, kind, x, y) {
-    this._super(id, "mob", kind, x, y);
+    this._super(id, 'mob', kind, x, y);
 
     this.updateHitPoints();
     this.spawningX = x;
@@ -66,7 +66,7 @@ module.exports = Mob = Character.extend({
 
   getHatedPlayerId: function(hateRank) {
     var i, playerId,
-    sorted = _.sortBy(this.hatelist, function(obj) { return obj.hate; }),
+      sorted = _.sortBy(this.hatelist, function(obj) { return obj.hate; }),
       size = _.size(this.hatelist);
 
     if(hateRank && hateRank <= size) {

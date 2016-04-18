@@ -1,6 +1,6 @@
 
 var _ = require('underscore'),
-  Types = require("../../shared/js/gametypes");
+  Types = require('../../shared/js/gametypes');
 
 (function() {
   FormatChecker = Class.extend({
@@ -18,7 +18,7 @@ var _ = require('underscore'),
         this.formats[Types.Messages.TELEPORT] = ['n', 'n'],
         this.formats[Types.Messages.ZONE] = [],
         this.formats[Types.Messages.OPEN] = ['n'],
-        this.formats[Types.Messages.CHECK] = ['n']
+        this.formats[Types.Messages.CHECK] = ['n'];
     },
 
     check: function(msg) {
@@ -44,10 +44,10 @@ var _ = require('underscore'),
       }
       else if(type === Types.Messages.WHO) {
         // WHO messages have a variable amount of params, all of which must be numbers.
-        return message.length > 0 && _.all(message, function(param) { return _.isNumber(param) });
+        return message.length > 0 && _.all(message, function(param) { return _.isNumber(param); });
       }
       else {
-        log.error("Unknown message type: "+type);
+        log.error('Unknown message type: '+type);
         return false;
       }
     }

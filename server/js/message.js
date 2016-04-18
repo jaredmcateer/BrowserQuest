@@ -1,8 +1,8 @@
 
-var cls = require("./lib/class"),
-  _ = require("underscore"),
-  Utils = require("./utils"),
-  Types = require("../../shared/js/gametypes");
+var cls = require('./lib/class'),
+  _ = require('underscore'),
+  Utils = require('./utils'),
+  Types = require('../../shared/js/gametypes');
 
 var Messages = {};
 module.exports = Messages;
@@ -113,7 +113,7 @@ Messages.Drop = Message.extend({
       this.mob.id,
     this.item.id,
     this.item.kind,
-    _.pluck(this.mob.hatelist, "id")];
+    _.pluck(this.mob.hatelist, 'id')];
 
     return drop;
   }

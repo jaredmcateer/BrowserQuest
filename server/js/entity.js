@@ -1,5 +1,5 @@
 
-var cls = require("./lib/class"),
+var cls = require('./lib/class'),
   Messages = require('./message'),
   Utils = require('./utils');
 

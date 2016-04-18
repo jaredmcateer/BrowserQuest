@@ -4,8 +4,8 @@ var fs = require('fs'),
 
 
 function main(config) {
-  var ws = require("./ws"),
-    WorldServer = require("./worldserver"),
+  var ws = require('./ws'),
+    WorldServer = require('./worldserver'),
     Log = require('log'),
     _ = require('underscore'),
     server = new ws.MultiVersionWebsocketServer(config.port),
@@ -13,7 +13,7 @@ function main(config) {
   worlds = [],
     lastTotalPlayers = 0,
     checkPopulationInterval = setInterval(function() {
-    if(metrics && metrics.isReady) {
+      if(metrics && metrics.isReady) {
       metrics.getTotalPlayers(function(totalPlayers) {
         if(totalPlayers !== lastTotalPlayers) {
           lastTotalPlayers = totalPlayers;
@@ -23,22 +23,22 @@ function main(config) {
         }
       });
     }
-  }, 1000);
+    }, 1000);
 
   switch(config.debug_level) {
-    case "error":
-      log = new Log(Log.ERROR); break;
-    case "debug":
-      log = new Log(Log.DEBUG); break;
-    case "info":
-      log = new Log(Log.INFO); break;
-  };
+  case 'error':
+    log = new Log(Log.ERROR); break;
+  case 'debug':
+    log = new Log(Log.DEBUG); break;
+  case 'info':
+    log = new Log(Log.INFO); break;
+  }
 
-  log.info("Starting BrowserQuest game server...");
+  log.info('Starting BrowserQuest game server...');
 
   server.onConnect(function(connection) {
     var world, // the one in which the player will be spawned
-    connect = function() {
+      connect = function() {
       if(world) {
         world.connect_callback(new Player(connection, world));
       }
@@ -62,7 +62,7 @@ function main(config) {
   });
 
   server.onError(function() {
-    log.error(Array.prototype.join.call(arguments, ", "));
+    log.error(Array.prototype.join.call(arguments, ', '));
   });
 
   var onPopulationChange = function() {
@@ -111,7 +111,7 @@ function getWorldDistribution(worlds) {
 function getConfigFile(path, callback) {
   fs.readFile(path, 'utf8', function(err, json_string) {
     if(err) {
-      console.error("Could not open config file:", err.path);
+      console.error('Could not open config file:', err.path);
       callback(null);
     } else {
       callback(JSON.parse(json_string));
@@ -135,7 +135,7 @@ getConfigFile(defaultConfigPath, function(defaultConfig) {
     } else if(defaultConfig) {
       main(defaultConfig);
     } else {
-      console.error("Server cannot start without any configuration file.");
+      console.error('Server cannot start without any configuration file.');
       process.exit(1);
     }
   });
