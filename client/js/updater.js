@@ -102,11 +102,11 @@ define(['character', 'timer'], function(Character, Timer) {
             c.setPosition(x, c.y);
             g.initAnimatedTiles();
             g.renderer.renderStaticCanvases();
-          }
+          };
           endFunc = function() {
             c.setPosition(z.endValue, c.y);
             g.endZoning();
-          }
+          };
         } else if(orientation === Types.Orientations.UP || orientation === Types.Orientations.DOWN) {
           offset = (c.gridH - 2) * ts;
           startValue = (orientation === Types.Orientations.UP) ? c.y - ts : c.y + ts;
@@ -115,11 +115,11 @@ define(['character', 'timer'], function(Character, Timer) {
             c.setPosition(c.x, y);
             g.initAnimatedTiles();
             g.renderer.renderStaticCanvases();
-          }
+          };
           endFunc = function() {
             c.setPosition(c.x, z.endValue);
             g.endZoning();
-          }
+          };
         }
 
         z.start(this.game.currentTime, updateFunc, endFunc, startValue, endValue, speed);

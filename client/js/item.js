@@ -15,16 +15,16 @@ define(['entity'], function(Entity) {
     },
 
     onLoot: function(player) {
-      if(this.type === "weapon") {
+      if(this.type === 'weapon') {
         player.switchWeapon(this.itemKind);
       }
-      else if(this.type === "armor") {
+      else if(this.type === 'armor') {
         player.armorloot_callback(this.itemKind);
       }
     },
 
     getSpriteName: function() {
-      return "item-"+ this.itemKind;
+      return 'item-'+ this.itemKind;
     },
 
     getLootMessage: function() {

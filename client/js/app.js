@@ -47,7 +47,7 @@ define(['jquery', 'storage'], function($, Storage) {
           }
           this.$playDiv.unbind('click');
           var watchCanStart = setInterval(function() {
-            log.debug("waiting...");
+            log.debug('waiting...');
             if(self.canStartGame()) {
               setTimeout(function() {
                 if(!self.isMobile) {
@@ -91,10 +91,10 @@ define(['jquery', 'storage'], function($, Storage) {
 
         //>>includeStart("devHost", pragmas.devHost);
         if(config.local) {
-          log.debug("Starting game with local dev config.");
+          log.debug('Starting game with local dev config.');
           this.game.setServerOptions(config.local.host, config.local.port, username);
         } else {
-          log.debug("Starting game with default dev config.");
+          log.debug('Starting game with default dev config.');
           this.game.setServerOptions(config.dev.host, config.dev.port, username);
         }
         optionsSet = true;
@@ -102,7 +102,7 @@ define(['jquery', 'storage'], function($, Storage) {
 
         //>>includeStart("prodHost", pragmas.prodHost);
         if(!optionsSet) {
-          log.debug("Starting game with build config.");
+          log.debug('Starting game with build config.');
           this.game.setServerOptions(config.build.host, config.build.port, username);
         }
         //>>includeEnd("prodHost");
@@ -142,11 +142,11 @@ define(['jquery', 'storage'], function($, Storage) {
 
     initHealthBar: function() {
       var scale = this.game.renderer.getScaleFactor(),
-        healthMaxWidth = $("#healthbar").width() - (12 * scale);
+        healthMaxWidth = $('#healthbar').width() - (12 * scale);
 
       this.game.onPlayerHealthChange(function(hp, maxHp) {
         var barWidth = Math.round((healthMaxWidth / maxHp) * (hp > 0 ? hp : 0));
-        $("#hitpoints").css('width', barWidth + "px");
+        $('#hitpoints').css('width', barWidth + 'px');
       });
 
       this.game.onPlayerHurt(this.blinkHealthBar.bind(this));
@@ -158,7 +158,7 @@ define(['jquery', 'storage'], function($, Storage) {
       $hitpoints.addClass('white');
       setTimeout(function() {
         $hitpoints.removeClass('white');
-      }, 500)
+      }, 500);
     },
 
     toggleButton: function() {
@@ -232,9 +232,9 @@ define(['jquery', 'storage'], function($, Storage) {
     initEquipmentIcons: function() {
       var scale = this.game.renderer.getScaleFactor();
       var getIconPath = function(spriteName) {
-        return 'img/'+ scale +'/item-' + spriteName + '.png';
-      },
-      weapon = this.game.player.getWeaponName(),
+          return 'img/'+ scale +'/item-' + spriteName + '.png';
+        },
+        weapon = this.game.player.getWeaponName(),
         armor = this.game.player.getSpriteName(),
         weaponPath = getIconPath(weapon),
         armorPath = getIconPath(armor);
@@ -432,17 +432,17 @@ define(['jquery', 'storage'], function($, Storage) {
       var h = $(window).height(),
         w = $(window).width(),
         popupHeight,
-      popupWidth,
-      top,
-      left;
+        popupWidth,
+        top,
+        left;
 
       switch(type) {
-        case 'twitter':
-          popupHeight = 450;
+      case 'twitter':
+        popupHeight = 450;
         popupWidth = 550;
         break;
-        case 'facebook':
-          popupHeight = 400;
+      case 'facebook':
+        popupHeight = 400;
         popupWidth = 580;
         break;
       }
@@ -451,7 +451,7 @@ define(['jquery', 'storage'], function($, Storage) {
       left = (w / 2) - (popupWidth / 2);
 
       newwindow = window.open(url,'name','height=' + popupHeight + ',width=' + popupWidth + ',top=' + top + ',left=' + left);
-      if (window.focus) {newwindow.focus()}
+      if (window.focus) {newwindow.focus();}
     },
 
     animateParchment: function(origin, destination) {

@@ -6,17 +6,17 @@ define(['area'], function(Area) {
       var self = this;
 
       this.enabled = true;
-      this.extension = Detect.canPlayMP3() ? "mp3" : "ogg";
+      this.extension = Detect.canPlayMP3() ? 'mp3' : 'ogg';
       this.sounds = {};
       this.game = game;
       this.currentMusic = null;
       this.areas = [];
-      this.musicNames = ["village", "beach", "forest", "cave", "desert", "lavaland", "boss"];
-      this.soundNames = ["loot", "hit1", "hit2", "hurt", "heal", "chat", "revive", "death", "firefox", "achievement", "kill1", "kill2", "noloot", "teleport", "chest", "npc", "npc-end"];
+      this.musicNames = ['village', 'beach', 'forest', 'cave', 'desert', 'lavaland', 'boss'];
+      this.soundNames = ['loot', 'hit1', 'hit2', 'hurt', 'heal', 'chat', 'revive', 'death', 'firefox', 'achievement', 'kill1', 'kill2', 'noloot', 'teleport', 'chest', 'npc', 'npc-end'];
 
       var loadSoundFiles = function() {
         var counter = _.size(self.soundNames);
-        log.info("Loading sound files...");
+        log.info('Loading sound files...');
         _.each(self.soundNames, function(name) { self.loadSound(name, function() {
           counter -= 1;
           if(counter === 0) {
@@ -30,7 +30,7 @@ define(['area'], function(Area) {
 
       var loadMusicFiles = function() {
         if(!self.game.renderer.mobile) { // disable music on mobile devices
-          log.info("Loading music files...");
+          log.info('Loading music files...');
           // Load the village music first, as players always start here
           self.loadMusic(self.musicNames.shift(), function() {
             // Then, load all the other music files
@@ -66,23 +66,23 @@ define(['area'], function(Area) {
     },
 
     load: function (basePath, name, loaded_callback, channels) {
-      var path = basePath + name + "." + this.extension,
+      var path = basePath + name + '.' + this.extension,
         sound = document.createElement('audio'),
         self = this;
 
       sound.addEventListener('canplaythrough', function (e) {
         this.removeEventListener('canplaythrough', arguments.callee, false);
-        log.debug(path + " is ready to play.");
+        log.debug(path + ' is ready to play.');
         if(loaded_callback) {
           loaded_callback();
         }
       }, false);
       sound.addEventListener('error', function (e) {
-        log.error("Error: "+ path +" could not be loaded.");
+        log.error('Error: '+ path +' could not be loaded.');
         self.sounds[name] = null;
       }, false);
 
-      sound.preload = "auto";
+      sound.preload = 'auto';
       sound.autobuffer = true;
       sound.src = path;
       sound.load();
@@ -94,14 +94,14 @@ define(['area'], function(Area) {
     },
 
     loadSound: function(name, handleLoaded) {
-      this.load("audio/sounds/", name, handleLoaded, 4);
+      this.load('audio/sounds/', name, handleLoaded, 4);
     },
 
     loadMusic: function(name, handleLoaded) {
-      this.load("audio/music/", name, handleLoaded, 1);
+      this.load('audio/music/', name, handleLoaded, 1);
       var music = this.sounds[name][0];
       music.loop = true;
-      music.addEventListener('ended', function() { music.play() }, false);
+      music.addEventListener('ended', function() { music.play(); }, false);
     },
 
     getSound: function(name) {
@@ -135,8 +135,8 @@ define(['area'], function(Area) {
     getSurroundingMusic: function(entity) {
       var music = null,
         area = _.detect(this.areas, function(area) {
-        return area.contains(entity);
-      });
+          return area.contains(entity);
+        });
 
       if(area) {
         music = { sound: this.getSound(area.musicName), name: area.musicName };

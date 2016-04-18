@@ -51,7 +51,7 @@ define(['lib/astar'], function(AStar) {
      */
     findIncompletePath_: function(start, end) {
       var perfect, x, y,
-      incomplete = [];
+        incomplete = [];
 
       perfect = AStar(this.blankGrid, start, end);
 

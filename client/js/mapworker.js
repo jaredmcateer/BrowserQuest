@@ -58,7 +58,7 @@ function tileIndexToGridPosition(tileNum) {
       return 0;
     }
     return (num % w == 0) ? w - 1 : (num % w) - 1;
-  }
+  };
 
   tileNum -= 1;
   x = getX(tileNum + 1, mapData.width);

@@ -7,7 +7,7 @@ define(['entity'], function(Entity) {
     },
 
     getSpriteName: function() {
-      return "chest";
+      return 'chest';
     },
 
     isMoving: function() {

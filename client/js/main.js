@@ -88,7 +88,7 @@ define(['jquery', 'app'], function($, App) {
         app.toggleAbout();
       });
 
-      $('#nameinput').bind("keyup", function() {
+      $('#nameinput').bind('keyup', function() {
         app.toggleButton();
       });
 
@@ -138,7 +138,7 @@ define(['jquery', 'app'], function($, App) {
 
       var data = app.storage.data;
       if(data.hasAlreadyPlayed) {
-        if(data.player.name && data.player.name !== "") {
+        if(data.player.name && data.player.name !== '') {
           $('#playername').html(data.player.name);
           $('#playerimage').attr('src', data.player.image);
         }
@@ -152,13 +152,13 @@ define(['jquery', 'app'], function($, App) {
         app.tryStartingGame(name);
       });
 
-      document.addEventListener("touchstart", function() {},false);
+      document.addEventListener('touchstart', function() {},false);
 
-      $('#resize-check').bind("transitionend", app.resizeUi.bind(app));
-      $('#resize-check').bind("webkitTransitionEnd", app.resizeUi.bind(app));
-      $('#resize-check').bind("oTransitionEnd", app.resizeUi.bind(app));
+      $('#resize-check').bind('transitionend', app.resizeUi.bind(app));
+      $('#resize-check').bind('webkitTransitionEnd', app.resizeUi.bind(app));
+      $('#resize-check').bind('oTransitionEnd', app.resizeUi.bind(app));
 
-      log.info("App initialized.");
+      log.info('App initialized.');
 
       initGame();
     });
@@ -167,10 +167,10 @@ define(['jquery', 'app'], function($, App) {
   var initGame = function() {
     require(['game'], function(Game) {
 
-      var canvas = document.getElementById("entities"),
-        background = document.getElementById("background"),
-        foreground = document.getElementById("foreground"),
-        input = document.getElementById("chatinput");
+      var canvas = document.getElementById('entities'),
+        background = document.getElementById('background'),
+        foreground = document.getElementById('foreground'),
+        input = document.getElementById('chatinput');
 
       game = new Game(app);
       game.setup('#bubbles', canvas, background, foreground, input);
@@ -186,7 +186,7 @@ define(['jquery', 'app'], function($, App) {
       });
 
       game.onDisconnect(function(message) {
-        $('#death').find('p').html(message+"<em>Please reload the page.</em>");
+        $('#death').find('p').html(message+'<em>Please reload the page.</em>');
         $('#respawn').hide();
       });
 
@@ -207,27 +207,27 @@ define(['jquery', 'app'], function($, App) {
 
       game.onNbPlayersChange(function(worldPlayers, totalPlayers) {
         var setWorldPlayersString = function(string) {
-          $("#instance-population").find("span:nth-child(2)").text(string);
-          $("#playercount").find("span:nth-child(2)").text(string);
-        },
-        setTotalPlayersString = function(string) {
-          $("#world-population").find("span:nth-child(2)").text(string);
+            $('#instance-population').find('span:nth-child(2)').text(string);
+            $('#playercount').find('span:nth-child(2)').text(string);
+          },
+          setTotalPlayersString = function(string) {
+          $('#world-population').find('span:nth-child(2)').text(string);
         };
 
-        $("#playercount").find("span.count").text(worldPlayers);
+        $('#playercount').find('span.count').text(worldPlayers);
 
-        $("#instance-population").find("span").text(worldPlayers);
+        $('#instance-population').find('span').text(worldPlayers);
         if(worldPlayers == 1) {
-          setWorldPlayersString("player");
+          setWorldPlayersString('player');
         } else {
-          setWorldPlayersString("players");
+          setWorldPlayersString('players');
         }
 
-        $("#world-population").find("span").text(totalPlayers);
+        $('#world-population').find('span').text(totalPlayers);
         if(totalPlayers == 1) {
-          setTotalPlayersString("player");
+          setTotalPlayersString('player');
         } else {
-          setTotalPlayersString("players");
+          setTotalPlayersString('players');
         }
       });
 
@@ -291,7 +291,7 @@ define(['jquery', 'app'], function($, App) {
       });
 
       $('#respawn').click(function(event) {
-        game.audioManager.playSound("revive");
+        game.audioManager.playSound('revive');
         game.restart();
         $('body').removeClass('death');
       });
@@ -361,7 +361,7 @@ define(['jquery', 'app'], function($, App) {
         game.audioManager.toggle();
       });
 
-      $(document).bind("keydown", function(e) {
+      $(document).bind('keydown', function(e) {
         var key = e.which,
           $chat = $('#chatinput');
 

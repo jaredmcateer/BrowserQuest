@@ -27,10 +27,10 @@ define(['jquery', 'area'], function($, Area) {
 
     _loadMap: function(useWorker) {
       var self = this,
-        filepath = "maps/world_client.json";
+        filepath = 'maps/world_client.json';
 
       if(useWorker) {
-        log.info("Loading map with web worker.");
+        log.info('Loading map with web worker.');
         var worker = new Worker('js/mapworker.js');
         worker.postMessage(1);
 
@@ -43,7 +43,7 @@ define(['jquery', 'area'], function($, Area) {
           self._checkReady();
         };
       } else {
-        log.info("Loading map via Ajax.");
+        log.info('Loading map via Ajax.');
         $.get(filepath, function (data) {
           self._initMap(data);
           self._generateCollisionGrid();
@@ -98,15 +98,15 @@ define(['jquery', 'area'], function($, Area) {
         var o;
 
         switch(door.to) {
-          case 'u': o = Types.Orientations.UP;
+        case 'u': o = Types.Orientations.UP;
           break;
-          case 'd': o = Types.Orientations.DOWN;
+        case 'd': o = Types.Orientations.DOWN;
           break;
-          case 'l': o = Types.Orientations.LEFT;
+        case 'l': o = Types.Orientations.LEFT;
           break;
-          case 'r': o = Types.Orientations.RIGHT;
+        case 'r': o = Types.Orientations.RIGHT;
           break;
-          default : o = Types.Orientations.DOWN;
+        default : o = Types.Orientations.DOWN;
         }
 
         doors[self.GridPositionToTileIndex(door.x, door.y)] = {
@@ -128,17 +128,17 @@ define(['jquery', 'area'], function($, Area) {
 
       tileset.src = filepath;
 
-      log.info("Loading tileset: "+filepath);
+      log.info('Loading tileset: '+filepath);
 
       tileset.onload = function() {
         if(tileset.width % self.tilesize > 0) {
-          throw Error("Tileset size should be a multiple of "+ self.tilesize);
+          throw Error('Tileset size should be a multiple of '+ self.tilesize);
         }
-        log.info("Map tileset loaded.");
+        log.info('Map tileset loaded.');
 
         self.tilesetCount -= 1;
         if(self.tilesetCount === 0) {
-          log.debug("All map tilesets loaded.")
+          log.debug('All map tilesets loaded.');
 
           self.tilesetsLoaded = true;
           self._checkReady();
@@ -161,7 +161,7 @@ define(['jquery', 'area'], function($, Area) {
           return 0;
         }
         return (num % w == 0) ? w - 1 : (num % w) - 1;
-      }
+      };
 
       tileNum -= 1;
       x = getX(tileNum + 1, this.width);
@@ -211,7 +211,7 @@ define(['jquery', 'area'], function($, Area) {
           self.grid[pos.y][pos.x] = 1;
         }
       });
-      log.info("Collision grid generated.");
+      log.info('Collision grid generated.');
     },
 
     _generatePlateauGrid: function() {
@@ -229,7 +229,7 @@ define(['jquery', 'area'], function($, Area) {
           tileIndex += 1;
         }
       }
-      log.info("Plateau grid generated.");
+      log.info('Plateau grid generated.');
     },
 
     /**

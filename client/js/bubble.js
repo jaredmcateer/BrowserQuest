@@ -40,10 +40,10 @@ define(['jquery', 'timer'], function($, Timer) {
     create: function(id, message, time) {
       if(this.bubbles[id]) {
         this.bubbles[id].reset(time);
-        $("#"+id+" p").html(message);
+        $('#'+id+' p').html(message);
       }
       else {
-        var el = $("<div id=\""+id+"\" class=\"bubble\"><p>"+message+"</p><div class=\"thingy\"></div></div>"); //.attr('id', id);
+        var el = $('<div id="'+id+'" class="bubble"><p>'+message+'</p><div class="thingy"></div></div>'); //.attr('id', id);
         $(el).appendTo(this.container);
 
         this.bubbles[id] = new Bubble(id, el, time);

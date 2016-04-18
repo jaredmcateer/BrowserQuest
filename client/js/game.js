@@ -27,7 +27,7 @@ define(
         this.audioManager = null;
 
         // Player
-        this.player = new Warrior("player", "");
+        this.player = new Warrior('player', '');
 
         // Game state
         this.entities = {};
@@ -44,7 +44,7 @@ define(
         this.selectedX = 0;
         this.selectedY = 0;
         this.selectedCellVisible = false;
-        this.targetColor = "rgba(255, 255, 255, 0.5)";
+        this.targetColor = 'rgba(255, 255, 255, 0.5)';
         this.targetCellVisible = true;
         this.hoveringTarget = false;
         this.hoveringMob = false;
@@ -69,12 +69,12 @@ define(
 
         // sprites
         this.spriteNames = [
-          "hand", "sword", "loot", "target", "talk", "sparks", "shadow16", "rat", "skeleton", "skeleton2", "spectre", "boss", "deathknight", 
-          "ogre", "crab", "snake", "eye", "bat", "goblin", "wizard", "guard", "king", "villagegirl", "villager", "coder", "agent", "rick", "scientist", "nyan", "priest", 
-          "sorcerer", "octocat", "beachnpc", "forestnpc", "desertnpc", "lavanpc", "clotharmor", "leatherarmor", "mailarmor", 
-          "platearmor", "redarmor", "goldenarmor", "firefox", "death", "sword1", "axe", "chest",
-          "sword2", "redsword", "bluesword", "goldensword", "item-sword2", "item-axe", "item-redsword", "item-bluesword", "item-goldensword", "item-leatherarmor", "item-mailarmor", 
-          "item-platearmor", "item-redarmor", "item-goldenarmor", "item-flask", "item-cake", "item-burger", "morningstar", "item-morningstar", "item-firepotion"
+          'hand', 'sword', 'loot', 'target', 'talk', 'sparks', 'shadow16', 'rat', 'skeleton', 'skeleton2', 'spectre', 'boss', 'deathknight', 
+          'ogre', 'crab', 'snake', 'eye', 'bat', 'goblin', 'wizard', 'guard', 'king', 'villagegirl', 'villager', 'coder', 'agent', 'rick', 'scientist', 'nyan', 'priest', 
+          'sorcerer', 'octocat', 'beachnpc', 'forestnpc', 'desertnpc', 'lavanpc', 'clotharmor', 'leatherarmor', 'mailarmor', 
+          'platearmor', 'redarmor', 'goldenarmor', 'firefox', 'death', 'sword1', 'axe', 'chest',
+          'sword2', 'redsword', 'bluesword', 'goldensword', 'item-sword2', 'item-axe', 'item-redsword', 'item-bluesword', 'item-goldensword', 'item-leatherarmor', 'item-mailarmor', 
+          'item-platearmor', 'item-redarmor', 'item-goldenarmor', 'item-flask', 'item-cake', 'item-burger', 'morningstar', 'item-morningstar', 'item-firepotion'
         ];
       },
 
@@ -114,7 +114,7 @@ define(
         this.map = new Map(!this.renderer.upscaledRendering, this);
 
         this.map.ready(function() {
-          log.info("Map loaded.");
+          log.info('Map loaded.');
           var tilesetIndex = self.renderer.upscaledRendering ? 0 : self.renderer.scale - 1;
           self.renderer.setTileset(self.map.tilesets[tilesetIndex]);
         });
@@ -129,28 +129,28 @@ define(
         this.player.setSprite(this.sprites[this.player.getSpriteName()]);
         this.player.idle();
 
-        log.debug("Finished initPlayer");
+        log.debug('Finished initPlayer');
       },
 
       initShadows: function() {
         this.shadows = {};
-        this.shadows["small"] = this.sprites["shadow16"];
+        this.shadows['small'] = this.sprites['shadow16'];
       },
 
       initCursors: function() {
-        this.cursors["hand"] = this.sprites["hand"];
-        this.cursors["sword"] = this.sprites["sword"];
-        this.cursors["loot"] = this.sprites["loot"];
-        this.cursors["target"] = this.sprites["target"];
-        this.cursors["arrow"] = this.sprites["arrow"];
-        this.cursors["talk"] = this.sprites["talk"];
+        this.cursors['hand'] = this.sprites['hand'];
+        this.cursors['sword'] = this.sprites['sword'];
+        this.cursors['loot'] = this.sprites['loot'];
+        this.cursors['target'] = this.sprites['target'];
+        this.cursors['arrow'] = this.sprites['arrow'];
+        this.cursors['talk'] = this.sprites['talk'];
       },
 
       initAnimations: function() {
-        this.targetAnimation = new Animation("idle_down", 4, 0, 16, 16);
+        this.targetAnimation = new Animation('idle_down', 4, 0, 16, 16);
         this.targetAnimation.setSpeed(50);
 
-        this.sparksAnimation = new Animation("idle_down", 6, 0, 16, 16);
+        this.sparksAnimation = new Animation('idle_down', 6, 0, 16, 16);
         this.sparksAnimation.setSpeed(120);
       },
 
@@ -168,8 +168,8 @@ define(
         Types.forEachMobOrNpcKind(function(kind, kindName) {
           self.sprites[kindName].createSilhouette();
         });
-        self.sprites["chest"].createSilhouette();
-        self.sprites["item-cake"].createSilhouette();
+        self.sprites['chest'].createSilhouette();
+        self.sprites['item-cake'].createSilhouette();
       },
 
       initAchievements: function() {
@@ -178,127 +178,127 @@ define(
         this.achievements = {
           A_TRUE_WARRIOR: {
             id: 1,
-            name: "A True Warrior",
-            desc: "Find a new weapon"
+            name: 'A True Warrior',
+            desc: 'Find a new weapon'
           },
           INTO_THE_WILD: {
             id: 2,
-            name: "Into the Wild",
-            desc: "Venture outside the village"
+            name: 'Into the Wild',
+            desc: 'Venture outside the village'
           },
           ANGRY_RATS: {
             id: 3,
-            name: "Angry Rats",
-            desc: "Kill 10 rats",
+            name: 'Angry Rats',
+            desc: 'Kill 10 rats',
             isCompleted: function() {
               return self.storage.getRatCount() >= 10;
             }
           },
           SMALL_TALK: {
             id: 4,
-            name: "Small Talk",
-            desc: "Talk to a non-player character"
+            name: 'Small Talk',
+            desc: 'Talk to a non-player character'
           },
           FAT_LOOT: {
             id: 5,
-            name: "Fat Loot",
-            desc: "Get a new armor set"
+            name: 'Fat Loot',
+            desc: 'Get a new armor set'
           },
           UNDERGROUND: {
             id: 6,
-            name: "Underground",
-            desc: "Explore at least one cave"
+            name: 'Underground',
+            desc: 'Explore at least one cave'
           },
           AT_WORLDS_END: {
             id: 7,
-            name: "At World's End",
-            desc: "Reach the south shore"
+            name: 'At World\'s End',
+            desc: 'Reach the south shore'
           },
           COWARD: {
             id: 8,
-            name: "Coward",
-            desc: "Successfully escape an enemy"
+            name: 'Coward',
+            desc: 'Successfully escape an enemy'
           },
           TOMB_RAIDER: {
             id: 9,
-            name: "Tomb Raider",
-            desc: "Find the graveyard"
+            name: 'Tomb Raider',
+            desc: 'Find the graveyard'
           },
           SKULL_COLLECTOR: {
             id: 10,
-            name: "Skull Collector",
-            desc: "Kill 10 skeletons",
+            name: 'Skull Collector',
+            desc: 'Kill 10 skeletons',
             isCompleted: function() {
               return self.storage.getSkeletonCount() >= 10;
             }
           },
           NINJA_LOOT: {
             id: 11,
-            name: "Ninja Loot",
-            desc: "Get hold of an item you didn't fight for"
+            name: 'Ninja Loot',
+            desc: 'Get hold of an item you didn\'t fight for'
           },
           NO_MANS_LAND: {
             id: 12,
-            name: "No Man's Land",
-            desc: "Travel through the desert"
+            name: 'No Man\'s Land',
+            desc: 'Travel through the desert'
           },
           HUNTER: {
             id: 13,
-            name: "Hunter",
-            desc: "Kill 50 enemies",
+            name: 'Hunter',
+            desc: 'Kill 50 enemies',
             isCompleted: function() {
               return self.storage.getTotalKills() >= 50;
             }
           },
           STILL_ALIVE: {
             id: 14,
-            name: "Still Alive",
-            desc: "Revive your character five times",
+            name: 'Still Alive',
+            desc: 'Revive your character five times',
             isCompleted: function() {
               return self.storage.getTotalRevives() >= 5;
             }
           },
           MEATSHIELD: {
             id: 15,
-            name: "Meatshield",
-            desc: "Take 5,000 points of damage",
+            name: 'Meatshield',
+            desc: 'Take 5,000 points of damage',
             isCompleted: function() {
               return self.storage.getTotalDamageTaken() >= 5000;
             }
           },
           HOT_SPOT: {
             id: 16,
-            name: "Hot Spot",
-            desc: "Enter the volcanic mountains"
+            name: 'Hot Spot',
+            desc: 'Enter the volcanic mountains'
           },
           HERO: {
             id: 17,
-            name: "Hero",
-            desc: "Defeat the final boss"
+            name: 'Hero',
+            desc: 'Defeat the final boss'
           },
           FOXY: {
             id: 18,
-            name: "Foxy",
-            desc: "Find the Firefox costume",
+            name: 'Foxy',
+            desc: 'Find the Firefox costume',
             hidden: true
           },
           FOR_SCIENCE: {
             id: 19,
-            name: "For Science",
-            desc: "Enter into a portal",
+            name: 'For Science',
+            desc: 'Enter into a portal',
             hidden: true
           },
           RICKROLLD: {
             id: 20,
-            name: "Rickroll'd",
-            desc: "Take some singing lessons",
+            name: 'Rickroll\'d',
+            desc: 'Take some singing lessons',
             hidden: true
           }
         };
 
         _.each(this.achievements, function(obj) {
           if(!obj.isCompleted) {
-            obj.isCompleted = function() { return true; }
+            obj.isCompleted = function() { return true; };
           }
           if(!obj.hidden) {
             obj.hidden = false;
@@ -352,7 +352,7 @@ define(
       },
 
       loadSprites: function() {
-        log.info("Loading sprites...");
+        log.info('Loading sprites...');
         this.spritesets = [];
         this.spritesets[0] = {};
         this.spritesets[1] = {};
@@ -372,35 +372,35 @@ define(
           this.currentCursor = this.cursors[name];
           this.currentCursorOrientation = orientation;
         } else {
-          log.error("Unknown cursor name :"+name);
+          log.error('Unknown cursor name :'+name);
         }
       },
 
       updateCursorLogic: function() {
         if(this.hoveringCollidingTile && this.started) {
-          this.targetColor = "rgba(255, 50, 50, 0.5)";
+          this.targetColor = 'rgba(255, 50, 50, 0.5)';
         }
         else {
-          this.targetColor = "rgba(255, 255, 255, 0.5)";
+          this.targetColor = 'rgba(255, 255, 255, 0.5)';
         }
 
         if(this.hoveringMob && this.started) {
-          this.setCursor("sword");
+          this.setCursor('sword');
           this.hoveringTarget = false;
           this.targetCellVisible = false;
         }
         else if(this.hoveringNpc && this.started) {
-          this.setCursor("talk");
+          this.setCursor('talk');
           this.hoveringTarget = false;
           this.targetCellVisible = false;
         }
         else if((this.hoveringItem || this.hoveringChest) && this.started) {
-          this.setCursor("loot");
+          this.setCursor('loot');
           this.hoveringTarget = false;
           this.targetCellVisible = true;
         }
         else {
-          this.setCursor("hand");
+          this.setCursor('hand');
           this.hoveringTarget = false;
           this.targetCellVisible = true;
         }
@@ -419,10 +419,10 @@ define(
 
           if(!(entity instanceof Item && entity.wasDropped)
              && !(this.renderer.mobile || this.renderer.tablet)) {
-               entity.fadeIn(this.currentTime);
-             }
+            entity.fadeIn(this.currentTime);
+          }
 
-             if(this.renderer.mobile || this.renderer.tablet) {
+          if(this.renderer.mobile || this.renderer.tablet) {
                entity.onDirty(function(e) {
                  if(self.camera.isVisible(e)) {
                    e.dirtyRect = self.renderer.getEntityBoundingRect(e);
@@ -432,7 +432,7 @@ define(
              }
         }
         else {
-          log.error("This entity already exists : " + entity.id + " ("+entity.kind+")");
+          log.error('This entity already exists : ' + entity.id + ' ('+entity.kind+')');
         }
       },
 
@@ -442,14 +442,14 @@ define(
           delete this.entities[entity.id];
         }
         else {
-          log.error("Cannot remove entity. Unknown ID : " + entity.id);
+          log.error('Cannot remove entity. Unknown ID : ' + entity.id);
         }
       },
 
       addItem: function(item, x, y) {
         item.setSprite(this.sprites[item.getSpriteName()]);
         item.setGridPosition(x, y);
-        item.setAnimation("idle", 150);
+        item.setAnimation('idle', 150);
         this.addEntity(item);
       },
 
@@ -459,7 +459,7 @@ define(
           this.removeFromRenderingGrid(item, item.gridX, item.gridY);
           delete this.entities[item.id];
         } else {
-          log.error("Cannot remove item. Unknown ID : " + item.id);
+          log.error('Cannot remove item. Unknown ID : ' + item.id);
         }
       },
 
@@ -471,7 +471,7 @@ define(
             this.pathingGrid[i][j] = this.map.grid[i][j];
           }
         }
-        log.info("Initialized the pathing grid with static colliding cells.");
+        log.info('Initialized the pathing grid with static colliding cells.');
       },
 
       initEntityGrid: function() {
@@ -482,7 +482,7 @@ define(
             this.entityGrid[i][j] = {};
           }
         }
-        log.info("Initialized the entity grid.");
+        log.info('Initialized the entity grid.');
       },
 
       initRenderingGrid: function() {
@@ -493,7 +493,7 @@ define(
             this.renderingGrid[i][j] = {};
           }
         }
-        log.info("Initialized the rendering grid.");
+        log.info('Initialized the rendering grid.');
       },
 
       initItemGrid: function() {
@@ -504,7 +504,7 @@ define(
             this.itemGrid[i][j] = {};
           }
         }
-        log.info("Initialized the item grid.");
+        log.info('Initialized the item grid.');
       },
 
       /**
@@ -659,22 +659,22 @@ define(
             if(!self.renderer.mobile
                && !self.renderer.tablet 
              && self.renderer.upscaledRendering) {
-               self.initSilhouettes();
-             }
+              self.initSilhouettes();
+            }
 
-             self.initEntityGrid();
-             self.initItemGrid();
-             self.initPathingGrid();
-             self.initRenderingGrid();
+            self.initEntityGrid();
+            self.initItemGrid();
+            self.initPathingGrid();
+            self.initRenderingGrid();
 
-             self.setPathfinder(new Pathfinder(self.map.width, self.map.height));
+            self.setPathfinder(new Pathfinder(self.map.width, self.map.height));
 
-             self.initPlayer();
-             self.setCursor("hand");
+            self.initPlayer();
+            self.setCursor('hand');
 
-             self.connect(started_callback);
+            self.connect(started_callback);
 
-             clearInterval(wait);
+            clearInterval(wait);
           }
         }, 100);
       },
@@ -696,11 +696,11 @@ define(
       start: function() {
         this.tick();
         this.hasNeverStarted = false;
-        log.info("Game loop started.");
+        log.info('Game loop started.');
       },
 
       stop: function() {
-        log.info("Game stopped.");
+        log.info('Game stopped.');
         this.isStopped = true;
       },
 
@@ -713,7 +713,7 @@ define(
           return this.entities[id];
         }
         else {
-          log.error("Unknown entity id : " + id, true);
+          log.error('Unknown entity id : ' + id, true);
         }
       },
 
@@ -738,7 +738,7 @@ define(
         //>>includeEnd("prodHost");
 
         this.client.onDispatched(function(host, port) {
-          log.debug("Dispatched to game server "+host+ ":"+port);
+          log.debug('Dispatched to game server '+host+ ':'+port);
 
           self.client.host = host;
           self.client.port = port;
@@ -746,7 +746,7 @@ define(
         });
 
         this.client.onConnected(function() {
-          log.info("Starting client/server handshake");
+          log.info('Starting client/server handshake');
 
           self.player.name = self.username;
           self.started = true;
@@ -773,7 +773,7 @@ define(
         });
 
         this.client.onWelcome(function(id, name, x, y, hp) {
-          log.info("Received player ID from server : "+ id);
+          log.info('Received player ID from server : '+ id);
           self.player.id = id;
           self.playerId = id;
           // Always accept name received from the server which will
@@ -791,7 +791,7 @@ define(
           self.player.dirtyRect = self.renderer.getEntityBoundingRect(self.player);
 
           setTimeout(function() {
-            self.tryUnlockingAchievement("STILL_ALIVE");
+            self.tryUnlockingAchievement('STILL_ALIVE');
           }, 1500);
 
           if(!self.storage.hasAlreadyPlayed()) {
@@ -799,9 +799,9 @@ define(
             self.storage.savePlayer(self.renderer.getPlayerImage(),
                                     self.player.getSpriteName(),
                                     self.player.getWeaponName());
-                                    self.showNotification("Welcome to BrowserQuest!");
+            self.showNotification('Welcome to BrowserQuest!');
           } else {
-            self.showNotification("Welcome back to BrowserQuest!");
+            self.showNotification('Welcome back to BrowserQuest!');
             self.storage.setPlayerName(name);
           }
 
@@ -840,7 +840,7 @@ define(
 
           self.player.onAggro(function(mob) {
             if(!mob.isWaitingToAttack(self.player) && !self.player.isAttackedBy(mob)) {
-              self.player.log_info("Aggroed by " + mob.id + " at ("+self.player.gridX+", "+self.player.gridY+")");
+              self.player.log_info('Aggroed by ' + mob.id + ' at ('+self.player.gridX+', '+self.player.gridY+')');
               self.client.sendAggro(mob);
               mob.waitToAttack(self.player);
             }
@@ -849,7 +849,7 @@ define(
           self.player.onBeforeStep(function() {
             var blockingEntity = self.getEntityAt(self.player.nextGridX, self.player.nextGridY);
             if(blockingEntity && blockingEntity.id !== self.playerId) {
-              log.debug("Blocked by " + blockingEntity.id);
+              log.debug('Blocked by ' + blockingEntity.id);
             }
             self.unregisterEntityPosition(self.player);
           });
@@ -872,23 +872,23 @@ define(
             });
 
             if((self.player.gridX <= 85 && self.player.gridY <= 179 && self.player.gridY > 178) || (self.player.gridX <= 85 && self.player.gridY <= 266 && self.player.gridY > 265)) {
-              self.tryUnlockingAchievement("INTO_THE_WILD");
+              self.tryUnlockingAchievement('INTO_THE_WILD');
             }
 
             if(self.player.gridX <= 85 && self.player.gridY <= 293 && self.player.gridY > 292) {
-              self.tryUnlockingAchievement("AT_WORLDS_END");
+              self.tryUnlockingAchievement('AT_WORLDS_END');
             }
 
             if(self.player.gridX <= 85 && self.player.gridY <= 100 && self.player.gridY > 99) {
-              self.tryUnlockingAchievement("NO_MANS_LAND");
+              self.tryUnlockingAchievement('NO_MANS_LAND');
             }
 
             if(self.player.gridX <= 85 && self.player.gridY <= 51 && self.player.gridY > 50) {
-              self.tryUnlockingAchievement("HOT_SPOT");
+              self.tryUnlockingAchievement('HOT_SPOT');
             }
 
             if(self.player.gridX <= 27 && self.player.gridY <= 123 && self.player.gridY > 112) {
-              self.tryUnlockingAchievement("TOMB_RAIDER");
+              self.tryUnlockingAchievement('TOMB_RAIDER');
             }
 
             self.updatePlayerCheckpoint();
@@ -914,36 +914,36 @@ define(
                 self.removeItem(item);
                 self.showNotification(item.getLootMessage());
 
-                if(item.type === "armor") {
-                  self.tryUnlockingAchievement("FAT_LOOT");
+                if(item.type === 'armor') {
+                  self.tryUnlockingAchievement('FAT_LOOT');
                 }
 
-                if(item.type === "weapon") {
-                  self.tryUnlockingAchievement("A_TRUE_WARRIOR");
+                if(item.type === 'weapon') {
+                  self.tryUnlockingAchievement('A_TRUE_WARRIOR');
                 }
 
                 if(item.kind === Types.Entities.CAKE) {
-                  self.tryUnlockingAchievement("FOR_SCIENCE");
+                  self.tryUnlockingAchievement('FOR_SCIENCE');
                 }
 
                 if(item.kind === Types.Entities.FIREPOTION) {
-                  self.tryUnlockingAchievement("FOXY");
-                  self.audioManager.playSound("firefox");
+                  self.tryUnlockingAchievement('FOXY');
+                  self.audioManager.playSound('firefox');
                 }
 
                 if(Types.isHealingItem(item.kind)) {
-                  self.audioManager.playSound("heal");
+                  self.audioManager.playSound('heal');
                 } else {
-                  self.audioManager.playSound("loot");
+                  self.audioManager.playSound('loot');
                 }
 
                 if(item.wasDropped && !_(item.playersInvolved).include(self.playerId)) {
-                  self.tryUnlockingAchievement("NINJA_LOOT");
+                  self.tryUnlockingAchievement('NINJA_LOOT');
                 }
               } catch(e) {
                 if(e instanceof Exceptions.LootException) {
                   self.showNotification(e.message);
-                  self.audioManager.playSound("noloot");
+                  self.audioManager.playSound('noloot');
                 } else {
                   throw e;
                 }
@@ -972,7 +972,7 @@ define(
               }
 
               if(_.size(self.player.attackers) > 0) {
-                setTimeout(function() { self.tryUnlockingAchievement("COWARD"); }, 500);
+                setTimeout(function() { self.tryUnlockingAchievement('COWARD'); }, 500);
               }
               self.player.forEachAttacker(function(attacker) {
                 attacker.disengage();
@@ -989,7 +989,7 @@ define(
               }
 
               if(dest.portal) {
-                self.audioManager.playSound("teleport");
+                self.audioManager.playSound('teleport');
               }
 
               if(!self.player.isDead) {
@@ -1001,7 +1001,7 @@ define(
               self.makeNpcTalk(self.player.target);
             } else if(self.player.target instanceof Chest) {
               self.client.sendOpen(self.player.target);
-              self.audioManager.playSound("chest");
+              self.audioManager.playSound('chest');
             }
 
             self.player.forEachAttacker(function(attacker) {
@@ -1024,12 +1024,12 @@ define(
           });
 
           self.player.onDeath(function() {
-            log.info(self.playerId + " is dead");
+            log.info(self.playerId + ' is dead');
 
             self.player.stopBlinking();
-            self.player.setSprite(self.sprites["death"]);
-            self.player.animate("death", 120, 1, function() {
-              log.info(self.playerId + " was removed");
+            self.player.setSprite(self.sprites['death']);
+            self.player.animate('death', 120, 1, function() {
+              log.info(self.playerId + ' was removed');
 
               self.removeEntity(self.player);
               self.removeFromRenderingGrid(self.player, self.player.gridX, self.player.gridY);
@@ -1048,7 +1048,7 @@ define(
             });
 
             self.audioManager.fadeOutCurrentMusic();
-            self.audioManager.playSound("death");
+            self.audioManager.playSound('death');
           });
 
           self.player.onHasMoved(function(player) {
@@ -1063,33 +1063,33 @@ define(
             self.storage.savePlayer(self.renderer.getPlayerImage(),
                                     self.player.getArmorName(),
                                     self.player.getWeaponName());
-                                    if(self.equipment_callback) {
+            if(self.equipment_callback) {
                                       self.equipment_callback();
                                     }
           });
 
           self.player.onInvincible(function() {
             self.invincible_callback();
-            self.player.switchArmor(self.sprites["firefox"]);
+            self.player.switchArmor(self.sprites['firefox']);
           });
 
           self.client.onSpawnItem(function(item, x, y) {
-            log.info("Spawned " + Types.getKindAsString(item.kind) + " (" + item.id + ") at "+x+", "+y);
+            log.info('Spawned ' + Types.getKindAsString(item.kind) + ' (' + item.id + ') at '+x+', '+y);
             self.addItem(item, x, y);
           });
 
           self.client.onSpawnChest(function(chest, x, y) {
-            log.info("Spawned chest (" + chest.id + ") at "+x+", "+y);
+            log.info('Spawned chest (' + chest.id + ') at '+x+', '+y);
             chest.setSprite(self.sprites[chest.getSpriteName()]);
             chest.setGridPosition(x, y);
-            chest.setAnimation("idle_down", 150);
+            chest.setAnimation('idle_down', 150);
             self.addEntity(chest, x, y);
 
             chest.onOpen(function() {
               chest.stopBlinking();
-              chest.setSprite(self.sprites["death"]);
-              chest.setAnimation("death", 120, 1, function() {
-                log.info(chest.id + " was removed");
+              chest.setSprite(self.sprites['death']);
+              chest.setAnimation('death', 120, 1, function() {
+                log.info(chest.id + ' was removed');
                 self.removeEntity(chest);
                 self.removeFromRenderingGrid(chest, chest.gridX, chest.gridY);
                 self.previousClickPosition = {};
@@ -1108,7 +1108,7 @@ define(
 
                   self.addEntity(entity);
 
-                  log.debug("Spawned " + Types.getKindAsString(entity.kind) + " (" + entity.id + ") at "+entity.gridX+", "+entity.gridY);
+                  log.debug('Spawned ' + Types.getKindAsString(entity.kind) + ' (' + entity.id + ') at '+entity.gridX+', '+entity.gridY);
 
                   if(entity instanceof Character) {
                     entity.onBeforeStep(function() {
@@ -1159,13 +1159,13 @@ define(
                     entity.onRequestPath(function(x, y) {
                       var ignored = [entity], // Always ignore self
                         ignoreTarget = function(target) {
-                        ignored.push(target);
+                          ignored.push(target);
 
                         // also ignore other attackers of the target entity
-                        target.forEachAttacker(function(attacker) {
+                          target.forEachAttacker(function(attacker) {
                           ignored.push(attacker);
                         });
-                      };
+                        };
 
                       if(entity.hasTarget()) {
                         ignoreTarget(entity.target);
@@ -1179,7 +1179,7 @@ define(
                     });
 
                     entity.onDeath(function() {
-                      log.info(entity.id + " is dead");
+                      log.info(entity.id + ' is dead');
 
                       if(entity instanceof Mob) {
                         // Keep track of where mobs die in order to spawn their dropped items
@@ -1188,9 +1188,9 @@ define(
                       }
 
                       entity.isDying = true;
-                      entity.setSprite(self.sprites[entity instanceof Mobs.Rat ? "rat" : "death"]);
-                      entity.animate("death", 120, 1, function() {
-                        log.info(entity.id + " was removed");
+                      entity.setSprite(self.sprites[entity instanceof Mobs.Rat ? 'rat' : 'death']);
+                      entity.animate('death', 120, 1, function() {
+                        log.info(entity.id + ' was removed');
 
                         self.removeEntity(entity);
                         self.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
@@ -1211,7 +1211,7 @@ define(
                       self.removeFromPathingGrid(entity.gridX, entity.gridY);
 
                       if(self.camera.isVisible(entity)) {
-                        self.audioManager.playSound("kill"+Math.floor(Math.random()*2+1));
+                        self.audioManager.playSound('kill'+Math.floor(Math.random()*2+1));
                       }
 
                       self.updateCursor();
@@ -1236,7 +1236,7 @@ define(
                 log.error(e);
               }
             } else {
-              log.debug("Character "+entity.id+" already exists. Don't respawn.");
+              log.debug('Character '+entity.id+' already exists. Don\'t respawn.');
             }
           });
 
@@ -1244,14 +1244,14 @@ define(
             var entity = self.getEntityById(entityId);
 
             if(entity) {
-              log.info("Despawning " + Types.getKindAsString(entity.kind) + " (" + entity.id+ ")");
+              log.info('Despawning ' + Types.getKindAsString(entity.kind) + ' (' + entity.id+ ')');
 
               if(entity.gridX === self.previousClickPosition.x
                  && entity.gridY === self.previousClickPosition.y) {
-                   self.previousClickPosition = {};
-                 }
+                self.previousClickPosition = {};
+              }
 
-                 if(entity instanceof Item) {
+              if(entity instanceof Item) {
                    self.removeItem(entity);
                  } else if(entity instanceof Character) {
                    entity.forEachAttacker(function(attacker) {
@@ -1264,7 +1264,7 @@ define(
                    entity.open();
                  }
 
-                 entity.clean();
+              entity.clean();
             }
           });
 
@@ -1284,7 +1284,7 @@ define(
 
               if(entity) {
                 if(self.player.isAttackedBy(entity)) {
-                  self.tryUnlockingAchievement("COWARD");
+                  self.tryUnlockingAchievement('COWARD');
                 }
                 entity.disengage();
                 entity.idle();
@@ -1301,7 +1301,7 @@ define(
               } else {
                 self.removeEntity(entity);
               }
-              log.debug("Entity was destroyed: "+entity.id);
+              log.debug('Entity was destroyed: '+entity.id);
             }
           });
 
@@ -1323,7 +1323,7 @@ define(
               target = self.getEntityById(targetId);
 
             if(attacker && target && attacker.id !== self.playerId) {
-              log.debug(attacker.id + " attacks " + target.id);
+              log.debug(attacker.id + ' attacks ' + target.id);
 
               if(attacker && target instanceof Player && target.id !== self.playerId && target.target && target.target.id === attacker.id && attacker.getDistanceToEntity(target) < 3) {
                 setTimeout(function() {
@@ -1338,7 +1338,7 @@ define(
           self.client.onPlayerDamageMob(function(mobId, points) {
             var mob = self.getEntityById(mobId);
             if(mob && points) {
-              self.infoManager.addDamageInfo(points, mob.x, mob.y - 15, "inflicted");
+              self.infoManager.addDamageInfo(points, mob.x, mob.y - 15, 'inflicted');
             }
           });
 
@@ -1358,37 +1358,37 @@ define(
             }
 
             if(mobName === 'boss') {
-              self.showNotification("You killed the skeleton king");
+              self.showNotification('You killed the skeleton king');
             } else {
               if(_.include(['a', 'e', 'i', 'o', 'u'], mobName[0])) {
-                self.showNotification("You killed an " + mobName);
+                self.showNotification('You killed an ' + mobName);
               } else {
-                self.showNotification("You killed a " + mobName);
+                self.showNotification('You killed a ' + mobName);
               }
             }
 
             self.storage.incrementTotalKills();
-            self.tryUnlockingAchievement("HUNTER");
+            self.tryUnlockingAchievement('HUNTER');
 
             if(kind === Types.Entities.RAT) {
               self.storage.incrementRatCount();
-              self.tryUnlockingAchievement("ANGRY_RATS");
+              self.tryUnlockingAchievement('ANGRY_RATS');
             }
 
             if(kind === Types.Entities.SKELETON || kind === Types.Entities.SKELETON2) {
               self.storage.incrementSkeletonCount();
-              self.tryUnlockingAchievement("SKULL_COLLECTOR");
+              self.tryUnlockingAchievement('SKULL_COLLECTOR');
             }
 
             if(kind === Types.Entities.BOSS) {
-              self.tryUnlockingAchievement("HERO");
+              self.tryUnlockingAchievement('HERO');
             }
           });
 
           self.client.onPlayerChangeHealth(function(points, isRegen) {
             var player = self.player,
               diff,
-            isHurt;
+              isHurt;
 
             if(player && !player.isDead && !player.invincible) {
               isHurt = points <= player.hitPoints;
@@ -1400,15 +1400,15 @@ define(
               }
               if(isHurt) {
                 player.hurt();
-                self.infoManager.addDamageInfo(diff, player.x, player.y - 15, "received");
-                self.audioManager.playSound("hurt");
+                self.infoManager.addDamageInfo(diff, player.x, player.y - 15, 'received');
+                self.audioManager.playSound('hurt');
                 self.storage.addDamage(-diff);
-                self.tryUnlockingAchievement("MEATSHIELD");
+                self.tryUnlockingAchievement('MEATSHIELD');
                 if(self.playerhurt_callback) {
                   self.playerhurt_callback();
                 }
               } else if(!isRegen){
-                self.infoManager.addDamageInfo("+"+diff, player.x, player.y - 15, "healed");
+                self.infoManager.addDamageInfo('+'+diff, player.x, player.y - 15, 'healed');
               }
               self.updateBars();
             }
@@ -1468,7 +1468,7 @@ define(
             var entity = self.getEntityById(entityId);
             self.createBubble(entityId, message);
             self.assignBubbleTo(entity);
-            self.audioManager.playSound("chat");
+            self.audioManager.playSound('chat');
           });
 
           self.client.onPopulationChange(function(worldPlayers, totalPlayers) {
@@ -1563,7 +1563,7 @@ define(
           this.registerEntityPosition(character);
           this.assignBubbleTo(character);
         } else {
-          log.debug("Teleport out of bounds: "+x+", "+y);
+          log.debug('Teleport out of bounds: '+x+', '+y);
         }
       },
 
@@ -1624,15 +1624,15 @@ define(
           if(msg) {
             this.createBubble(npc.id, msg);
             this.assignBubbleTo(npc);
-            this.audioManager.playSound("npc");
+            this.audioManager.playSound('npc');
           } else {
             this.destroyBubble(npc.id);
-            this.audioManager.playSound("npc-end");
+            this.audioManager.playSound('npc-end');
           }
-          this.tryUnlockingAchievement("SMALL_TALK");
+          this.tryUnlockingAchievement('SMALL_TALK');
 
           if(npc.kind === Types.Entities.RICK) {
-            this.tryUnlockingAchievement("RICKROLLD");
+            this.tryUnlockingAchievement('RICKROLLD');
           }
         }
       },
@@ -1783,7 +1783,7 @@ define(
           _.each(items, function(i) {
             if(Types.isExpendableItem(i.kind)) {
               item = i;
-            };
+            }
           });
 
           // Else, get the first item of the stack
@@ -1845,7 +1845,7 @@ define(
             this.pathfinder.clearIgnoreList();
           }
         } else {
-          log.error("Error while finding the path to "+x+", "+y+" for "+character.id);
+          log.error('Error while finding the path to '+x+', '+y+' for '+character.id);
         }
         return path;
       },
@@ -1988,14 +1988,14 @@ define(
             var pos;
 
             switch(target.orientation) {
-              case Types.Orientations.UP:
-                pos = {x: target.gridX, y: target.gridY - 1, o: target.orientation}; break;
-              case Types.Orientations.DOWN:
-                pos = {x: target.gridX, y: target.gridY + 1, o: target.orientation}; break;
-              case Types.Orientations.LEFT:
-                pos = {x: target.gridX - 1, y: target.gridY, o: target.orientation}; break;
-              case Types.Orientations.RIGHT:
-                pos = {x: target.gridX + 1, y: target.gridY, o: target.orientation}; break;
+            case Types.Orientations.UP:
+              pos = {x: target.gridX, y: target.gridY - 1, o: target.orientation}; break;
+            case Types.Orientations.DOWN:
+              pos = {x: target.gridX, y: target.gridY + 1, o: target.orientation}; break;
+            case Types.Orientations.LEFT:
+              pos = {x: target.gridX - 1, y: target.gridY, o: target.orientation}; break;
+            case Types.Orientations.RIGHT:
+              pos = {x: target.gridX + 1, y: target.gridY, o: target.orientation}; break;
             }
 
             if(pos) {
@@ -2066,7 +2066,7 @@ define(
               }
 
               if(character instanceof Player && this.camera.isVisible(character)) {
-                this.audioManager.playSound("hit"+Math.floor(Math.random()*2+1));
+                this.audioManager.playSound('hit'+Math.floor(Math.random()*2+1));
               }
 
               if(character.hasTarget() && character.target.id === this.playerId && this.player && !this.player.invincible) {
@@ -2078,8 +2078,8 @@ define(
                && character.isDiagonallyAdjacent(character.target)
              && character.target instanceof Player
              && !character.target.isMoving()) {
-               character.follow(character.target);
-             }
+              character.follow(character.target);
+            }
           }
         }
       },
@@ -2103,7 +2103,7 @@ define(
        * 
        */
       getZoningOrientation: function(x, y) {
-        var orientation = "",
+        var orientation = '',
           c = this.camera;
 
         x = x - c.gridX;
@@ -2215,7 +2215,7 @@ define(
             w = parseInt(bubble.element.css('width')) + 24,
             offset = (w / 2) - (t / 2),
             offsetY,
-          y;
+            y;
 
           if(character instanceof Npc) {
             offsetY = 0;
@@ -2239,14 +2239,14 @@ define(
       },
 
       restart: function() {
-        log.debug("Beginning restart");
+        log.debug('Beginning restart');
 
         this.entities = {};
         this.initEntityGrid();
         this.initPathingGrid();
         this.initRenderingGrid();
 
-        this.player = new Warrior("player", this.username);
+        this.player = new Warrior('player', this.username);
         this.initPlayer();
 
         this.started = true;
@@ -2259,7 +2259,7 @@ define(
           this.renderer.clearScreen(this.renderer.context);
         }
 
-        log.debug("Finished restart");
+        log.debug('Finished restart');
       },
 
       onGameStart: function(callback) {
@@ -2295,7 +2295,7 @@ define(
       },
 
       onPlayerInvincible: function(callback) {
-        this.invincible_callback = callback
+        this.invincible_callback = callback;
       },
 
       resize: function() {
@@ -2340,7 +2340,7 @@ define(
           if(achievement.isCompleted() && this.storage.unlockAchievement(achievement.id)) {
             if(this.unlock_callback) {
               this.unlock_callback(achievement.id, achievement.name, achievement.desc);
-              this.audioManager.playSound("achievement");
+              this.audioManager.playSound('achievement');
             }
           }
         }
@@ -2362,7 +2362,7 @@ define(
               self.removeEntity(entity);
             }
           });
-          log.debug("Removed "+nb+" entities: "+_.pluck(_.reject(this.obsoleteEntities, function(id) { return id === self.player.id }), 'id'));
+          log.debug('Removed '+nb+' entities: '+_.pluck(_.reject(this.obsoleteEntities, function(id) { return id === self.player.id; }), 'id'));
           this.obsoleteEntities = null;
         }
       },
@@ -2406,7 +2406,7 @@ define(
 
         if(music) {
           if(music.name === 'cave') {
-            this.tryUnlockingAchievement("UNDERGROUND");
+            this.tryUnlockingAchievement('UNDERGROUND');
           }
         }
       },
@@ -2438,7 +2438,7 @@ define(
           }
         });
 
-        if(source && !(source.hasOwnProperty("index"))) {
+        if(source && !(source.hasOwnProperty('index'))) {
           this.forEachAnimatedTile(function(tile) {
             if(!tile.isDirty) {
               var r2 = r.getTileBoundingRect(tile);

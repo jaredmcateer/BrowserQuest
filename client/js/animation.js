@@ -46,7 +46,7 @@ define(function() {
     },
 
     update: function(time) {
-      if(this.lastTime === 0 && this.name.substr(0, 3) === "atk") {
+      if(this.lastTime === 0 && this.name.substr(0, 3) === 'atk') {
         this.lastTime = time;
       }
 

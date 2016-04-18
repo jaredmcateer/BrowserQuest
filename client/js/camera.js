@@ -18,9 +18,9 @@ define(function() {
       this.gridW = 15 * factor;
       this.gridH = 7 * factor;
 
-      log.debug("---------");
-      log.debug("Factor:"+factor);
-      log.debug("W:"+this.gridW + " H:" + this.gridH);
+      log.debug('---------');
+      log.debug('Factor:'+factor);
+      log.debug('W:'+this.gridW + ' H:' + this.gridH);
     },
 
     setPosition: function(x, y) {
@@ -63,10 +63,10 @@ define(function() {
     isVisiblePosition: function(x, y) {
       if(y >= this.gridY && y < this.gridY + this.gridH
          && x >= this.gridX && x < this.gridX + this.gridW) {
-           return true;
-         } else {
-           return false;
-         }
+        return true;
+      } else {
+        return false;
+      }
     },
 
     focusEntity: function(entity) {

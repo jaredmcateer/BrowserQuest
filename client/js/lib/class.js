@@ -22,10 +22,10 @@ Class.extend = function(prop) {
   // Copy the properties over onto the new prototype
   for (var name in prop) {
     // Check if we're overwriting an existing function
-    prototype[name] = typeof prop[name] == "function" &&
-      typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+    prototype[name] = typeof prop[name] == 'function' &&
+      typeof _super[name] == 'function' && fnTest.test(prop[name]) ?
       (function(name, fn){
-      return function() {
+        return function() {
         var tmp = this._super;
 
         // Add a new ._super() method that is the same method
@@ -39,7 +39,7 @@ Class.extend = function(prop) {
 
         return ret;
       };
-    })(name, prop[name]) :
+      })(name, prop[name]) :
       prop[name];
   }
 
@@ -48,7 +48,7 @@ Class.extend = function(prop) {
     // All construction is actually done in the init method
     if ( !initializing && this.init )
       this.init.apply(this, arguments);
-  }
+  };
 
   // Populate our constructed prototype object
   Class.prototype = prototype;

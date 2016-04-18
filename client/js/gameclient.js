@@ -45,10 +45,10 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
     },
 
     connect: function(dispatcherMode) {
-      var url = "ws://"+ this.host +":"+ this.port +"/",
+      var url = 'ws://'+ this.host +':'+ this.port +'/',
         self = this;
 
-      log.info("Trying to connect to server : "+url);
+      log.info('Trying to connect to server : '+url);
 
       if(window.MozWebSocket) {
         this.connection = new MozWebSocket(url);
@@ -63,18 +63,18 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
           if(reply.status === 'OK') {
             self.dispatched_callback(reply.host, reply.port);
           } else if(reply.status === 'FULL') {
-            alert("BrowserQuest is currently at maximum player population. Please retry later.");
+            alert('BrowserQuest is currently at maximum player population. Please retry later.');
           } else {
-            alert("Unknown error while connecting to BrowserQuest.");
+            alert('Unknown error while connecting to BrowserQuest.');
           }
         };
       } else {
         this.connection.onopen = function(e) {
-          log.info("Connected to server "+self.host+":"+self.port);
+          log.info('Connected to server '+self.host+':'+self.port);
         };
 
         this.connection.onmessage = function(e) {
-          if(e.data === "go") {
+          if(e.data === 'go') {
             if(self.connected_callback) {
               self.connected_callback();
             }
@@ -93,14 +93,14 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
         };
 
         this.connection.onclose = function() {
-          log.debug("Connection closed");
+          log.debug('Connection closed');
           $('#container').addClass('error');
 
           if(self.disconnected_callback) {
             if(self.isTimeout) {
-              self.disconnected_callback("You have been disconnected for being inactive for too long");
+              self.disconnected_callback('You have been disconnected for being inactive for too long');
             } else {
-              self.disconnected_callback("The connection to BrowserQuest has been lost");
+              self.disconnected_callback('The connection to BrowserQuest has been lost');
             }
           }
         };
@@ -129,7 +129,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
           data = JSON.parse(message);
         }
 
-        log.debug("data: " + message);
+        log.debug('data: ' + message);
 
         if(data instanceof Array) {
           if(data[0] instanceof Array) {
@@ -149,7 +149,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
         this.handlers[action].call(this, data);
       }
       else {
-        log.error("Unknown action : " + action);
+        log.error('Unknown action : ' + action);
       }
     },
 

@@ -14,10 +14,10 @@ define(function() {
       this.data = {
         hasAlreadyPlayed: false,
         player: {
-          name: "",
-          weapon: "",
-          armor: "",
-          image: ""
+          name: '',
+          weapon: '',
+          armor: '',
+          image: ''
         },
         achievements: {
           unlocked: [],
@@ -42,7 +42,7 @@ define(function() {
 
     clear: function() {
       if(this.hasLocalStorage()) {
-        localStorage.data = "";
+        localStorage.data = '';
         this.resetData();
       }
     },

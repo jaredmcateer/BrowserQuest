@@ -6,9 +6,9 @@ define(
     var Renderer = Class.extend({
       init: function(game, canvas, background, foreground) {
         this.game = game;
-        this.context = (canvas && canvas.getContext) ? canvas.getContext("2d") : null;
-        this.background = (background && background.getContext) ? background.getContext("2d") : null;
-        this.foreground = (foreground && foreground.getContext) ? foreground.getContext("2d") : null;
+        this.context = (canvas && canvas.getContext) ? canvas.getContext('2d') : null;
+        this.background = (background && background.getContext) ? background.getContext('2d') : null;
+        this.foreground = (foreground && foreground.getContext) ? foreground.getContext('2d') : null;
 
         this.canvas = canvas;
         this.backcanvas = background;
@@ -95,15 +95,15 @@ define(
 
         this.canvas.width = this.camera.gridW * this.tilesize * this.scale;
         this.canvas.height = this.camera.gridH * this.tilesize * this.scale;
-        log.debug("#entities set to "+this.canvas.width+" x "+this.canvas.height);
+        log.debug('#entities set to '+this.canvas.width+' x '+this.canvas.height);
 
         this.backcanvas.width = this.canvas.width;
         this.backcanvas.height = this.canvas.height;
-        log.debug("#background set to "+this.backcanvas.width+" x "+this.backcanvas.height);
+        log.debug('#background set to '+this.backcanvas.width+' x '+this.backcanvas.height);
 
         this.forecanvas.width = this.canvas.width;
         this.forecanvas.height = this.canvas.height;
-        log.debug("#foreground set to "+this.forecanvas.width+" x "+this.forecanvas.height);
+        log.debug('#foreground set to '+this.forecanvas.width+' x '+this.forecanvas.height);
       },
 
       initFPS: function() {
@@ -114,18 +114,18 @@ define(
         var fontsize;
 
         switch(this.scale) {
-          case 1:
-            fontsize = 10; break;
-          case 2:
-            fontsize = Detect.isWindows() ? 10 : 13; break;
-          case 3:
-            fontsize = 20;
+        case 1:
+          fontsize = 10; break;
+        case 2:
+          fontsize = Detect.isWindows() ? 10 : 13; break;
+        case 3:
+          fontsize = 20;
         }
         this.setFontSize(fontsize);
       },
 
       setFontSize: function(size) {
-        var font = size+"px GraphicPixel";
+        var font = size+'px GraphicPixel';
 
         this.context.font = font;
         this.background.font = font;
@@ -137,23 +137,23 @@ define(
         var strokeSize;
 
         switch(this.scale) {
-          case 1:
-            strokeSize = 3; break;
-          case 2:
-            strokeSize = 3; break;
-          case 3:
-            strokeSize = 5;
+        case 1:
+          strokeSize = 3; break;
+        case 2:
+          strokeSize = 3; break;
+        case 3:
+          strokeSize = 5;
         }
 
         if(text && x && y) {
           ctx.save();
           if(centered) {
-            ctx.textAlign = "center";
+            ctx.textAlign = 'center';
           }
-          ctx.strokeStyle = strokeColor || "#373737";
+          ctx.strokeStyle = strokeColor || '#373737';
           ctx.lineWidth = strokeSize;
           ctx.strokeText(text, x, y);
-          ctx.fillStyle = color || "white";
+          ctx.fillStyle = color || 'white';
           ctx.fillText(text, x, y);
           ctx.restore();
         }
@@ -191,7 +191,7 @@ define(
           s = this.scale;
 
         if(entity) {
-          this.drawCellRect(entity.x * s, entity.y * s, "rgba(255, 0, 0, 0.5)");
+          this.drawCellRect(entity.x * s, entity.y * s, 'rgba(255, 0, 0, 0.5)');
         }
       },
 
@@ -202,7 +202,7 @@ define(
           for(var i=0; i < positions.length; i += 1) {
             for(var j=0; j < positions[i].length; j += 1) {
               if(!_.isNull(positions[i][j])) {
-                this.drawCellHighlight(i, j, "rgba(50, 50, 255, 0.5)");
+                this.drawCellHighlight(i, j, 'rgba(50, 50, 255, 0.5)');
               }
             }
           }
@@ -216,7 +216,7 @@ define(
           for(var y=0; y < grid.length; y += 1) {
             for(var x=0; x < grid[y].length; x += 1) {
               if(grid[y][x] === 1 && this.game.camera.isVisiblePosition(x, y)) {
-                this.drawCellHighlight(x, y, "rgba(50, 50, 255, 0.5)");
+                this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
               }
             }
           }
@@ -224,7 +224,7 @@ define(
       },
 
       drawSelectedCell: function() {
-        var sprite = this.game.cursors["target"],
+        var sprite = this.game.cursors['target'],
           anim = this.game.targetAnimation,
           os = this.upscaledRendering ? 1 : this.scale,
           ds = this.upscaledRendering ? this.scale : 1;
@@ -235,7 +235,7 @@ define(
               var x = this.game.selectedX,
                 y = this.game.selectedY;
 
-              this.drawCellHighlight(this.game.selectedX, this.game.selectedY, "rgb(51, 255, 0)");
+              this.drawCellHighlight(this.game.selectedX, this.game.selectedY, 'rgb(51, 255, 0)');
               this.lastTargetPos = { x: x,
                 y: y };
               this.game.drawTarget = false;
@@ -286,8 +286,8 @@ define(
         var s = this.upscaledRendering ? 1 : this.scale;
         _.each(arguments, function(arg) {
           if(_.isUndefined(arg) || _.isNaN(arg) || _.isNull(arg) || arg < 0) {
-            log.error("x:"+x+" y:"+y+" w:"+w+" h:"+h+" dx:"+dx+" dy:"+dy, true);
-            throw Error("A problem occured when trying to draw on the canvas");
+            log.error('x:'+x+' y:'+y+' w:'+w+' h:'+h+' dx:'+dx+' dy:'+dy, true);
+            throw Error('A problem occured when trying to draw on the canvas');
           }
         });
 
@@ -329,7 +329,7 @@ define(
 
       drawEntity: function(entity) {
         var sprite = entity.sprite,
-          shadow = this.game.shadows["small"],
+          shadow = this.game.shadows['small'],
           anim = entity.currentAnimation,
           os = this.upscaledRendering ? 1 : this.scale,
           ds = this.upscaledRendering ? this.scale : 1;
@@ -381,7 +381,7 @@ define(
             this.context.drawImage(sprite.image, x, y, w, h, ox, oy, dw, dh);
 
             if(entity instanceof Item && entity.kind !== Types.Entities.CAKE) {
-              var sparks = this.game.sprites["sparks"],
+              var sparks = this.game.sprites['sparks'],
                 anim = this.game.sparksAnimation,
                 frame = anim.currentFrame,
                 sx = sparks.width * frame.index * os,
@@ -555,7 +555,7 @@ define(
       drawEntityName: function(entity) {
         this.context.save();
         if(entity.name && entity instanceof Player) {
-          var color = (entity.id === this.game.playerId) ? "#fcda5c" : "white";
+          var color = (entity.id === this.game.playerId) ? '#fcda5c' : 'white';
           this.drawText(entity.name,
                         (entity.x + 8) * this.scale,
                         (entity.y + entity.nameOffsetY) * this.scale,
@@ -631,14 +631,14 @@ define(
         this.frameCount++;
 
         //this.drawText("FPS: " + this.realFPS + " / " + this.maxFPS, 30, 30, false);
-        this.drawText("FPS: " + this.realFPS, 30, 30, false);
+        this.drawText('FPS: ' + this.realFPS, 30, 30, false);
       },
 
       drawDebugInfo: function() {
         if(this.isDebugInfoVisible) {
           this.drawFPS();
-          this.drawText("A: " + this.animatedTileCount, 100, 30, false);
-          this.drawText("H: " + this.highTileCount, 140, 30, false);
+          this.drawText('A: ' + this.animatedTileCount, 100, 30, false);
+          this.drawText('H: ' + this.highTileCount, 140, 30, false);
         }
       },
 
@@ -646,8 +646,8 @@ define(
         var self = this;
 
         switch(this.scale) {
-          case 2: this.setFontSize(20); break;
-          case 3: this.setFontSize(30); break;
+        case 2: this.setFontSize(20); break;
+        case 3: this.setFontSize(30); break;
         }
         this.game.infoManager.forEachInfo(function(info) {
           self.context.save();
@@ -672,7 +672,7 @@ define(
           os = this.upscaledRendering ? 1 : this.scale,
           player = this.game.player,
           sprite = player.getArmorSprite(),
-          spriteAnim = sprite.animationData["idle_down"],
+          spriteAnim = sprite.animationData['idle_down'],
           // character
           row = spriteAnim.row,
           w = sprite.width * os,
@@ -686,7 +686,7 @@ define(
           offsetX = (weapon.offsetX - sprite.offsetX) * os,
           offsetY = (weapon.offsetY - sprite.offsetY) * os,
           // shadow
-          shadow = this.game.shadows["small"],
+          shadow = this.game.shadows['small'],
           sw = shadow.width * os,
           sh = shadow.height * os,
           ox = -sprite.offsetX * os;
@@ -700,7 +700,7 @@ define(
         ctx.drawImage(sprite.image, 0, y, w, h, 0, 0, w, h);
         ctx.drawImage(weapon.image, 0, wy, ww, wh, offsetX, offsetY, ww, wh);
 
-        return canvas.toDataURL("image/png");
+        return canvas.toDataURL('image/png');
       },
 
       renderStaticCanvases: function() {

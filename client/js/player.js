@@ -13,8 +13,8 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
       this.nameOffsetY = -10;
 
       // sprites
-      this.spriteName = "clotharmor";
-      this.weaponName = "sword1";
+      this.spriteName = 'clotharmor';
+      this.weaponName = 'sword1';
 
       // modes
       this.isLootMoving = false;
@@ -31,19 +31,19 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
           currentArmorName = this.spriteName;
         }
 
-        if(item.type === "armor") {
+        if(item.type === 'armor') {
           rank = Types.getArmorRank(item.kind);
           currentRank = Types.getArmorRank(Types.getKindFromString(currentArmorName));
-          msg = "You are wearing a better armor";
-        } else if(item.type === "weapon") {
+          msg = 'You are wearing a better armor';
+        } else if(item.type === 'weapon') {
           rank = Types.getWeaponRank(item.kind);
           currentRank = Types.getWeaponRank(Types.getKindFromString(this.weaponName));
-          msg = "You are wielding a better weapon";
+          msg = 'You are wielding a better weapon';
         }
 
         if(rank && currentRank) {
           if(rank === currentRank) {
-            throw new Exceptions.LootException("You already have this "+item.type);
+            throw new Exceptions.LootException('You already have this '+item.type);
           } else if(rank <= currentRank) {
             throw new Exceptions.LootException(msg);
           }
@@ -60,9 +60,9 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
     /**
      * Returns true if the character is currently walking towards an item in order to loot it.
      */
-isMovingToLoot: function() {
-                  return this.isLootMoving;
-                },
+    isMovingToLoot: function() {
+  return this.isLootMoving;
+},
 
     getSpriteName: function() {
       return this.spriteName;

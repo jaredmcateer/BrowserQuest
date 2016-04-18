@@ -45,8 +45,8 @@ define(function() {
 
     setSprite: function(sprite) {
       if(!sprite) {
-        log.error(this.id + " : sprite is null", true);
-        throw "Error";
+        log.error(this.id + ' : sprite is null', true);
+        throw 'Error';
       }
 
       if(this.sprite && this.sprite.name === sprite.name) {
@@ -83,7 +83,7 @@ define(function() {
         animation = this.animations[name];
       }
       else {
-        log.error("No animation called "+ name);
+        log.error('No animation called '+ name);
       }
       return animation;
     },
@@ -101,7 +101,7 @@ define(function() {
 
         if(a) {
           this.currentAnimation = a;
-          if(name.substr(0, 3) === "atk") {
+          if(name.substr(0, 3) === 'atk') {
             this.currentAnimation.reset();
           }
           this.currentAnimation.setSpeed(speed);
@@ -111,7 +111,7 @@ define(function() {
         }
       }
       else {
-        this.log_error("Not ready for animation");
+        this.log_error('Not ready for animation');
       }
     },
 
@@ -128,11 +128,11 @@ define(function() {
     },
 
     log_info: function(message) {
-      log.info("["+this.id+"] " + message);
+      log.info('['+this.id+'] ' + message);
     },
 
     log_error: function(message) {
-      log.error("["+this.id+"] " + message);
+      log.error('['+this.id+'] ' + message);
     },
 
     setHighlight: function(value) {
@@ -165,16 +165,16 @@ define(function() {
     /**
      * 
      */
-getDistanceToEntity: function(entity) {
-                       var distX = Math.abs(entity.gridX - this.gridX);
-                       var distY = Math.abs(entity.gridY - this.gridY);
+    getDistanceToEntity: function(entity) {
+  var distX = Math.abs(entity.gridX - this.gridX);
+  var distY = Math.abs(entity.gridY - this.gridY);
 
-                       return (distX > distY) ? distX : distY;
-                     },
+  return (distX > distY) ? distX : distY;
+},
 
-isCloseTo: function(entity) {
-             var dx, dy, d, close = false;
-             if(entity) {
+    isCloseTo: function(entity) {
+  var dx, dy, d, close = false;
+  if(entity) {
                dx = Math.abs(entity.gridX - this.gridX);
                dy = Math.abs(entity.gridY - this.gridY);
 
@@ -182,8 +182,8 @@ isCloseTo: function(entity) {
                  close = true;
                }
              }
-             return close;
-           },
+  return close;
+},
 
            /**
             * Returns true if the entity is adjacent to the given one.
@@ -201,58 +201,58 @@ isCloseTo: function(entity) {
     /**
      * 
      */
-isAdjacentNonDiagonal: function(entity) {
-                         var result = false;
+    isAdjacentNonDiagonal: function(entity) {
+  var result = false;
 
-                         if(this.isAdjacent(entity) && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)) {
+  if(this.isAdjacent(entity) && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)) {
                            result = true;
                          }
 
-                         return result;
-                       },
+  return result;
+},
 
-isDiagonallyAdjacent: function(entity) {
-                        return this.isAdjacent(entity) && !this.isAdjacentNonDiagonal(entity);
-                      },
+    isDiagonallyAdjacent: function(entity) {
+  return this.isAdjacent(entity) && !this.isAdjacentNonDiagonal(entity);
+},
 
-forEachAdjacentNonDiagonalPosition: function(callback) {
-                                      callback(this.gridX - 1, this.gridY, Types.Orientations.LEFT);
-                                      callback(this.gridX, this.gridY - 1, Types.Orientations.UP);
-                                      callback(this.gridX + 1, this.gridY, Types.Orientations.RIGHT);
-                                      callback(this.gridX, this.gridY + 1, Types.Orientations.DOWN);
+    forEachAdjacentNonDiagonalPosition: function(callback) {
+  callback(this.gridX - 1, this.gridY, Types.Orientations.LEFT);
+  callback(this.gridX, this.gridY - 1, Types.Orientations.UP);
+  callback(this.gridX + 1, this.gridY, Types.Orientations.RIGHT);
+  callback(this.gridX, this.gridY + 1, Types.Orientations.DOWN);
 
-                                    },
+},
 
-fadeIn: function(currentTime) {
-          this.isFading = true;
-          this.startFadingTime = currentTime;
-        },
+    fadeIn: function(currentTime) {
+  this.isFading = true;
+  this.startFadingTime = currentTime;
+},
 
-blink: function(speed, callback) {
-         var self = this;
+    blink: function(speed, callback) {
+  var self = this;
 
-         this.blinking = setInterval(function() {
-             self.toggleVisibility();
-             }, speed);
-       },
+  this.blinking = setInterval(function() {
+           self.toggleVisibility();
+         }, speed);
+},
 
-stopBlinking: function() {
-                if(this.blinking) {
+    stopBlinking: function() {
+  if(this.blinking) {
                   clearInterval(this.blinking);
                 }
-                this.setVisible(true);
-              },
+  this.setVisible(true);
+},
 
-setDirty: function() {
-            this.isDirty = true;
-            if(this.dirty_callback) {
+    setDirty: function() {
+  this.isDirty = true;
+  if(this.dirty_callback) {
               this.dirty_callback(this);
             }
-          },
+},
 
-onDirty: function(dirty_callback) {
-           this.dirty_callback = dirty_callback;
-         }
+    onDirty: function(dirty_callback) {
+  this.dirty_callback = dirty_callback;
+}
   });
 
   return Entity;

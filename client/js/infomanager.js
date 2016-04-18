@@ -10,7 +10,7 @@ define(function() {
 
     addDamageInfo: function(value, x, y, type) {
       var time = this.game.currentTime,
-        id = time+""+Math.abs(value)+""+x+""+y,
+        id = time+''+Math.abs(value)+''+x+''+y,
         self = this,
         info = new DamageInfo(id, value, x, y, DamageInfo.DURATION, type);
 
@@ -44,17 +44,17 @@ define(function() {
 
 
   var damageInfoColors = {
-    "received": {
-      fill: "rgb(255, 50, 50)",
-      stroke: "rgb(255, 180, 180)"
+    'received': {
+      fill: 'rgb(255, 50, 50)',
+      stroke: 'rgb(255, 180, 180)'
     },
-    "inflicted": {
-      fill: "white",
-      stroke: "#373737"
+    'inflicted': {
+      fill: 'white',
+      stroke: '#373737'
     },
-    "healed": {
-      fill: "rgb(80, 255, 80)",
-      stroke: "rgb(50, 120, 50)"
+    'healed': {
+      fill: 'rgb(80, 255, 80)',
+      stroke: 'rgb(50, 120, 50)'
     }
   };
 
