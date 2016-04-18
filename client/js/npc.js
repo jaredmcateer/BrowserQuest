@@ -1,15 +1,15 @@
 
-define(['character'], function(Character) {
+define(['character'], function (Character) {
 
   var NpcTalk = {
-    'guard': [
+    guard: [
       'Hello there',
       'We don\'t need to see your identification',
       'You are not the player we\'re looking for',
       'Move along, move along...'
     ],
 
-    'king': [
+    king: [
       'Hi, I\'m the King',
       'I run this place',
       'Like a boss',
@@ -23,7 +23,7 @@ define(['character'], function(Character) {
       'Like a boss'
     ],
 
-    'villagegirl': [
+    villagegirl: [
       'Hi there, adventurer!',
       'How do you like this game?',
       'It\'s all happening in a single web page! Isn\'t it crazy?',
@@ -32,7 +32,7 @@ define(['character'], function(Character) {
       'Why don&#x27;t you read this <a target="_blank" href="http://hacks.mozilla.org/2012/03/browserquest/">blog post</a> and learn all about it?'
     ],
 
-    'villager': [
+    villager: [
       'Howdy stranger. Do you like poetry?',
       'Roses are red, violets are blue...',
       'I like hunting rats, and so do you...',
@@ -42,14 +42,14 @@ define(['character'], function(Character) {
       'or instead, cook a rat stew.'
     ],
 
-    'agent': [
+    agent: [
       'Do not try to bend the sword',
       'That\'s impossible',
       'Instead, only try to realize the truth...',
       'There is no sword.'
     ],
 
-    'rick': [
+    rick: [
       'We\'re no strangers to love',
       'You know the rules and so do I',
       'A full commitment\'s what I\'m thinking of',
@@ -64,7 +64,7 @@ define(['character'], function(Character) {
       'Never gonna tell a lie and hurt you'
     ],
 
-    'scientist': [
+    scientist: [
       'Greetings.',
       'I am the inventor of these two potions.',
       'The red one will replenish your health points...',
@@ -74,34 +74,34 @@ define(['character'], function(Character) {
       'Now if you\'ll excuse me, I need to get back to my experiments...'
     ],
 
-    'nyan': [
+    nyan: [
       'nyan nyan nyan nyan nyan',
       'nyan nyan nyan nyan nyan nyan nyan',
       'nyan nyan nyan nyan nyan nyan',
       'nyan nyan nyan nyan nyan nyan nyan nyan'
     ],
 
-    'beachnpc': [
+    beachnpc: [
       'lorem ipsum dolor sit amet',
       'consectetur adipisicing elit, sed do eiusmod tempor'
     ],
 
-    'forestnpc': [
+    forestnpc: [
       'lorem ipsum dolor sit amet',
       'consectetur adipisicing elit, sed do eiusmod tempor'
     ],
 
-    'desertnpc': [
+    desertnpc: [
       'lorem ipsum dolor sit amet',
       'consectetur adipisicing elit, sed do eiusmod tempor'
     ],
 
-    'lavanpc': [
+    lavanpc: [
       'lorem ipsum dolor sit amet',
       'consectetur adipisicing elit, sed do eiusmod tempor'
     ],
 
-    'priest': [
+    priest: [
       'Oh, hello, young man.',
       'Wisdom is everything, so I\'ll share a few guidelines with you.',
       'You are free to go wherever you like in this world',
@@ -114,7 +114,7 @@ define(['character'], function(Character) {
       'Farewell, young friend.'
     ],
 
-    'sorcerer': [
+    sorcerer: [
       'Ah... I had foreseen you would come to see me.',
       'Well? How do you like my new staff?',
       'Pretty cool, eh?',
@@ -128,26 +128,26 @@ define(['character'], function(Character) {
       'Good luck.'
     ],
 
-    'octocat': [
+    octocat: [
       'Welcome to BrowserQuest!',
       'Want to see the source code?',
       'Check out <a target="_blank" href="http://github.com/mozilla/BrowserQuest">the repository on GitHub</a>'
     ],
 
-    'coder': [
+    coder: [
       'Hi! Do you know that you can also play BrowserQuest on your tablet or mobile?',
       'That\'s the beauty of HTML5!',
       'Give it a try...'
     ],
 
-    'beachnpc': [
+    beachnpc: [
       'Don\'t mind me, I\'m just here on vacation.',
       'I have to say...',
       'These giant crabs are somewhat annoying.',
       'Could you please get rid of them for me?'
     ],
 
-    'desertnpc': [
+    desertnpc: [
       'One does not simply walk into these mountains...',
       'An ancient undead lord is said to dwell here.',
       'Nobody knows exactly what he looks like...',
@@ -155,29 +155,31 @@ define(['character'], function(Character) {
       'It\'s not too late to turn around and go home, kid.'
     ],
 
-    'othernpc': [
+    othernpc: [
       'lorem ipsum',
       'lorem ipsum'
     ]
   };
 
   var Npc = Character.extend({
-    init: function(id, kind) {
+    init: function (id, kind) {
       this._super(id, kind, 1);
       this.itemKind = Types.getKindAsString(this.kind);
       this.talkCount = NpcTalk[this.itemKind].length;
       this.talkIndex = 0;
     },
 
-    talk: function() {
+    talk: function () {
       var msg = null;
 
-      if(this.talkIndex > this.talkCount) {
+      if (this.talkIndex > this.talkCount) {
         this.talkIndex = 0;
       }
-      if(this.talkIndex < this.talkCount) {
+
+      if (this.talkIndex < this.talkCount) {
         msg = NpcTalk[this.itemKind][this.talkIndex];
       }
+
       this.talkIndex += 1;
 
       return msg;

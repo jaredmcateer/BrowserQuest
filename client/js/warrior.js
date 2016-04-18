@@ -1,8 +1,8 @@
 
-define(['player'], function(Player) {
+define(['player'], function (Player) {
 
   var Warrior = Player.extend({
-    init: function(id, name) {
+    init: function (id, name) {
       this._super(id, name, Types.Entities.WARRIOR);
     },
   });
