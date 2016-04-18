@@ -101,60 +101,60 @@ Types = {
 };
 
 var kinds = {
-  warrior: [Types.Entities.WARRIOR, "player"],
+  warrior: [Types.Entities.WARRIOR, 'player'],
 
-  rat: [Types.Entities.RAT, "mob"],
-  skeleton: [Types.Entities.SKELETON , "mob"],
-  goblin: [Types.Entities.GOBLIN, "mob"],
-  ogre: [Types.Entities.OGRE, "mob"],
-  spectre: [Types.Entities.SPECTRE, "mob"],
-  deathknight: [Types.Entities.DEATHKNIGHT, "mob"],
-  crab: [Types.Entities.CRAB, "mob"],
-  snake: [Types.Entities.SNAKE, "mob"],
-  bat: [Types.Entities.BAT, "mob"],
-  wizard: [Types.Entities.WIZARD, "mob"],
-  eye: [Types.Entities.EYE, "mob"],
-  skeleton2: [Types.Entities.SKELETON2, "mob"],
-  boss: [Types.Entities.BOSS, "mob"],
+  rat: [Types.Entities.RAT, 'mob'],
+  skeleton: [Types.Entities.SKELETON , 'mob'],
+  goblin: [Types.Entities.GOBLIN, 'mob'],
+  ogre: [Types.Entities.OGRE, 'mob'],
+  spectre: [Types.Entities.SPECTRE, 'mob'],
+  deathknight: [Types.Entities.DEATHKNIGHT, 'mob'],
+  crab: [Types.Entities.CRAB, 'mob'],
+  snake: [Types.Entities.SNAKE, 'mob'],
+  bat: [Types.Entities.BAT, 'mob'],
+  wizard: [Types.Entities.WIZARD, 'mob'],
+  eye: [Types.Entities.EYE, 'mob'],
+  skeleton2: [Types.Entities.SKELETON2, 'mob'],
+  boss: [Types.Entities.BOSS, 'mob'],
 
-  sword1: [Types.Entities.SWORD1, "weapon"],
-  sword2: [Types.Entities.SWORD2, "weapon"],
-  axe: [Types.Entities.AXE, "weapon"],
-  redsword: [Types.Entities.REDSWORD, "weapon"],
-  bluesword: [Types.Entities.BLUESWORD, "weapon"],
-  goldensword: [Types.Entities.GOLDENSWORD, "weapon"],
-  morningstar: [Types.Entities.MORNINGSTAR, "weapon"],
+  sword1: [Types.Entities.SWORD1, 'weapon'],
+  sword2: [Types.Entities.SWORD2, 'weapon'],
+  axe: [Types.Entities.AXE, 'weapon'],
+  redsword: [Types.Entities.REDSWORD, 'weapon'],
+  bluesword: [Types.Entities.BLUESWORD, 'weapon'],
+  goldensword: [Types.Entities.GOLDENSWORD, 'weapon'],
+  morningstar: [Types.Entities.MORNINGSTAR, 'weapon'],
 
-  firefox: [Types.Entities.FIREFOX, "armor"],
-  clotharmor: [Types.Entities.CLOTHARMOR, "armor"],
-  leatherarmor: [Types.Entities.LEATHERARMOR, "armor"],
-  mailarmor: [Types.Entities.MAILARMOR, "armor"],
-  platearmor: [Types.Entities.PLATEARMOR, "armor"],
-  redarmor: [Types.Entities.REDARMOR, "armor"],
-  goldenarmor: [Types.Entities.GOLDENARMOR, "armor"],
+  firefox: [Types.Entities.FIREFOX, 'armor'],
+  clotharmor: [Types.Entities.CLOTHARMOR, 'armor'],
+  leatherarmor: [Types.Entities.LEATHERARMOR, 'armor'],
+  mailarmor: [Types.Entities.MAILARMOR, 'armor'],
+  platearmor: [Types.Entities.PLATEARMOR, 'armor'],
+  redarmor: [Types.Entities.REDARMOR, 'armor'],
+  goldenarmor: [Types.Entities.GOLDENARMOR, 'armor'],
 
-  flask: [Types.Entities.FLASK, "object"],
-  cake: [Types.Entities.CAKE, "object"],
-  burger: [Types.Entities.BURGER, "object"],
-  chest: [Types.Entities.CHEST, "object"],
-  firepotion: [Types.Entities.FIREPOTION, "object"],
+  flask: [Types.Entities.FLASK, 'object'],
+  cake: [Types.Entities.CAKE, 'object'],
+  burger: [Types.Entities.BURGER, 'object'],
+  chest: [Types.Entities.CHEST, 'object'],
+  firepotion: [Types.Entities.FIREPOTION, 'object'],
 
-  guard: [Types.Entities.GUARD, "npc"],
-  villagegirl: [Types.Entities.VILLAGEGIRL, "npc"],
-  villager: [Types.Entities.VILLAGER, "npc"],
-  coder: [Types.Entities.CODER, "npc"],
-  scientist: [Types.Entities.SCIENTIST, "npc"],
-  priest: [Types.Entities.PRIEST, "npc"],
-  king: [Types.Entities.KING, "npc"],
-  rick: [Types.Entities.RICK, "npc"],
-  nyan: [Types.Entities.NYAN, "npc"],
-  sorcerer: [Types.Entities.SORCERER, "npc"],
-  agent: [Types.Entities.AGENT, "npc"],
-  octocat: [Types.Entities.OCTOCAT, "npc"],
-  beachnpc: [Types.Entities.BEACHNPC, "npc"],
-  forestnpc: [Types.Entities.FORESTNPC, "npc"],
-  desertnpc: [Types.Entities.DESERTNPC, "npc"],
-  lavanpc: [Types.Entities.LAVANPC, "npc"],
+  guard: [Types.Entities.GUARD, 'npc'],
+  villagegirl: [Types.Entities.VILLAGEGIRL, 'npc'],
+  villager: [Types.Entities.VILLAGER, 'npc'],
+  coder: [Types.Entities.CODER, 'npc'],
+  scientist: [Types.Entities.SCIENTIST, 'npc'],
+  priest: [Types.Entities.PRIEST, 'npc'],
+  king: [Types.Entities.KING, 'npc'],
+  rick: [Types.Entities.RICK, 'npc'],
+  nyan: [Types.Entities.NYAN, 'npc'],
+  sorcerer: [Types.Entities.SORCERER, 'npc'],
+  agent: [Types.Entities.AGENT, 'npc'],
+  octocat: [Types.Entities.OCTOCAT, 'npc'],
+  beachnpc: [Types.Entities.BEACHNPC, 'npc'],
+  forestnpc: [Types.Entities.FORESTNPC, 'npc'],
+  desertnpc: [Types.Entities.DESERTNPC, 'npc'],
+  lavanpc: [Types.Entities.LAVANPC, 'npc'],
 
   getType: function(kind) {
     return kinds[Types.getKindAsString(kind)][1];
@@ -189,15 +189,15 @@ Types.getArmorRank = function(armorKind) {
 };
 
 Types.isPlayer = function(kind) {
-  return kinds.getType(kind) === "player";
+  return kinds.getType(kind) === 'player';
 };
 
 Types.isMob = function(kind) {
-  return kinds.getType(kind) === "mob";
+  return kinds.getType(kind) === 'mob';
 };
 
 Types.isNpc = function(kind) {
-  return kinds.getType(kind) === "npc";
+  return kinds.getType(kind) === 'npc';
 };
 
 Types.isCharacter = function(kind) {
@@ -205,15 +205,15 @@ Types.isCharacter = function(kind) {
 };
 
 Types.isArmor = function(kind) {
-  return kinds.getType(kind) === "armor";
+  return kinds.getType(kind) === 'armor';
 };
 
 Types.isWeapon = function(kind) {
-  return kinds.getType(kind) === "weapon";
+  return kinds.getType(kind) === 'weapon';
 };
 
 Types.isObject = function(kind) {
-  return kinds.getType(kind) === "object";
+  return kinds.getType(kind) === 'object';
 };
 
 Types.isChest = function(kind) {
@@ -283,10 +283,10 @@ Types.forEachArmorKind = function(callback) {
 
 Types.getOrientationAsString = function(orientation) {
   switch(orientation) {
-    case Types.Orientations.LEFT: return "left"; break;
-    case Types.Orientations.RIGHT: return "right"; break;
-    case Types.Orientations.UP: return "up"; break;
-    case Types.Orientations.DOWN: return "down"; break;
+  case Types.Orientations.LEFT: return 'left'; break;
+  case Types.Orientations.RIGHT: return 'right'; break;
+  case Types.Orientations.UP: return 'up'; break;
+  case Types.Orientations.DOWN: return 'down'; break;
   }
 };
 
@@ -307,7 +307,7 @@ Types.getMessageTypeAsString = function(type) {
     }
   });
   if(!typeName) {
-    typeName = "UNKNOWN";
+    typeName = 'UNKNOWN';
   }
   return typeName;
 };
