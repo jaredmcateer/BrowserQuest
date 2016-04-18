@@ -18,69 +18,68 @@ module.exports = WS;
  * Abstract Server and Connection classes
  */
 var Server = cls.Class.extend({
-  init: function(port) {
+  init: function (port) {
     this.port = port;
   },
 
-  onConnect: function(callback) {
+  onConnect: function (callback) {
     this.connection_callback = callback;
   },
 
-  onError: function(callback) {
+  onError: function (callback) {
     this.error_callback = callback;
   },
 
-  broadcast: function(message) {
+  broadcast: function (message) {
     throw 'Not implemented';
   },
 
-  forEachConnection: function(callback) {
+  forEachConnection: function (callback) {
     _.each(this._connections, callback);
   },
 
-  addConnection: function(connection) {
+  addConnection: function (connection) {
     this._connections[connection.id] = connection;
   },
 
-  removeConnection: function(id) {
+  removeConnection: function (id) {
     delete this._connections[id];
   },
 
-  getConnection: function(id) {
+  getConnection: function (id) {
     return this._connections[id];
   }
 });
 
-
 var Connection = cls.Class.extend({
-  init: function(id, connection, server) {
+  init: function (id, connection, server) {
     this._connection = connection;
     this._server = server;
     this.id = id;
   },
 
-  onClose: function(callback) {
+  onClose: function (callback) {
     this.close_callback = callback;
   },
 
-  listen: function(callback) {
+  listen: function (callback) {
     this.listen_callback = callback;
   },
 
-  broadcast: function(message) {
+  broadcast: function (message) {
     throw 'Not implemented';
   },
 
-  send: function(message) {
+  send: function (message) {
     throw 'Not implemented';
   },
 
-  sendUTF8: function(data) {
+  sendUTF8: function (data) {
     throw 'Not implemented';
   },
 
-  close: function(logError) {
-    log.info('Closing connection to '+this._connection.remoteAddress+'. Error: '+logError);
+  close: function (logError) {
+    log.info('Closing connection to ' + this._connection.remoteAddress + '. Error: ' + logError);
     this._connection.close();
   }
 });
@@ -89,7 +88,7 @@ var Connection = cls.Class.extend({
 
 /**
  * MultiVersionWebsocketServer
- * 
+ *
  * Websocket server supporting draft-75, draft-76 and version 08+ of the WebSocket protocol.
  * Fallback for older protocol versions borrowed from https://gist.github.com/1219165
  */
@@ -112,32 +111,34 @@ WS.MultiVersionWebsocketServer = Server.extend({
   _connections: {},
   _counter: 0,
 
-  init: function(port) {
+  init: function (port) {
     var self = this;
 
     this._super(port);
 
-    this._httpServer = http.createServer(function(request, response) {
+    this._httpServer = http.createServer(function (request, response) {
       var path = url.parse(request.url).pathname;
-      switch(path) {
+      switch (path) {
       case '/status':
-        if(self.status_callback) {
-            response.writeHead(200);
-            response.write(self.status_callback());
-            break;
-          }
+        if (self.status_callback) {
+          response.writeHead(200);
+          response.write(self.status_callback());
+          break;
+        }
+
       default:
         response.writeHead(404);
-      }
+    }
       response.end();
     });
-    this._httpServer.listen(port, function() {
-      log.info('Server is listening on port '+port);
+
+    this._httpServer.listen(port, function () {
+      log.info('Server is listening on port ' + port);
     });
 
     this._miksagoServer = wsserver.createServer();
     this._miksagoServer.server = this._httpServer;
-    this._miksagoServer.addListener('connection', function(connection) {
+    this._miksagoServer.addListener('connection', function (connection) {
       // Add remoteAddress property
       connection.remoteAddress = connection._socket.remoteAddress;
 
@@ -145,13 +146,14 @@ WS.MultiVersionWebsocketServer = Server.extend({
       connection.sendUTF = connection.send;
       var c = new WS.miksagoWebSocketConnection(self._createId(), connection, self);
 
-      if(self.connection_callback) {
+      if (self.connection_callback) {
         self.connection_callback(c);
       }
+
       self.addConnection(c);
     });
 
-    this._httpServer.on('upgrade', function(req, socket, head) {
+    this._httpServer.on('upgrade', function (req, socket, head) {
       if (typeof req.headers['sec-websocket-version'] !== 'undefined') {
         // WebSocket hybi-08/-09/-10 connection (WebSocket-Node)
         var wsRequest = new worlizeRequest(socket, req, self.worlizeServerConfig);
@@ -159,12 +161,13 @@ WS.MultiVersionWebsocketServer = Server.extend({
           wsRequest.readHandshake();
           var wsConnection = wsRequest.accept(wsRequest.requestedProtocols[0], wsRequest.origin);
           var c = new WS.worlizeWebSocketConnection(self._createId(), wsConnection, self);
-          if(self.connection_callback) {
+          if (self.connection_callback) {
             self.connection_callback(c);
           }
+
           self.addConnection(c);
         }
-        catch(e) {
+        catch (e) {
           console.log('WebSocket Request unsupported by WebSocket-Node: ' + e.toString());
           return;
         }
@@ -180,17 +183,17 @@ WS.MultiVersionWebsocketServer = Server.extend({
     });
   },
 
-  _createId: function() {
+  _createId: function () {
     return '5' + Utils.random(99) + '' + (this._counter++);
   },
 
-  broadcast: function(message) {
-    this.forEachConnection(function(connection) {
+  broadcast: function (message) {
+    this.forEachConnection(function (connection) {
       connection.send(message);
     });
   },
 
-  onRequestStatus: function(status_callback) {
+  onRequestStatus: function (status_callback) {
     this.status_callback = status_callback;
   }
 });
@@ -201,21 +204,21 @@ WS.MultiVersionWebsocketServer = Server.extend({
  * https://github.com/Worlize/WebSocket-Node
  */
 WS.worlizeWebSocketConnection = Connection.extend({
-  init: function(id, connection, server) {
+  init: function (id, connection, server) {
     var self = this;
 
     this._super(id, connection, server);
 
-    this._connection.on('message', function(message) {
-      if(self.listen_callback) {
-        if(message.type === 'utf8') {
-          if(useBison) {
+    this._connection.on('message', function (message) {
+      if (self.listen_callback) {
+        if (message.type === 'utf8') {
+          if (useBison) {
             self.listen_callback(BISON.decode(message.utf8Data));
           } else {
             try {
               self.listen_callback(JSON.parse(message.utf8Data));
-            } catch(e) {
-              if(e instanceof SyntaxError) {
+            } catch (e) {
+              if (e instanceof SyntaxError) {
                 self.close('Received message was not valid JSON.');
               } else {
                 throw e;
@@ -226,25 +229,27 @@ WS.worlizeWebSocketConnection = Connection.extend({
       }
     });
 
-    this._connection.on('close', function(connection) {
-      if(self.close_callback) {
+    this._connection.on('close', function (connection) {
+      if (self.close_callback) {
         self.close_callback();
       }
+
       delete self._server.removeConnection(self.id);
     });
   },
 
-  send: function(message) {
+  send: function (message) {
     var data;
-    if(useBison) {
+    if (useBison) {
       data = BISON.encode(message);
     } else {
       data = JSON.stringify(message);
     }
+
     this.sendUTF8(data);
   },
 
-  sendUTF8: function(data) {
+  sendUTF8: function (data) {
     this._connection.sendUTF(data);
   }
 });
@@ -255,14 +260,14 @@ WS.worlizeWebSocketConnection = Connection.extend({
  * https://github.com/miksago/node-websocket-server
  */
 WS.miksagoWebSocketConnection = Connection.extend({
-  init: function(id, connection, server) {
+  init: function (id, connection, server) {
     var self = this;
 
     this._super(id, connection, server);
 
-    this._connection.addListener('message', function(message) {
-      if(self.listen_callback) {
-        if(useBison) {
+    this._connection.addListener('message', function (message) {
+      if (self.listen_callback) {
+        if (useBison) {
           self.listen_callback(BISON.decode(message));
         } else {
           self.listen_callback(JSON.parse(message));
@@ -270,25 +275,27 @@ WS.miksagoWebSocketConnection = Connection.extend({
       }
     });
 
-    this._connection.on('close', function(connection) {
-      if(self.close_callback) {
+    this._connection.on('close', function (connection) {
+      if (self.close_callback) {
         self.close_callback();
       }
+
       delete self._server.removeConnection(self.id);
     });
   },
 
-  send: function(message) {
+  send: function (message) {
     var data;
-    if(useBison) {
+    if (useBison) {
       data = BISON.encode(message);
     } else {
       data = JSON.stringify(message);
     }
+
     this.sendUTF8(data);
   },
 
-  sendUTF8: function(data) {
+  sendUTF8: function (data) {
     this._connection.send(data);
   }
 });

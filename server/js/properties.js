@@ -152,31 +152,31 @@ var Properties = {
   }
 };
 
-Properties.getArmorLevel = function(kind) {
+Properties.getArmorLevel = function (kind) {
   try {
-    if(Types.isMob(kind)) {
+    if (Types.isMob(kind)) {
       return Properties[Types.getKindAsString(kind)].armor;
     } else {
       return Types.getArmorRank(kind) + 1;
     }
-  } catch(e) {
-    log.error('No level found for armor: '+Types.getKindAsString(kind));
+  } catch (e) {
+    log.error('No level found for armor: ' + Types.getKindAsString(kind));
   }
 };
 
-Properties.getWeaponLevel = function(kind) {
+Properties.getWeaponLevel = function (kind) {
   try {
-    if(Types.isMob(kind)) {
+    if (Types.isMob(kind)) {
       return Properties[Types.getKindAsString(kind)].weapon;
     } else {
       return Types.getWeaponRank(kind) + 1;
     }
-  } catch(e) {
-    log.error('No level found for weapon: '+Types.getKindAsString(kind));
+  } catch (e) {
+    log.error('No level found for weapon: ' + Types.getKindAsString(kind));
   }
 };
 
-Properties.getHitPoints = function(kind) {
+Properties.getHitPoints = function (kind) {
   return Properties[Types.getKindAsString(kind)].hp;
 };
 

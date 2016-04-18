@@ -5,7 +5,7 @@ var cls = require('./lib/class'),
   Types = require('../../shared/js/gametypes');
 
 module.exports = Checkpoint = cls.Class.extend({
-  init: function(id, x, y, width, height) {
+  init: function (id, x, y, width, height) {
     this.id = id;
     this.x = x;
     this.y = y;
@@ -13,7 +13,7 @@ module.exports = Checkpoint = cls.Class.extend({
     this.height = height;
   },
 
-  getRandomPosition: function() {
+  getRandomPosition: function () {
     var pos = {};
 
     pos.x = this.x + Utils.randomInt(0, this.width - 1);
