@@ -147,10 +147,10 @@ define(
       },
 
       initAnimations: function () {
-        this.targetAnimation = new Animation('idle_down', 4, 0, 16, 16);
+        this.targetAnimation = new Animation('idleDown', 4, 0, 16, 16);
         this.targetAnimation.setSpeed(50);
 
-        this.sparksAnimation = new Animation('idle_down', 6, 0, 16, 16);
+        this.sparksAnimation = new Animation('idleDown', 6, 0, 16, 16);
         this.sparksAnimation.setSpeed(120);
       },
 
@@ -316,7 +316,7 @@ define(
 
       getAchievementById: function (id) {
         var found = null;
-        _.each(this.achievements, function (achievement, key) {
+        _.each(this.achievements, function (achievement) {
           if (achievement.id === parseInt(id)) {
             found = achievement;
           }
@@ -638,7 +638,7 @@ define(
         });
       },
 
-      run: function (started_callback) {
+      run: function (startedCallback) {
         var self = this;
 
         this.loadSprites();
@@ -677,7 +677,7 @@ define(
             self.initPlayer();
             self.setCursor('hand');
 
-            self.connect(started_callback);
+            self.connect(startedCallback);
 
             clearInterval(wait);
           }
@@ -721,7 +721,7 @@ define(
         }
       },
 
-      connect: function (started_callback) {
+      connect: function (startedCallback) {
         var self = this,
           connecting = false; // always in dispatcher mode in the build version
 
@@ -843,7 +843,7 @@ define(
 
           self.player.onAggro(function (mob) {
             if (!mob.isWaitingToAttack(self.player) && !self.player.isAttackedBy(mob)) {
-              self.player.log_info('Aggroed by ' + mob.id + ' at (' + self.player.gridX + ', ' + self.player.gridY + ')');
+              self.player.logInfo('Aggroed by ' + mob.id + ' at (' + self.player.gridX + ', ' + self.player.gridY + ')');
               self.client.sendAggro(mob);
               mob.waitToAttack(self.player);
             }
@@ -875,7 +875,17 @@ define(
               }
             });
 
-            if ((self.player.gridX <= 85 && self.player.gridY <= 179 && self.player.gridY > 178) || (self.player.gridX <= 85 && self.player.gridY <= 266 && self.player.gridY > 265)) {
+            if (
+              (
+                self.player.gridX <= 85
+                && self.player.gridY <= 179
+                && self.player.gridY > 178
+              ) || (
+                self.player.gridX <= 85
+                && self.player.gridY <= 266
+                && self.player.gridY > 265
+              )
+            ) {
               self.tryUnlockingAchievement('INTO_THE_WILD');
             }
 
@@ -1044,7 +1054,7 @@ define(
               self.client.disable();
 
               setTimeout(function () {
-                self.playerdeath_callback();
+                self.playerdeathCallback();
               }, 1000);
             });
 
@@ -1069,13 +1079,13 @@ define(
             self.storage.savePlayer(self.renderer.getPlayerImage(),
                                     self.player.getArmorName(),
                                     self.player.getWeaponName());
-            if (self.equipment_callback) {
-              self.equipment_callback();
+            if (self.equipmentCallback) {
+              self.equipmentCallback();
             }
           });
 
           self.player.onInvincible(function () {
-            self.invincible_callback();
+            self.invincibleCallback();
             self.player.switchArmor(self.sprites['firefox']);
           });
 
@@ -1088,7 +1098,7 @@ define(
             log.info('Spawned chest (' + chest.id + ') at ' + x + ', ' + y);
             chest.setSprite(self.sprites[chest.getSpriteName()]);
             chest.setGridPosition(x, y);
-            chest.setAnimation('idle_down', 150);
+            chest.setAnimation('idleDown', 150);
             self.addEntity(chest, x, y);
 
             chest.onOpen(function () {
@@ -1105,7 +1115,7 @@ define(
 
           self.client.onSpawnCharacter(function (entity, x, y, orientation, targetId) {
             if (!self.entityIdExists(entity.id)) {
-              try {
+              try {
                 if (entity.id !== self.playerId) {
                   entity.setSprite(self.sprites[entity.getSpriteName()]);
                   entity.setGridPosition(x, y);
@@ -1135,7 +1145,7 @@ define(
                       }
                     });
 
-                    entity.onStopPathing(function (x, y) {
+                    entity.onStopPathing(function () {
                       if (!entity.isDying) {
                         if (entity.hasTarget() && entity.isAdjacent(entity.target)) {
                           entity.lookAtTarget();
@@ -1414,8 +1424,8 @@ define(
                 self.audioManager.playSound('hurt');
                 self.storage.addDamage(-diff);
                 self.tryUnlockingAchievement('MEATSHIELD');
-                if (self.playerhurt_callback) {
-                  self.playerhurt_callback();
+                if (self.playerhurtCallback) {
+                  self.playerhurtCallback();
                 }
               } else if (!isRegen) {
                 self.infoManager.addDamageInfo('+' + diff, player.x, player.y - 15, 'healed');
@@ -1483,8 +1493,8 @@ define(
           });
 
           self.client.onPopulationChange(function (worldPlayers, totalPlayers) {
-            if (self.nbplayers_callback) {
-              self.nbplayers_callback(worldPlayers, totalPlayers);
+            if (self.nbplayersCallback) {
+              self.nbplayersCallback(worldPlayers, totalPlayers);
             }
           });
 
@@ -1493,16 +1503,16 @@ define(
               self.player.die();
             }
 
-            if (self.disconnect_callback) {
-              self.disconnect_callback(message);
+            if (self.disconnectCallback) {
+              self.disconnectCallback(message);
             }
           });
 
-          self.gamestart_callback();
+          self.gamestartCallback();
 
           if (self.hasNeverStarted) {
             self.start();
-            started_callback();
+            startedCallback();
           }
         });
       },
@@ -1710,8 +1720,7 @@ define(
        *
        */
       forEachVisibleTile: function (callback, extra) {
-        var self = this,
-          m = this.map;
+        var m = this.map;
 
         if (m.isLoaded) {
           this.forEachVisibleTileIndex(function (tileIndex) {
@@ -1842,10 +1851,9 @@ define(
        * The path will pass through any entity present in the ignore list.
        */
       findPath: function (character, x, y, ignoreList) {
-        var self = this,
-          grid = this.pathingGrid;
-        path = [],
-          isPlayer = (character === this.player);
+        var self = this;
+        var grid = this.pathingGrid;
+        var path = [];
 
         if (this.map.isColliding(x, y)) {
           return path;
@@ -1998,12 +2006,12 @@ define(
       },
 
       tryMovingToADifferentTile: function (character) {
-        var attacker = character,
-          target = character.target;
+        var attacker = character;
+        var target = character.target;
+        var pos;
 
         if (attacker && target && target instanceof Player) {
           if (!target.isMoving() && attacker.getDistanceToEntity(target) === 0) {
-            var pos;
 
             switch (target.orientation) {
             case Types.Orientations.UP:
@@ -2014,7 +2022,7 @@ define(
               pos = { x: target.gridX - 1, y: target.gridY, o: target.orientation }; break;
             case Types.Orientations.RIGHT:
               pos = { x: target.gridX + 1, y: target.gridY, o: target.orientation }; break;
-          }
+            }
 
             if (pos) {
               attacker.previousTarget = target;
@@ -2028,7 +2036,7 @@ define(
           }
 
           if (!target.isMoving() && attacker.isAdjacentNonDiagonal(target) && this.isMobOnSameTile(attacker)) {
-            var pos = this.getFreeAdjacentNonDiagonalPosition(target);
+            pos = this.getFreeAdjacentNonDiagonalPosition(target);
 
             // avoid stacking mobs on the same tile next to a player
             // by making them go to adjacent tiles if they are available
@@ -2055,8 +2063,7 @@ define(
        *
        */
       onCharacterUpdate: function (character) {
-        var time = this.currentTime,
-          self = this;
+        var time = this.currentTime;
 
         // If mob has finished moving to a different tile in order to avoid stacking, attack again from the new position.
         if (character.previousTarget && !character.isMoving() && character instanceof Mob) {
@@ -2146,13 +2153,14 @@ define(
         this.zoningOrientation = this.getZoningOrientation(x, y);
 
         if (this.renderer.mobile || this.renderer.tablet) {
-          var z = this.zoningOrientation,
-            c = this.camera,
-            ts = this.renderer.tilesize,
-            x = c.x,
-            y = c.y,
-            xoffset = (c.gridW - 2) * ts,
-            yoffset = (c.gridH - 2) * ts;
+          var z = this.zoningOrientation;
+          var c = this.camera;
+          var ts = this.renderer.tilesize;
+          var xoffset = (c.gridW - 2) * ts;
+          var yoffset = (c.gridH - 2) * ts;
+
+          x = c.x;
+          y = c.y;
 
           if (z === Types.Orientations.LEFT || z === Types.Orientations.RIGHT) {
             x = (z === Types.Orientations.LEFT) ? c.x - xoffset : c.x + xoffset;
@@ -2281,46 +2289,45 @@ define(
       },
 
       onGameStart: function (callback) {
-        this.gamestart_callback = callback;
+        this.gamestartCallback = callback;
       },
 
       onDisconnect: function (callback) {
-        this.disconnect_callback = callback;
+        this.disconnectCallback = callback;
       },
 
       onPlayerDeath: function (callback) {
-        this.playerdeath_callback = callback;
+        this.playerdeathCallback = callback;
       },
 
       onPlayerHealthChange: function (callback) {
-        this.playerhp_callback = callback;
+        this.playerhpCallback = callback;
       },
 
       onPlayerHurt: function (callback) {
-        this.playerhurt_callback = callback;
+        this.playerhurtCallback = callback;
       },
 
       onPlayerEquipmentChange: function (callback) {
-        this.equipment_callback = callback;
+        this.equipmentCallback = callback;
       },
 
       onNbPlayersChange: function (callback) {
-        this.nbplayers_callback = callback;
+        this.nbplayersCallback = callback;
       },
 
       onNotification: function (callback) {
-        this.notification_callback = callback;
+        this.notificationCallback = callback;
       },
 
       onPlayerInvincible: function (callback) {
-        this.invincible_callback = callback;
+        this.invincibleCallback = callback;
       },
 
       resize: function () {
-        var x = this.camera.x,
-          y = this.camera.y,
-          currentScale = this.renderer.scale,
-          newScale = this.renderer.getScaleFactor();
+        var x = this.camera.x;
+        var y = this.camera.y;
+        var newScale = this.renderer.getScaleFactor();
 
         this.renderer.rescale(newScale);
         this.camera = this.renderer.camera;
@@ -2330,8 +2337,8 @@ define(
       },
 
       updateBars: function () {
-        if (this.player && this.playerhp_callback) {
-          this.playerhp_callback(this.player.hitPoints, this.player.maxHitPoints);
+        if (this.player && this.playerhpCallback) {
+          this.playerhpCallback(this.player.hitPoints, this.player.maxHitPoints);
         }
       },
 
@@ -2347,7 +2354,7 @@ define(
       },
 
       onAchievementUnlock: function (callback) {
-        this.unlock_callback = callback;
+        this.unlockCallback = callback;
       },
 
       tryUnlockingAchievement: function (name) {
@@ -2356,8 +2363,8 @@ define(
           achievement = this.achievements[name];
 
           if (achievement.isCompleted() && this.storage.unlockAchievement(achievement.id)) {
-            if (this.unlock_callback) {
-              this.unlock_callback(achievement.id, achievement.name, achievement.desc);
+            if (this.unlockCallback) {
+              this.unlockCallback(achievement.id, achievement.name, achievement.desc);
               this.audioManager.playSound('achievement');
             }
           }
@@ -2365,8 +2372,8 @@ define(
       },
 
       showNotification: function (message) {
-        if (this.notification_callback) {
-          this.notification_callback(message);
+        if (this.notificationCallback) {
+          this.notificationCallback(message);
         }
       },
 
@@ -2432,8 +2439,8 @@ define(
       },
 
       forEachEntityAround: function (x, y, r, callback) {
-        for (var i = x - r, max_i = x + r; i <= max_i; i += 1) {
-          for (var j = y - r, max_j = y + r; j <= max_j; j += 1) {
+        for (var i = x - r, maxI = x + r; i <= maxI; i += 1) {
+          for (var j = y - r, maxJ = y + r; j <= maxJ; j += 1) {
             if (!this.map.isOutOfBounds(i, j)) {
               _.each(this.renderingGrid[j][i], function (entity) {
                 callback(entity);

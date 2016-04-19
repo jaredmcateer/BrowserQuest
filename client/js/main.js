@@ -1,6 +1,7 @@
 
 define(['jquery', 'app'], function ($, App) {
-  var app, game;
+  var app;
+  var game;
 
   var initApp = function () {
     $(document).ready(function () {
@@ -17,7 +18,7 @@ define(['jquery', 'app'], function ($, App) {
         $('body').addClass('opera');
       }
 
-      $('body').click(function (event) {
+      $('body').click(function () {
         if ($('#parchment').hasClass('credits')) {
           app.toggleCredits();
         }
@@ -105,9 +106,9 @@ define(['jquery', 'app'], function ($, App) {
       });
 
       $('#next').click(function () {
-        var $achievements = $('#achievements'),
-          $lists = $('#lists'),
-          nbPages = $lists.children('ul').length;
+        var $achievements = $('#achievements');
+        var $lists = $('#lists');
+        var nbPages = $lists.children('ul').length;
 
         if (app.currentPage === nbPages) {
           return false;
@@ -145,10 +146,10 @@ define(['jquery', 'app'], function ($, App) {
         }
       }
 
-      $('.play div').click(function (event) {
-        var nameFromInput = $('#nameinput').attr('value'),
-          nameFromStorage = $('#playername').html(),
-          name = nameFromInput || nameFromStorage;
+      $('.play div').click(function () {
+        var nameFromInput = $('#nameinput').attr('value');
+        var nameFromStorage = $('#playername').html();
+        var name = nameFromInput || nameFromStorage;
 
         app.tryStartingGame(name);
       });
@@ -168,10 +169,10 @@ define(['jquery', 'app'], function ($, App) {
   var initGame = function () {
     require(['game'], function (Game) {
 
-      var canvas = document.getElementById('entities'),
-        background = document.getElementById('background'),
-        foreground = document.getElementById('foreground'),
-        input = document.getElementById('chatinput');
+      var canvas = document.getElementById('entities');
+      var background = document.getElementById('background');
+      var foreground = document.getElementById('foreground');
+      var input = document.getElementById('chatinput');
 
       game = new Game(app);
       game.setup('#bubbles', canvas, background, foreground, input);
@@ -209,11 +210,11 @@ define(['jquery', 'app'], function ($, App) {
 
       game.onNbPlayersChange(function (worldPlayers, totalPlayers) {
         var setWorldPlayersString = function (string) {
-            $('#instance-population').find('span:nth-child(2)').text(string);
-            $('#playercount').find('span:nth-child(2)').text(string);
-          },
+          $('#instance-population').find('span:nth-child(2)').text(string);
+          $('#playercount').find('span:nth-child(2)').text(string);
+        };
 
-          setTotalPlayersString = function (string) {
+        var setTotalPlayersString = function (string) {
           $('#world-population').find('span:nth-child(2)').text(string);
         };
 
@@ -234,7 +235,7 @@ define(['jquery', 'app'], function ($, App) {
         }
       });
 
-      game.onAchievementUnlock(function (id, name, description) {
+      game.onAchievementUnlock(function (id, name) {
         app.unlockAchievement(id, name);
       });
 
@@ -263,12 +264,11 @@ define(['jquery', 'app'], function ($, App) {
           }
 
           app.hideWindows();
-          // $('#chatinput').focus();
         });
       }
 
       $('body').unbind('click');
-      $('body').click(function (event) {
+      $('body').click(function () {
         var hasClosedParchment = false;
 
         if ($('#parchment').hasClass('credits')) {
@@ -294,7 +294,7 @@ define(['jquery', 'app'], function ($, App) {
         }
       });
 
-      $('#respawn').click(function (event) {
+      $('#respawn').click(function () {
         game.audioManager.playSound('revive');
         game.restart();
         $('body').removeClass('death');
@@ -308,8 +308,7 @@ define(['jquery', 'app'], function ($, App) {
       });
 
       $(document).keydown(function (e) {
-        var key = e.which,
-          $chat = $('#chatinput');
+        var key = e.which;
 
         if (key === 13) {
           if ($('#chatbox').hasClass('active')) {
@@ -321,8 +320,8 @@ define(['jquery', 'app'], function ($, App) {
       });
 
       $('#chatinput').keydown(function (e) {
-        var key = e.which,
-          $chat = $('#chatinput');
+        var key = e.which;
+        var $chat = $('#chatinput');
 
         if (key === 13) {
           if ($chat.attr('value') !== '') {
@@ -347,8 +346,8 @@ define(['jquery', 'app'], function ($, App) {
       });
 
       $('#nameinput').keypress(function (event) {
-        var $name = $('#nameinput'),
-          name = $name.attr('value');
+        var $name = $('#nameinput');
+        var name = $name.attr('value');
 
         if (event.keyCode === 13) {
           if (name !== '') {
@@ -368,8 +367,8 @@ define(['jquery', 'app'], function ($, App) {
       });
 
       $(document).bind('keydown', function (e) {
-        var key = e.which,
-          $chat = $('#chatinput');
+        var key = e.which;
+        var $chat = $('#chatinput');
 
         if ($('#chatinput:focus').size() == 0 && $('#nameinput:focus').size() == 0) {
           if (key === 13) { // Enter

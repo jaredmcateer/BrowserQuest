@@ -21,7 +21,7 @@ define(function () {
           this.count -= 1;
           if (this.count === 0) {
             this.currentFrame.index = 0;
-            this.endcount_callback();
+            this.endcountCallback();
             return;
           }
         }
@@ -38,7 +38,7 @@ define(function () {
 
     setCount: function (count, onEndCount) {
       this.count = count;
-      this.endcount_callback = onEndCount;
+      this.endcountCallback = onEndCount;
     },
 
     isTimeToAnimate: function (time) {
@@ -59,7 +59,7 @@ define(function () {
       }
     },
 
-    reset: function () {
+    reset: function () {
       this.lastTime = 0;
       this.currentFrame = { index: 0, x: 0, y: this.row * this.height };
     }

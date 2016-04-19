@@ -9,10 +9,10 @@ define(function () {
     },
 
     addDamageInfo: function (value, x, y, type) {
-      var time = this.game.currentTime,
-        id = time + '' + Math.abs(value) + '' + x + '' + y,
-        self = this,
-        info = new DamageInfo(id, value, x, y, DamageInfo.DURATION, type);
+      var time = this.game.currentTime;
+      var id = time + '' + Math.abs(value) + '' + x + '' + y;
+      var self = this;
+      var info = new DamageInfo(id, value, x, y, DamageInfo.DURATION, type);
 
       info.onDestroy(function (id) {
         self.destroyQueue.push(id);
@@ -22,9 +22,7 @@ define(function () {
     },
 
     forEachInfo: function (callback) {
-      var self = this;
-
-      _.each(this.infos, function (info, id) {
+      _.each(this.infos, function (info) {
         callback(info);
       });
     },
@@ -94,13 +92,13 @@ define(function () {
       }
     },
 
-    onDestroy: function (callback) {
-      this.destroy_callback = callback;
+    onDestroy: function (callback) {
+      this.destroyCallback = callback;
     },
 
     destroy: function () {
-      if (this.destroy_callback) {
-        this.destroy_callback(this.id);
+      if (this.destroyCallback) {
+        this.destroyCallback(this.id);
       }
     }
   });

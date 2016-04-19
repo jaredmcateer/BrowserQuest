@@ -2,6 +2,7 @@ env:
   browser: true
   es6: true
   node: true
+  worker: true
 extends: 'eslint:recommended'
 parserOptions:
   sourceType: module
@@ -18,3 +19,16 @@ rules:
   semi:
     - error
     - always
+globals:
+  define: false
+  Class: false
+  log: false
+  TRANSITIONEND: false
+  _: false
+  Detect: false
+  Types: false
+  Modernizr: false
+  requestAnimFrame: false
+  MozWebSocket: false
+  $: false
+  isInt: false

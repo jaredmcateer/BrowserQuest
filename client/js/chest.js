@@ -2,7 +2,7 @@
 define(['entity'], function (Entity) {
 
   var Chest = Entity.extend({
-    init: function (id, kind) {
+    init: function (id) {
       this._super(id, Types.Entities.CHEST);
     },
 
@@ -15,13 +15,13 @@ define(['entity'], function (Entity) {
     },
 
     open: function () {
-      if (this.open_callback) {
-        this.open_callback();
+      if (this.openCallback) {
+        this.openCallback();
       }
     },
 
     onOpen: function (callback) {
-      this.open_callback = callback;
+      this.openCallback = callback;
     }
   });
 

@@ -18,7 +18,7 @@ define(['entity'], function (Entity) {
       if (this.type === 'weapon') {
         player.switchWeapon(this.itemKind);
       } else if (this.type === 'armor') {
-        player.armorloot_callback(this.itemKind);
+        player.armorlootCallback(this.itemKind);
       }
     },
 

@@ -1,1 +1,13 @@
-{	"id": "nyan",	"width": 49,	"height": 24,	"animations": {		"idle_down": {			"length": 6,			"row": 0		}	},	"offset_x": -22,	"offset_y": -6}
+{
+    "animations": {
+        "idleDown": {
+            "length": 6,
+            "row": 0
+        }
+    },
+    "height": 24,
+    "id": "nyan",
+    "offsetX": -22,
+    "offsetY": -6,
+    "width": 49
+}

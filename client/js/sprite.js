@@ -17,8 +17,8 @@ define(['jquery', 'animation', 'sprites'], function ($, Animation, sprites) {
       this.animationData = data.animations;
       this.width = data.width;
       this.height = data.height;
-      this.offsetX = (data.offset_x !== undefined) ? data.offset_x : -16;
-      this.offsetY = (data.offset_y !== undefined) ? data.offset_y : -16;
+      this.offsetX = (data.offsetX !== undefined) ? data.offsetX : -16;
+      this.offsetY = (data.offsetY !== undefined) ? data.offsetY : -16;
 
       this.load();
     },
@@ -32,8 +32,8 @@ define(['jquery', 'animation', 'sprites'], function ($, Animation, sprites) {
       this.image.onload = function () {
         self.isLoaded = true;
 
-        if (self.onload_func) {
-          self.onload_func();
+        if (self.onloadFunc) {
+          self.onloadFunc();
         }
       };
     },
@@ -50,11 +50,12 @@ define(['jquery', 'animation', 'sprites'], function ($, Animation, sprites) {
     },
 
     createHurtSprite: function () {
-      var canvas = document.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-        width = this.image.width,
-        height = this.image.height,
-        spriteData, data;
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var width = this.image.width;
+      var height = this.image.height;
+      var spriteData;
+      var data;
 
       canvas.width = width;
       canvas.height = height;
@@ -92,11 +93,13 @@ define(['jquery', 'animation', 'sprites'], function ($, Animation, sprites) {
     },
 
     createSilhouette: function () {
-      var canvas = document.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-        width = this.image.width,
-        height = this.image.height,
-        spriteData, finalData, data;
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var width = this.image.width;
+      var height = this.image.height;
+      var spriteData;
+      var finalData;
+      var data;
 
       canvas.width = width;
       canvas.height = height;
@@ -110,7 +113,8 @@ define(['jquery', 'animation', 'sprites'], function ($, Animation, sprites) {
       };
 
       var getPosition = function (i) {
-        var x, y;
+        var x;
+        var y;
 
         i = (i / 4) + 1;
         x = i % width;

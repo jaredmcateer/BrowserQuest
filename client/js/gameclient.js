@@ -7,9 +7,9 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
       this.host = host;
       this.port = port;
 
-      this.connected_callback = null;
-      this.spawn_callback = null;
-      this.movement_callback = null;
+      this.connectedCallback = null;
+      this.spawnCallback = null;
+      this.movementCallback = null;
 
       this.handlers = [];
       this.handlers[Types.Messages.WELCOME] = this.receiveWelcome;
@@ -45,8 +45,8 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
     },
 
     connect: function (dispatcherMode) {
-      var url = 'ws://' + this.host + ':' + this.port + '/',
-        self = this;
+      var url = 'ws://' + this.host + ':' + this.port + '/';
+      var self = this;
 
       log.info('Trying to connect to server : ' + url);
 
@@ -61,7 +61,7 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
           var reply = JSON.parse(e.data);
 
           if (reply.status === 'OK') {
-            self.dispatched_callback(reply.host, reply.port);
+            self.dispatchedCallback(reply.host, reply.port);
           } else if (reply.status === 'FULL') {
             alert('BrowserQuest is currently at maximum player population. Please retry later.');
           } else {
@@ -69,14 +69,14 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
           }
         };
       } else {
-        this.connection.onopen = function (e) {
+        this.connection.onopen = function () {
           log.info('Connected to server ' + self.host + ':' + self.port);
         };
 
         this.connection.onmessage = function (e) {
           if (e.data === 'go') {
-            if (self.connected_callback) {
-              self.connected_callback();
+            if (self.connectedCallback) {
+              self.connectedCallback();
             }
 
             return;
@@ -98,11 +98,13 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
           log.debug('Connection closed');
           $('#container').addClass('error');
 
-          if (self.disconnected_callback) {
+          if (self.disconnectedCallback) {
             if (self.isTimeout) {
-              self.disconnected_callback('You have been disconnected for being inactive for too long');
+              self.disconnectedCallback(
+                'You have been disconnected for being inactive for too long'
+              );
             } else {
-              self.disconnected_callback('The connection to BrowserQuest has been lost');
+              self.disconnectedCallback('The connection to BrowserQuest has been lost');
             }
           }
         };
@@ -123,7 +125,7 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
     },
 
     receiveMessage: function (message) {
-      var data, action;
+      var data;
 
       if (this.isListening) {
         if (this.useBison) {
@@ -164,65 +166,70 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
     },
 
     receiveWelcome: function (data) {
-      var id = data[1],
-        name = data[2],
-        x = data[3],
-        y = data[4],
-        hp = data[5];
+      var id = data[1];
+      var name = data[2];
+      var x = data[3];
+      var y = data[4];
+      var hp = data[5];
 
-      if (this.welcome_callback) {
-        this.welcome_callback(id, name, x, y, hp);
+      if (this.welcomeCallback) {
+        this.welcomeCallback(id, name, x, y, hp);
       }
     },
 
     receiveMove: function (data) {
-      var id = data[1],
-        x = data[2],
-        y = data[3];
+      var id = data[1];
+      var x = data[2];
+      var y = data[3];
 
-      if (this.move_callback) {
-        this.move_callback(id, x, y);
+      if (this.moveCallback) {
+        this.moveCallback(id, x, y);
       }
     },
 
     receiveLootMove: function (data) {
-      var id = data[1],
-        item = data[2];
+      var id = data[1];
+      var item = data[2];
 
-      if (this.lootmove_callback) {
-        this.lootmove_callback(id, item);
+      if (this.lootmoveCallback) {
+        this.lootmoveCallback(id, item);
       }
     },
 
     receiveAttack: function (data) {
-      var attacker = data[1],
-        target = data[2];
+      var attacker = data[1];
+      var target = data[2];
 
-      if (this.attack_callback) {
-        this.attack_callback(attacker, target);
+      if (this.attackCallback) {
+        this.attackCallback(attacker, target);
       }
     },
 
     receiveSpawn: function (data) {
-      var id = data[1],
-        kind = data[2],
-        x = data[3],
-        y = data[4];
+      var id = data[1];
+      var kind = data[2];
+      var x = data[3];
+      var y = data[4];
+      var item;
 
       if (Types.isItem(kind)) {
-        var item = EntityFactory.createEntity(kind, id);
+        item = EntityFactory.createEntity(kind, id);
 
-        if (this.spawn_item_callback) {
-          this.spawn_item_callback(item, x, y);
+        if (this.spawnItemCallback) {
+          this.spawnItemCallback(item, x, y);
         }
       } else if (Types.isChest(kind)) {
-        var item = EntityFactory.createEntity(kind, id);
+        item = EntityFactory.createEntity(kind, id);
 
-        if (this.spawn_chest_callback) {
-          this.spawn_chest_callback(item, x, y);
+        if (this.spawnChestCallback) {
+          this.spawnChestCallback(item, x, y);
         }
       } else {
-        var name, orientation, target, weapon, armor;
+        var name;
+        var orientation;
+        var target;
+        var weapon;
+        var armor;
 
         if (Types.isPlayer(kind)) {
           name = data[5];
@@ -246,8 +253,8 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
           character.spriteName = Types.getKindAsString(armor);
         }
 
-        if (this.spawn_character_callback) {
-          this.spawn_character_callback(character, x, y, orientation, target);
+        if (this.spawnCharacterCallback) {
+          this.spawnCharacterCallback(character, x, y, orientation, target);
         }
       }
     },
@@ -255,214 +262,214 @@ define(['player', 'entityfactory', 'lib/bison'], function (Player, EntityFactory
     receiveDespawn: function (data) {
       var id = data[1];
 
-      if (this.despawn_callback) {
-        this.despawn_callback(id);
+      if (this.despawnCallback) {
+        this.despawnCallback(id);
       }
     },
 
     receiveHealth: function (data) {
-      var points = data[1],
-        isRegen = false;
+      var points = data[1];
+      var  isRegen = false;
 
       if (data[2]) {
         isRegen = true;
       }
 
-      if (this.health_callback) {
-        this.health_callback(points, isRegen);
+      if (this.healthCallback) {
+        this.healthCallback(points, isRegen);
       }
     },
 
     receiveChat: function (data) {
-      var id = data[1],
-        text = data[2];
+      var id = data[1];
+      var text = data[2];
 
-      if (this.chat_callback) {
-        this.chat_callback(id, text);
+      if (this.chatCallback) {
+        this.chatCallback(id, text);
       }
     },
 
     receiveEquipItem: function (data) {
-      var id = data[1],
-        itemKind = data[2];
+      var id = data[1];
+      var itemKind = data[2];
 
-      if (this.equip_callback) {
-        this.equip_callback(id, itemKind);
+      if (this.equipCallback) {
+        this.equipCallback(id, itemKind);
       }
     },
 
     receiveDrop: function (data) {
-      var mobId = data[1],
-        id = data[2],
-        kind = data[3];
+      var mobId = data[1];
+      var id = data[2];
+      var kind = data[3];
 
       var item = EntityFactory.createEntity(kind, id);
       item.wasDropped = true;
       item.playersInvolved = data[4];
 
-      if (this.drop_callback) {
-        this.drop_callback(item, mobId);
+      if (this.dropCallback) {
+        this.dropCallback(item, mobId);
       }
     },
 
     receiveTeleport: function (data) {
-      var id = data[1],
-        x = data[2],
-        y = data[3];
+      var id = data[1];
+      var x = data[2];
+      var y = data[3];
 
-      if (this.teleport_callback) {
-        this.teleport_callback(id, x, y);
+      if (this.teleportCallback) {
+        this.teleportCallback(id, x, y);
       }
     },
 
     receiveDamage: function (data) {
-      var id = data[1],
-        dmg = data[2];
+      var id = data[1];
+      var dmg = data[2];
 
-      if (this.dmg_callback) {
-        this.dmg_callback(id, dmg);
+      if (this.dmgCallback) {
+        this.dmgCallback(id, dmg);
       }
     },
 
     receivePopulation: function (data) {
-      var worldPlayers = data[1],
-        totalPlayers = data[2];
+      var worldPlayers = data[1];
+      var totalPlayers = data[2];
 
-      if (this.population_callback) {
-        this.population_callback(worldPlayers, totalPlayers);
+      if (this.popluationCallback) {
+        this.popluationCallback(worldPlayers, totalPlayers);
       }
     },
 
     receiveKill: function (data) {
       var mobKind = data[1];
 
-      if (this.kill_callback) {
-        this.kill_callback(mobKind);
+      if (this.killCallback) {
+        this.killCallback(mobKind);
       }
     },
 
     receiveList: function (data) {
       data.shift();
 
-      if (this.list_callback) {
-        this.list_callback(data);
+      if (this.listCallback) {
+        this.listCallback(data);
       }
     },
 
     receiveDestroy: function (data) {
       var id = data[1];
 
-      if (this.destroy_callback) {
-        this.destroy_callback(id);
+      if (this.destroyCallback) {
+        this.destroyCallback(id);
       }
     },
 
     receiveHitPoints: function (data) {
       var maxHp = data[1];
 
-      if (this.hp_callback) {
-        this.hp_callback(maxHp);
+      if (this.hpCallback) {
+        this.hpCallback(maxHp);
       }
     },
 
     receiveBlink: function (data) {
       var id = data[1];
 
-      if (this.blink_callback) {
-        this.blink_callback(id);
+      if (this.blinkCallback) {
+        this.blinkCallback(id);
       }
     },
 
     onDispatched: function (callback) {
-      this.dispatched_callback = callback;
+      this.dispatchedCallback = callback;
     },
 
     onConnected: function (callback) {
-      this.connected_callback = callback;
+      this.connectedCallback = callback;
     },
 
     onDisconnected: function (callback) {
-      this.disconnected_callback = callback;
+      this.disconnectedCallback = callback;
     },
 
     onWelcome: function (callback) {
-      this.welcome_callback = callback;
+      this.welcomeCallback = callback;
     },
 
     onSpawnCharacter: function (callback) {
-      this.spawn_character_callback = callback;
+      this.spawnCharacterCallback = callback;
     },
 
     onSpawnItem: function (callback) {
-      this.spawn_item_callback = callback;
+      this.spawnItemCallback = callback;
     },
 
     onSpawnChest: function (callback) {
-      this.spawn_chest_callback = callback;
+      this.spawnChestCallback = callback;
     },
 
     onDespawnEntity: function (callback) {
-      this.despawn_callback = callback;
+      this.despawnCallback = callback;
     },
 
     onEntityMove: function (callback) {
-      this.move_callback = callback;
+      this.moveCallback = callback;
     },
 
     onEntityAttack: function (callback) {
-      this.attack_callback = callback;
+      this.attackCallback = callback;
     },
 
     onPlayerChangeHealth: function (callback) {
-      this.health_callback = callback;
+      this.healthCallback = callback;
     },
 
     onPlayerEquipItem: function (callback) {
-      this.equip_callback = callback;
+      this.equipCallback = callback;
     },
 
     onPlayerMoveToItem: function (callback) {
-      this.lootmove_callback = callback;
+      this.lootmoveCallback = callback;
     },
 
     onPlayerTeleport: function (callback) {
-      this.teleport_callback = callback;
+      this.teleportCallback = callback;
     },
 
     onChatMessage: function (callback) {
-      this.chat_callback = callback;
+      this.chatCallback = callback;
     },
 
     onDropItem: function (callback) {
-      this.drop_callback = callback;
+      this.dropCallback = callback;
     },
 
     onPlayerDamageMob: function (callback) {
-      this.dmg_callback = callback;
+      this.dmgCallback = callback;
     },
 
     onPlayerKillMob: function (callback) {
-      this.kill_callback = callback;
+      this.killCallback = callback;
     },
 
     onPopulationChange: function (callback) {
-      this.population_callback = callback;
+      this.popluationCallback = callback;
     },
 
     onEntityList: function (callback) {
-      this.list_callback = callback;
+      this.listCallback = callback;
     },
 
     onEntityDestroy: function (callback) {
-      this.destroy_callback = callback;
+      this.destroyCallback = callback;
     },
 
     onPlayerChangeMaxHitPoints: function (callback) {
-      this.hp_callback = callback;
+      this.hpCallback = callback;
     },
 
     onItemBlink: function (callback) {
-      this.blink_callback = callback;
+      this.blinkCallback = callback;
     },
 
     sendHello: function (player) {

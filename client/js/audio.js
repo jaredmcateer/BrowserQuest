@@ -12,17 +12,20 @@ define(['area'], function (Area) {
       this.currentMusic = null;
       this.areas = [];
       this.musicNames = ['village', 'beach', 'forest', 'cave', 'desert', 'lavaland', 'boss'];
-      this.soundNames = ['loot', 'hit1', 'hit2', 'hurt', 'heal', 'chat', 'revive', 'death', 'firefox', 'achievement', 'kill1', 'kill2', 'noloot', 'teleport', 'chest', 'npc', 'npc-end'];
+      this.soundNames = [
+        'loot', 'hit1', 'hit2', 'hurt', 'heal', 'chat', 'revive', 'death',
+        'firefox', 'achievement', 'kill1', 'kill2', 'noloot', 'teleport',
+        'chest', 'npc', 'npc-end'
+      ];
 
       var loadSoundFiles = function () {
         var counter = _.size(self.soundNames);
         log.info('Loading sound files...');
-        _.each(self.soundNames, function (name) { self.loadSound(name, function () {
+        _.each(self.soundNames, function (name) {
+          self.loadSound(name, function () {
             counter -= 1;
-            if (counter === 0) {
-              if (!Detect.isSafari()) { // Disable music on Safari - See bug 738008
-                loadMusicFiles();
-              }
+            if (counter === 0 && !Detect.isSafari()) { // Disable music on Safari - See bug 738008
+              loadMusicFiles();
             }
           });
         });
@@ -31,6 +34,7 @@ define(['area'], function (Area) {
       var loadMusicFiles = function () {
         if (!self.game.renderer.mobile) { // disable music on mobile devices
           log.info('Loading music files...');
+
           // Load the village music first, as players always start here
           self.loadMusic(self.musicNames.shift(), function () {
             // Then, load all the other music files
@@ -66,20 +70,20 @@ define(['area'], function (Area) {
       }
     },
 
-    load: function (basePath, name, loaded_callback, channels) {
-      var path = basePath + name + '.' + this.extension,
-        sound = document.createElement('audio'),
-        self = this;
+    load: function (basePath, name, loadedCallback, channels) {
+      var path = basePath + name + '.' + this.extension;
+      var sound = document.createElement('audio');
+      var self = this;
 
-      sound.addEventListener('canplaythrough', function (e) {
+      sound.addEventListener('canplaythrough', function () {
         this.removeEventListener('canplaythrough', arguments.callee, false);
         log.debug(path + ' is ready to play.');
-        if (loaded_callback) {
-          loaded_callback();
+        if (loadedCallback) {
+          loadedCallback();
         }
       }, false);
 
-      sound.addEventListener('error', function (e) {
+      sound.addEventListener('error', function () {
         log.error('Error: ' + path + ' could not be loaded.');
         self.sounds[name] = null;
       }, false);
@@ -138,10 +142,10 @@ define(['area'], function (Area) {
     },
 
     getSurroundingMusic: function (entity) {
-      var music = null,
-        area = _.detect(this.areas, function (area) {
-          return area.contains(entity);
-        });
+      var music = null;
+      var area = _.detect(this.areas, function (area) {
+        return area.contains(entity);
+      });
 
       if (area) {
         music = { sound: this.getSound(area.musicName), name: area.musicName };
@@ -192,20 +196,20 @@ define(['area'], function (Area) {
       }
     },
 
-    fadeOutMusic: function (music, ended_callback) {
+    fadeOutMusic: function (music, endedCallback) {
       var self = this;
       if (music && !music.sound.fadingOut) {
         this.clearFadeIn(music);
         music.sound.fadingOut = setInterval(function () {
           var step = 0.02;
-          volume = music.sound.volume - step;
+          var volume = music.sound.volume - step;
 
           if (self.enabled && volume >= step) {
             music.sound.volume = volume;
           } else {
             music.sound.volume = 0;
             self.clearFadeOut(music);
-            ended_callback(music);
+            endedCallback(music);
           }
         }, 50);
       }
@@ -217,7 +221,7 @@ define(['area'], function (Area) {
         this.clearFadeOut(music);
         music.sound.fadingIn = setInterval(function () {
           var step = 0.01;
-          volume = music.sound.volume + step;
+          var volume = music.sound.volume + step;
 
           if (self.enabled && volume < 1 - step) {
             music.sound.volume = volume;

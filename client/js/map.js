@@ -19,15 +19,15 @@ define(['jquery', 'area'], function ($, Area) {
     _checkReady: function () {
       if (this.tilesetsLoaded && this.mapLoaded) {
         this.isLoaded = true;
-        if (this.ready_func) {
-          this.ready_func();
+        if (this.readyFunc) {
+          this.readyFunc();
         }
       }
     },
 
     _loadMap: function (useWorker) {
-      var self = this,
-        filepath = 'maps/world_client.json';
+      var self = this;
+      var filepath = 'maps/world_client.json';
 
       if (useWorker) {
         log.info('Loading map with web worker.');
@@ -55,7 +55,9 @@ define(['jquery', 'area'], function ($, Area) {
     },
 
     _initTilesets: function () {
-      var tileset1, tileset2, tileset3;
+      var tileset1;
+      var tileset2;
+      var tileset3;
 
       if (!this.loadMultiTilesheets) {
         this.tilesetCount = 1;
@@ -91,8 +93,8 @@ define(['jquery', 'area'], function ($, Area) {
     },
 
     _getDoors: function (map) {
-      var doors = {},
-        self = this;
+      var doors = {};
+      var self = this;
 
       _.each(map.doors, function (door) {
         var o;
@@ -107,7 +109,7 @@ define(['jquery', 'area'], function ($, Area) {
         case 'r': o = Types.Orientations.RIGHT;
           break;
         default : o = Types.Orientations.DOWN;
-      }
+        }
 
         doors[self.GridPositionToTileIndex(door.x, door.y)] = {
           x: door.tx,
@@ -115,7 +117,7 @@ define(['jquery', 'area'], function ($, Area) {
           orientation: o,
           cameraX: door.tcx,
           cameraY: door.tcy,
-          portal: door.p === 1,
+          portal: door.p === 1
         };
       });
 
@@ -150,12 +152,12 @@ define(['jquery', 'area'], function ($, Area) {
     },
 
     ready: function (f) {
-      this.ready_func = f;
+      this.readyFunc = f;
     },
 
     tileIndexToGridPosition: function (tileNum) {
-      var x = 0,
-        y = 0;
+      var x = 0;
+      var y = 0;
 
       var getX = function (num, w) {
         if (num == 0) {
@@ -193,8 +195,7 @@ define(['jquery', 'area'], function ($, Area) {
     },
 
     _generateCollisionGrid: function () {
-      var tileIndex = 0,
-        self = this;
+      var self = this;
 
       this.grid = [];
       for (var	j, i = 0; i < this.height; i++) {

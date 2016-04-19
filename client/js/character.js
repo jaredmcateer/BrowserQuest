@@ -1,10 +1,7 @@
-
 define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
 
   var Character = Entity.extend({
     init: function (id, kind) {
-      var self = this;
-
       this._super(id, kind);
 
       // Position and orientation
@@ -66,14 +63,16 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
 
     animate: function (animation, speed, count, onEndCount) {
       var oriented = ['atk', 'walk', 'idle'];
-      o = this.orientation;
+      var o = this.orientation;
 
-      if (!(this.currentAnimation && this.currentAnimation.name === 'death')) { // don't change animation if the character is dying
+      // don't change animation if the character is dying
+      if (!(this.currentAnimation && this.currentAnimation.name === 'death')) {
         this.flipSpriteX = false;
         this.flipSpriteY = false;
 
         if (_.indexOf(oriented, animation) >= 0) {
-          animation += '_' + (o === Types.Orientations.LEFT ? 'right' : Types.getOrientationAsString(o));
+          animation += 
+            (o === Types.Orientations.LEFT ? 'Right' : Types.getOrientationAsString(o));
           this.flipSpriteX = (this.orientation === Types.Orientations.LEFT) ? true : false;
         }
 
@@ -107,7 +106,7 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
       this.animate('walk', this.walkSpeed);
     },
 
-    moveTo_: function (x, y, callback) {
+    moveTo_: function (x, y) {
       this.destination = { gridX: x, gridY: y };
       this.adjacentTiles = {};
 
@@ -121,8 +120,8 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     requestPathfindingTo: function (x, y) {
-      if (this.request_path_callback) {
-        return this.request_path_callback(x, y);
+      if (this.requestPathCallback) {
+        return this.requestPathCallback(x, y);
       } else {
         log.error(this.id + ' couldn\'t request pathfinding to ' + x + ', ' + y);
         return [];
@@ -130,15 +129,15 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     onRequestPath: function (callback) {
-      this.request_path_callback = callback;
+      this.requestPathCallback = callback;
     },
 
     onStartPathing: function (callback) {
-      this.start_pathing_callback = callback;
+      this.startPathingCallback = callback;
     },
 
     onStopPathing: function (callback) {
-      this.stop_pathing_callback = callback;
+      this.stopPathingCallback = callback;
     },
 
     followPath: function (path) {
@@ -150,8 +149,8 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
           path.pop();
         }
 
-        if (this.start_pathing_callback) {
-          this.start_pathing_callback(path);
+        if (this.startPathingCallback) {
+          this.startPathingCallback(path);
         }
 
         this.nextStep();
@@ -163,8 +162,8 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     updateMovement: function () {
-      var p = this.path,
-        i = this.step;
+      var p = this.path;
+      var i = this.step;
 
       if (p[i][0] < p[i - 1][0]) {
         this.walk(Types.Orientations.LEFT);
@@ -188,12 +187,14 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     nextStep: function () {
-      var stop = false,
-        x, y, path;
+      var stop = false;
+      var x;
+      var y;
+      var path;
 
       if (this.isMoving()) {
-        if (this.before_step_callback) {
-          this.before_step_callback();
+        if (this.beforeStepCallback) {
+          this.beforeStepCallback();
         }
 
         this.updatePositionOnGrid();
@@ -208,8 +209,8 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
             this.nextGridY = this.path[this.step + 1][1];
           }
 
-          if (this.step_callback) {
-            this.step_callback();
+          if (this.stepCallback) {
+            this.stepCallback();
           }
 
           if (this.hasChangedItsPath()) {
@@ -235,19 +236,19 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
           this.path = null;
           this.idle();
 
-          if (this.stop_pathing_callback) {
-            this.stop_pathing_callback(this.gridX, this.gridY);
+          if (this.stopPathingCallback) {
+            this.stopPathingCallback(this.gridX, this.gridY);
           }
         }
       }
     },
 
     onBeforeStep: function (callback) {
-      this.before_step_callback = callback;
+      this.beforeStepCallback = callback;
     },
 
     onStep: function (callback) {
-      this.step_callback = callback;
+      this.stepCallback = callback;
     },
 
     isMoving: function () {
@@ -263,7 +264,9 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     isNear: function (character, distance) {
-      var dx, dy, near = false;
+      var dx;
+      var dy;
+      var near = false;
 
       dx = Math.abs(this.gridX - character.gridX);
       dy = Math.abs(this.gridY - character.gridY);
@@ -276,27 +279,27 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     onAggro: function (callback) {
-      this.aggro_callback = callback;
+      this.aggroCallback = callback;
     },
 
     onCheckAggro: function (callback) {
-      this.checkaggro_callback = callback;
+      this.checkaggroCallback = callback;
     },
 
     checkAggro: function () {
-      if (this.checkaggro_callback) {
-        this.checkaggro_callback();
+      if (this.checkaggroCallback) {
+        this.checkaggroCallback();
       }
     },
 
     aggro: function (character) {
-      if (this.aggro_callback) {
-        this.aggro_callback(character);
+      if (this.aggroCallback) {
+        this.aggroCallback(character);
       }
     },
 
     onDeath: function (callback) {
-      this.death_callback = callback;
+      this.deathCallback = callback;
     },
 
     /**
@@ -342,7 +345,9 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
     },
 
     /**
-     * Makes the character attack another character. Same as Character.follow but with an auto-attacking behavior.
+     * Makes the character attack another character. Same as Character.follow
+     * but with an auto-attacking behavior.
+     *
      * @see Character.follow
      */
     engage: function (character) {
@@ -428,8 +433,8 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
      */
     forEachAttacker: function (callback) {
       _.each(this.attackers, function (attacker) {
-                        callback(attacker);
-                      });
+        callback(attacker);
+      });
     },
 
     /**
@@ -453,8 +458,6 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
      * Removes the current attack target.
      */
     removeTarget: function () {
-      var self = this;
-
       if (this.target) {
         if (this.target instanceof Character) {
           this.target.removeAttacker(this);
@@ -518,25 +521,23 @@ define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
       this.removeTarget();
       this.isDead = true;
 
-      if (this.death_callback) {
-        this.death_callback();
+      if (this.deathCallback) {
+        this.deathCallback();
       }
     },
 
     onHasMoved: function (callback) {
-      this.hasmoved_callback = callback;
+      this.hasmovedCallback = callback;
     },
 
     hasMoved: function () {
       this.setDirty();
-      if (this.hasmoved_callback) {
-        this.hasmoved_callback(this);
+      if (this.hasmovedCallback) {
+        this.hasmovedCallback(this);
       }
     },
 
     hurt: function () {
-      var self = this;
-
       this.stopHurting();
       this.sprite = this.hurtSprite;
       this.hurting = setTimeout(this.stopHurting.bind(this), 75);

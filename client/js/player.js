@@ -23,7 +23,10 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
 
     loot: function (item) {
       if (item) {
-        var rank, currentRank, msg, currentArmorName;
+        var rank;
+        var currentRank;
+        var msg;
+        var currentArmorName;
 
         if (this.currentArmorSprite) {
           currentArmorName = this.currentArmorSprite.name;
@@ -99,9 +102,9 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
     },
 
     switchWeapon: function (newWeaponName) {
-      var count = 14,
-        value = false,
-        self = this;
+      var count = 14;
+      var value = false;
+      var self = this;
 
       var toggle = function () {
         value = !value;
@@ -126,8 +129,8 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
             clearInterval(blanking);
             self.switchingWeapon = false;
 
-            if (self.switch_callback) {
-              self.switch_callback();
+            if (self.switchCallback) {
+              self.switchCallback();
             }
           }
         }, 90);
@@ -135,9 +138,9 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
     },
 
     switchArmor: function (newArmorSprite) {
-      var count = 14,
-        value = false,
-        self = this;
+      var count = 14;
+      var value = false;
+      var self = this;
 
       var toggle = function () {
         value = !value;
@@ -160,8 +163,8 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
             clearInterval(blanking);
             self.isSwitchingArmor = false;
 
-            if (self.switch_callback) {
-              self.switch_callback();
+            if (self.switchCallback) {
+              self.switchCallback();
             }
           }
         }, 90);
@@ -169,15 +172,15 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
     },
 
     onArmorLoot: function (callback) {
-      this.armorloot_callback = callback;
+      this.armorlootCallback = callback;
     },
 
     onSwitchItem: function (callback) {
-      this.switch_callback = callback;
+      this.switchCallback = callback;
     },
 
     onInvincible: function (callback) {
-      this.invincible_callback = callback;
+      this.invincibleCallback = callback;
     },
 
     startInvincibility: function () {
@@ -186,7 +189,7 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
       if (!this.invincible) {
         this.currentArmorSprite = this.getSprite();
         this.invincible = true;
-        this.invincible_callback();
+        this.invincibleCallback();
       } else {
         // If the player already has invincibility, just reset its duration.
         if (this.invincibleTimeout) {
@@ -201,7 +204,7 @@ define(['character', 'exceptions'], function (Character, Exceptions) {
     },
 
     stopInvincibility: function () {
-      this.invincible_callback();
+      this.invincibleCallback();
       this.invincible = false;
 
       if (this.currentArmorSprite) {

@@ -21,9 +21,9 @@ define(['lib/astar'], function (AStar) {
     },
 
     findPath: function (grid, entity, x, y, findIncomplete) {
-      var start = [entity.gridX, entity.gridY],
-        end = [x, y],
-        path;
+      var start = [entity.gridX, entity.gridY];
+      var end = [x, y];
+      var path;
 
       this.grid = grid;
       this.applyIgnoreList_(true);
@@ -50,8 +50,10 @@ define(['lib/astar'], function (AStar) {
      * @returns {Array} The incomplete path towards the end position
      */
     findIncompletePath_: function (start, end) {
-      var perfect, x, y,
-        incomplete = [];
+      var perfect;
+      var x;
+      var y;
+      var incomplete = [];
 
       perfect = AStar(this.blankGrid, start, end);
 
@@ -71,15 +73,16 @@ define(['lib/astar'], function (AStar) {
     /**
      * Removes colliding tiles corresponding to the given entity's position in the pathing grid.
      */
-    ignoreEntity: function (entity) {
+    ignoreEntity: function (entity) {
       if (entity) {
         this.ignored.push(entity);
       }
     },
 
     applyIgnoreList_: function (ignored) {
-      var self = this,
-        x, y, g;
+      var self = this;
+      var x;
+      var y;
 
       _.each(this.ignored, function (entity) {
         x = entity.isMoving() ? entity.nextGridX : entity.gridX;

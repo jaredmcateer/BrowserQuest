@@ -1,7 +1,9 @@
+/*globals mapData:true*/
 
+// mapData is imported from world_client.js
 importScripts('../maps/world_client.js', 'lib/underscore.min.js');
 
-onmessage = function (event) {
+onmessage = function () {
   generateCollisionGrid();
   generatePlateauGrid();
 
@@ -9,8 +11,6 @@ onmessage = function (event) {
 };
 
 function generateCollisionGrid() {
-  var tileIndex = 0;
-
   mapData.grid = [];
   for (var	j, i = 0; i < mapData.height; i++) {
     mapData.grid[i] = [];
@@ -51,8 +51,8 @@ function generatePlateauGrid() {
 }
 
 function tileIndexToGridPosition(tileNum) {
-  var x = 0,
-    y = 0;
+  var x = 0;
+  var y = 0;
 
   var getX = function (num, w) {
     if (num == 0) {

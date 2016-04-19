@@ -3,8 +3,6 @@ define(function () {
 
   var Entity = Class.extend({
     init: function (id, kind) {
-      var self = this;
-
       this.id = id;
       this.kind = kind;
 
@@ -63,8 +61,8 @@ define(function () {
       this.animations = sprite.createAnimations();
 
       this.isLoaded = true;
-      if (this.ready_func) {
-        this.ready_func();
+      if (this.loadFunc) {
+        this.loadFunc();
       }
     },
 
@@ -72,7 +70,7 @@ define(function () {
       return this.sprite;
     },
 
-    getSpriteName: function () {
+    getSpriteName: function () {
       return Types.getKindAsString(this.kind);
     },
 
@@ -96,8 +94,7 @@ define(function () {
           return;
         }
 
-        var s = this.sprite,
-          a = this.getAnimationByName(name);
+        var a = this.getAnimationByName(name);
 
         if (a) {
           this.currentAnimation = a;
@@ -111,7 +108,7 @@ define(function () {
           });
         }
       } else {
-        this.log_error('Not ready for animation');
+        this.logError('Not ready for animation');
       }
     },
 
@@ -120,18 +117,18 @@ define(function () {
     },
 
     ready: function (f) {
-      this.ready_func = f;
+      this.loadFunc = f;
     },
 
     clean: function () {
       this.stopBlinking();
     },
 
-    log_info: function (message) {
+    logInfo: function (message) {
       log.info('[' + this.id + '] ' + message);
     },
 
-    log_error: function (message) {
+    logError: function (message) {
       log.error('[' + this.id + '] ' + message);
     },
 
@@ -172,7 +169,10 @@ define(function () {
     },
 
     isCloseTo: function (entity) {
-      var dx, dy, d, close = false;
+      var dx;
+      var dy;
+      var close = false;
+
       if (entity) {
         dx = Math.abs(entity.gridX - this.gridX);
         dy = Math.abs(entity.gridY - this.gridY);
@@ -205,7 +205,9 @@ define(function () {
     isAdjacentNonDiagonal: function (entity) {
       var result = false;
 
-      if (this.isAdjacent(entity) && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)) {
+      if (this.isAdjacent(entity)
+          && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+      ) {
         result = true;
       }
 
@@ -229,12 +231,12 @@ define(function () {
       this.startFadingTime = currentTime;
     },
 
-    blink: function (speed, callback) {
+    blink: function (speed) {
       var self = this;
 
       this.blinking = setInterval(function () {
-              self.toggleVisibility();
-            }, speed);
+        self.toggleVisibility();
+      }, speed);
     },
 
     stopBlinking: function () {
@@ -247,13 +249,13 @@ define(function () {
 
     setDirty: function () {
       this.isDirty = true;
-      if (this.dirty_callback) {
-        this.dirty_callback(this);
+      if (this.dirtyCallback) {
+        this.dirtyCallback(this);
       }
     },
 
-    onDirty: function (dirty_callback) {
-      this.dirty_callback = dirty_callback;
+    onDirty: function (dirtyCallback) {
+      this.dirtyCallback = dirtyCallback;
     }
   });
 

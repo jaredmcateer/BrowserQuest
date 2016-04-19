@@ -162,7 +162,7 @@ define(function () {
         this.data.achievements.totalRevives++;
         this.save();
       }
-    },
+    }
   });
 
   return Storage;

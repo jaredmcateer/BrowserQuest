@@ -15,6 +15,7 @@ define(
         // Exception triggered when config_local.json does not exist. Nothing to do here.
       }
     });
+
     //>>excludeEnd("prodHost");
 
     return config;

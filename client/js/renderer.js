@@ -7,8 +7,10 @@ define(
       init: function (game, canvas, background, foreground) {
         this.game = game;
         this.context = (canvas && canvas.getContext) ? canvas.getContext('2d') : null;
-        this.background = (background && background.getContext) ? background.getContext('2d') : null;
-        this.foreground = (foreground && foreground.getContext) ? foreground.getContext('2d') : null;
+        this.background = (background && background.getContext) ?
+          background.getContext('2d') : null;
+        this.foreground = (foreground && foreground.getContext) ?
+          foreground.getContext('2d') : null;
 
         this.canvas = canvas;
         this.backcanvas = background;
@@ -49,9 +51,9 @@ define(
       },
 
       getScaleFactor: function () {
-        var w = window.innerWidth,
-          h = window.innerHeight,
-          scale;
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        var scale;
 
         this.mobile = false;
 
@@ -67,7 +69,7 @@ define(
         return scale;
       },
 
-      rescale: function (factor) {
+      rescale: function () {
         this.scale = this.getScaleFactor();
 
         this.createCamera();
@@ -119,7 +121,7 @@ define(
           fontsize = Detect.isWindows() ? 10 : 13; break;
         case 3:
           fontsize = 20;
-      }
+        }
         this.setFontSize(fontsize);
       },
 
@@ -142,7 +144,7 @@ define(
           strokeSize = 3; break;
         case 3:
           strokeSize = 5;
-      }
+        }
 
         if (text && x && y) {
           ctx.save();
@@ -164,15 +166,20 @@ define(
         this.context.lineWidth = 2 * this.scale;
         this.context.strokeStyle = color;
         this.context.translate(x + 2, y + 2);
-        this.context.strokeRect(0, 0, (this.tilesize * this.scale) - 4, (this.tilesize * this.scale) - 4);
+        this.context.strokeRect(
+          0,
+          0,
+          (this.tilesize * this.scale) - 4,
+          (this.tilesize * this.scale) - 4
+        );
         this.context.restore();
       },
 
       drawCellHighlight: function (x, y, color) {
-        var s = this.scale,
-          ts = this.tilesize,
-          tx = x * ts * s,
-          ty = y * ts * s;
+        var s = this.scale;
+        var ts = this.tilesize;
+        var tx = x * ts * s;
+        var ty = y * ts * s;
 
         this.drawCellRect(tx, ty, color);
       },
@@ -180,15 +187,17 @@ define(
       drawTargetCell: function () {
         var mouse = this.game.getMouseGridPosition();
 
-        if (this.game.targetCellVisible && !(mouse.x === this.game.selectedX && mouse.y === this.game.selectedY)) {
+        if (this.game.targetCellVisible
+            && !(mouse.x === this.game.selectedX && mouse.y === this.game.selectedY)
+        ) {
           this.drawCellHighlight(mouse.x, mouse.y, this.game.targetColor);
         }
       },
 
       drawAttackTargetCell: function () {
-        var mouse = this.game.getMouseGridPosition(),
-          entity = this.game.getEntityAt(mouse.x, mouse.y),
-          s = this.scale;
+        var mouse = this.game.getMouseGridPosition();
+        var entity = this.game.getEntityAt(mouse.x, mouse.y);
+        var s = this.scale;
 
         if (entity) {
           this.drawCellRect(entity.x * s, entity.y * s, 'rgba(255, 0, 0, 0.5)');
@@ -224,35 +233,34 @@ define(
       },
 
       drawSelectedCell: function () {
-        var sprite = this.game.cursors['target'],
-          anim = this.game.targetAnimation,
-          os = this.upscaledRendering ? 1 : this.scale,
-          ds = this.upscaledRendering ? this.scale : 1;
+        var sprite = this.game.cursors.target;
+        var anim = this.game.targetAnimation;
+        var os = this.upscaledRendering ? 1 : this.scale;
+        var ds = this.upscaledRendering ? this.scale : 1;
 
         if (this.game.selectedCellVisible) {
           if (this.mobile || this.tablet) {
             if (this.game.drawTarget) {
-              var x = this.game.selectedX,
-                y = this.game.selectedY;
+              var x = this.game.selectedX;
+              var y = this.game.selectedY;
 
               this.drawCellHighlight(this.game.selectedX, this.game.selectedY, 'rgb(51, 255, 0)');
-              this.lastTargetPos = { x: x,
-                y: y };
+              this.lastTargetPos = { x: x, y: y };
               this.game.drawTarget = false;
             }
           } else {
             if (sprite && anim) {
-              var	frame = anim.currentFrame,
-                s = this.scale,
-                x = frame.x * os,
-                y = frame.y * os,
-                w = sprite.width * os,
-                h = sprite.height * os,
-                ts = 16,
-                dx = this.game.selectedX * ts * s,
-                dy = this.game.selectedY * ts * s,
-                dw = w * ds,
-                dh = h * ds;
+              var frame = anim.currentFrame;
+              var s = this.scaler;
+              x = frame.x * os;
+              y = frame.y * os;
+              var w = sprite.width * os;
+              var h = sprite.height * os;
+              var ts = 16;
+              var dx = this.game.selectedX * ts * s;
+              var dy = this.game.selectedY * ts * s;
+              var dw = w * ds;
+              var dh = h * ds;
 
               this.context.save();
               this.context.translate(dx, dy);
@@ -270,14 +278,24 @@ define(
       },
 
       drawCursor: function () {
-        var mx = this.game.mouse.x,
-          my = this.game.mouse.y,
-          s = this.scale,
-          os = this.upscaledRendering ? 1 : this.scale;
+        var mx = this.game.mouse.x;
+        var my = this.game.mouse.y;
+        var s = this.scale;
+        var os = this.upscaledRendering ? 1 : this.scale;
 
         this.context.save();
         if (this.game.currentCursor && this.game.currentCursor.isLoaded) {
-          this.context.drawImage(this.game.currentCursor.image, 0, 0, 14 * os, 14 * os, mx, my, 14 * s, 14 * s);
+          this.context.drawImage(
+            this.game.currentCursor.image,
+            0,
+            0,
+            14 * os,
+            14 * os,
+            mx,
+            my,
+            14 * s,
+            14 * s
+          );
         }
 
         this.context.restore();
@@ -287,7 +305,16 @@ define(
         var s = this.upscaledRendering ? 1 : this.scale;
         _.each(arguments, function (arg) {
           if (_.isUndefined(arg) || _.isNaN(arg) || _.isNull(arg) || arg < 0) {
-            log.error('x:' + x + ' y:' + y + ' w:' + w + ' h:' + h + ' dx:' + dx + ' dy:' + dy, true);
+            log.error(
+              ['x:', x,
+                ' y:', y,
+                ' w:', w,
+                ' h:', h,
+                ' dx:', dx,
+                ' dy:', dy
+              ].join(' '),
+              true
+            );
             throw Error('A problem occured when trying to draw on the canvas');
           }
         });
@@ -318,36 +345,36 @@ define(
       },
 
       clearTile: function (ctx, gridW, cellid) {
-        var s = this.scale,
-          ts = this.tilesize,
-          x = getX(cellid + 1, gridW) * ts * s,
-          y = Math.floor(cellid / gridW) * ts * s,
-          w = ts * s,
-          h = w;
+        var s = this.scale;
+        var ts = this.tilesize;
+        var x = getX(cellid + 1, gridW) * ts * s;
+        var y = Math.floor(cellid / gridW) * ts * s;
+        var w = ts * s;
+        var h = w;
 
         ctx.clearRect(x, y, h, w);
       },
 
       drawEntity: function (entity) {
-        var sprite = entity.sprite,
-          shadow = this.game.shadows['small'],
-          anim = entity.currentAnimation,
-          os = this.upscaledRendering ? 1 : this.scale,
-          ds = this.upscaledRendering ? this.scale : 1;
+        var sprite = entity.sprite;
+        var shadow = this.game.shadows.small;
+        var anim = entity.currentAnimation;
+        var os = this.upscaledRendering ? 1 : this.scale;
+        var ds = this.upscaledRendering ? this.scale : 1;
 
         if (anim && sprite) {
-          var	frame = anim.currentFrame,
-            s = this.scale,
-            x = frame.x * os,
-            y = frame.y * os,
-            w = sprite.width * os,
-            h = sprite.height * os,
-            ox = sprite.offsetX * s,
-            oy = sprite.offsetY * s,
-            dx = entity.x * s,
-            dy = entity.y * s,
-            dw = w * ds,
-            dh = h * ds;
+          var frame = anim.currentFrame;
+          var s = this.scale;
+          var x = frame.x * os;
+          var y = frame.y * os;
+          var w = sprite.width * os;
+          var h = sprite.height * os;
+          var ox = sprite.offsetX * s;
+          var oy = sprite.offsetY * s;
+          var dx = entity.x * s;
+          var dy = entity.y * s;
+          var dw = w * ds;
+          var dh = h * ds;
 
           if (entity.isFading) {
             this.context.save();
@@ -380,13 +407,13 @@ define(
             this.context.drawImage(sprite.image, x, y, w, h, ox, oy, dw, dh);
 
             if (entity instanceof Item && entity.kind !== Types.Entities.CAKE) {
-              var sparks = this.game.sprites['sparks'],
-                anim = this.game.sparksAnimation,
-                frame = anim.currentFrame,
-                sx = sparks.width * frame.index * os,
-                sy = sparks.height * anim.row * os,
-                sw = sparks.width * os,
-                sh = sparks.width * os;
+              var sparks = this.game.sprites.sparks;
+              anim = this.game.sparksAnimation;
+              frame = anim.currentFrame;
+              var sx = sparks.width * frame.index * os;
+              var sy = sparks.height * anim.row * os;
+              var sw = sparks.width * os;
+              var sh = sparks.width * os;
 
               this.context.drawImage(sparks.image, sx, sy, sw, sh,
                                      sparks.offsetX * s,
@@ -399,12 +426,13 @@ define(
             var weapon = this.game.sprites[entity.getWeaponName()];
 
             if (weapon) {
-              var weaponAnimData = weapon.animationData[anim.name],
-                index = frame.index < weaponAnimData.length ? frame.index : frame.index % weaponAnimData.length;
-              wx = weapon.width * index * os,
-                wy = weapon.height * anim.row * os,
-                ww = weapon.width * os,
-                wh = weapon.height * os;
+              var weaponAnimData = weapon.animationData[anim.name];
+              var index = frame.index < weaponAnimData.length ?
+                frame.index : frame.index % weaponAnimData.length;
+              var wx = weapon.width * index * os;
+              var wy = weapon.height * anim.row * os;
+              var ww = weapon.width * os;
+              var wh = weapon.height * os;
 
               this.context.drawImage(weapon.image, wx, wy, ww, wh,
                                      weapon.offsetX * s,
@@ -450,8 +478,8 @@ define(
       },
 
       clearDirtyRects: function () {
-        var self = this,
-          count = 0;
+        var self = this;
+        var count = 0;
 
         this.game.forEachVisibleEntityByDepth(function (entity) {
           if (entity.isDirty && entity.oldDirtyRect) {
@@ -469,22 +497,22 @@ define(
 
         if (this.game.clearTarget && this.lastTargetPos) {
           var last = this.lastTargetPos;
-          rect = this.getTargetBoundingRect(last.x, last.y);
+          var rect = this.getTargetBoundingRect(last.x, last.y);
 
           this.clearDirtyRect(rect);
           this.game.clearTarget = false;
           count += 1;
         }
 
-        if (count > 0) {
+        //if (count > 0) {
           //log.debug("count:"+count);
-        }
+        //}
       },
 
       getEntityBoundingRect: function (entity) {
-        var rect = {},
-          s = this.scale,
-          spr;
+        var rect = {};
+        var s = this.scale;
+        var spr;
 
         if (entity instanceof Player && entity.hasWeapon()) {
           var weapon = this.game.sprites[entity.getWeaponName()];
@@ -508,11 +536,11 @@ define(
       },
 
       getTileBoundingRect: function (tile) {
-        var rect = {},
-          gridW = this.game.map.width,
-          s = this.scale,
-          ts = this.tilesize,
-          cellid = tile.index;
+        var rect = {};
+        var gridW = this.game.map.width;
+        var s = this.scale;
+        var ts = this.tilesize;
+        var cellid = tile.index;
 
         rect.x = ((getX(cellid + 1, gridW) * ts) - this.camera.x) * s;
         rect.y = ((Math.floor(cellid / gridW) * ts) - this.camera.y) * s;
@@ -527,11 +555,11 @@ define(
       },
 
       getTargetBoundingRect: function (x, y) {
-        var rect = {},
-          s = this.scale,
-          ts = this.tilesize,
-          tx = x || this.game.selectedX,
-          ty = y || this.game.selectedY;
+        var rect = {};
+        var s = this.scale;
+        var ts = this.tilesize;
+        var tx = x || this.game.selectedX;
+        var ty = y || this.game.selectedY;
 
         rect.x = ((tx * ts) - this.camera.x) * s;
         rect.y = ((ty * ts) - this.camera.y) * s;
@@ -567,9 +595,9 @@ define(
       },
 
       drawTerrain: function () {
-        var self = this,
-          m = this.game.map,
-          tilesetwidth = this.tileset.width / m.tilesize;
+        var self = this;
+        var m = this.game.map;
+        var tilesetwidth = this.tileset.width / m.tilesize;
 
         this.game.forEachVisibleTile(function (id, index) {
           if (!m.isHighTile(id) && !m.isAnimatedTile(id)) { // Don't draw unnecessary tiles
@@ -579,9 +607,9 @@ define(
       },
 
       drawAnimatedTiles: function (dirtyOnly) {
-        var self = this,
-          m = this.game.map,
-          tilesetwidth = this.tileset.width / m.tilesize;
+        var self = this;
+        var m = this.game.map;
+        var tilesetwidth = this.tileset.width / m.tilesize;
 
         this.animatedTileCount = 0;
         this.game.forEachAnimatedTile(function (tile) {
@@ -602,9 +630,9 @@ define(
       },
 
       drawHighTiles: function (ctx) {
-        var self = this,
-          m = this.game.map,
-          tilesetwidth = this.tileset.width / m.tilesize;
+        var self = this;
+        var m = this.game.map;
+        var tilesetwidth = this.tileset.width / m.tilesize;
 
         this.highTileCount = 0;
         this.game.forEachVisibleTile(function (id, index) {
@@ -621,8 +649,8 @@ define(
       },
 
       drawFPS: function () {
-        var nowTime = new Date(),
-          diffTime = nowTime.getTime() - this.lastTime.getTime();
+        var nowTime = new Date();
+        var diffTime = nowTime.getTime() - this.lastTime.getTime();
 
         if (diffTime >= 1000) {
           this.realFPS = this.frameCount;
@@ -654,7 +682,14 @@ define(
         this.game.infoManager.forEachInfo(function (info) {
           self.context.save();
           self.context.globalAlpha = info.opacity;
-          self.drawText(info.value, (info.x + 8) * self.scale, Math.floor(info.y * self.scale), true, info.fillColor, info.strokeColor);
+          self.drawText(
+            info.value,
+            (info.x + 8) * self.scale,
+            Math.floor(info.y * self.scale),
+            true,
+            info.fillColor,
+            info.strokeColor
+          );
           self.context.restore();
         });
 
@@ -670,30 +705,33 @@ define(
       },
 
       getPlayerImage: function () {
-        var canvas = document.createElement('canvas'),
-          ctx = canvas.getContext('2d'),
-          os = this.upscaledRendering ? 1 : this.scale,
-          player = this.game.player,
-          sprite = player.getArmorSprite(),
-          spriteAnim = sprite.animationData['idle_down'],
-          // character
-          row = spriteAnim.row,
-          w = sprite.width * os,
-          h = sprite.height * os,
-          y = row * h,
-          // weapon
-          weapon = this.game.sprites[this.game.player.getWeaponName()],
-          ww = weapon.width * os,
-          wh = weapon.height * os,
-          wy = wh * row,
-          offsetX = (weapon.offsetX - sprite.offsetX) * os,
-          offsetY = (weapon.offsetY - sprite.offsetY) * os,
-          // shadow
-          shadow = this.game.shadows['small'],
-          sw = shadow.width * os,
-          sh = shadow.height * os,
-          ox = -sprite.offsetX * os;
-        oy = -sprite.offsetY * os;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var os = this.upscaledRendering ? 1 : this.scale;
+        var player = this.game.player;
+        var sprite = player.getArmorSprite();
+        var spriteAnim = sprite.animationData.idleDown;
+
+        // character
+        var row = spriteAnim.row;
+        var w = sprite.width * os;
+        var h = sprite.height * os;
+        var y = row * h;
+
+        // weapon
+        var weapon = this.game.sprites[this.game.player.getWeaponName()];
+        var ww = weapon.width * os;
+        var wh = weapon.height * os;
+        var wy = wh * row;
+        var offsetX = (weapon.offsetX - sprite.offsetX) * os;
+        var offsetY = (weapon.offsetY - sprite.offsetY) * os;
+
+        // shadow
+        var shadow = this.game.shadows.small;
+        var sw = shadow.width * os;
+        var sh = shadow.height * os;
+        var ox = -sprite.offsetX * os;
+        var oy = -sprite.offsetY * os;
 
         canvas.width = w;
         canvas.height = h;

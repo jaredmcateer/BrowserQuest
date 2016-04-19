@@ -1,1 +1,13 @@
-{	"id": "king",	"width": 32,	"height": 32,	"animations": {		"idle_down": {			"length": 2,			"row": 0		}	},	"offset_x": -8,	"offset_y": -12}
+{
+    "animations": {
+        "idleDown": {
+            "length": 2,
+            "row": 0
+        }
+    },
+    "height": 32,
+    "id": "king",
+    "offsetX": -8,
+    "offsetY": -12,
+    "width": 32
+}

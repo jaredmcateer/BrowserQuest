@@ -44,16 +44,21 @@ define(['jquery', 'timer'], function ($, Timer) {
         this.bubbles[id].reset(time);
         $('#' + id + ' p').html(message);
       } else {
-        var el = $('<div id="' + id + '" class="bubble"><p>' + message + '</p><div class="thingy"></div></div>'); //.attr('id', id);
-        $(el).appendTo(this.container);
+        var $el = $([
+          '<div id="', id, '" class="bubble">',
+          '<p>', message, '</p>',
+          '<div class="thingy"></div>',
+          '</div>'
+        ].join('')); //.attr('id', id);
+        $el.appendTo(this.container);
 
-        this.bubbles[id] = new Bubble(id, el, time);
+        this.bubbles[id] = new Bubble(id, $el, time);
       }
     },
 
     update: function (time) {
-      var self = this,
-        bubblesToDelete = [];
+      var self = this;
+      var bubblesToDelete = [];
 
       _.each(this.bubbles, function (bubble) {
         if (bubble.isOver(time)) {
@@ -68,8 +73,8 @@ define(['jquery', 'timer'], function ($, Timer) {
     },
 
     clean: function () {
-      var self = this,
-        bubblesToDelete = [];
+      var self = this;
+      var bubblesToDelete = [];
 
       _.each(this.bubbles, function (bubble) {
         bubble.destroy();

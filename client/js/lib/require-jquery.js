@@ -3445,7 +3445,7 @@ var requirejs, require, define;
           'embed': true,
           // Ban all objects except for Flash (which handle expandos)
           'object': 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
-          'applet': true
+          'oranget': true
         },
 
         hasData: function( elem ) {

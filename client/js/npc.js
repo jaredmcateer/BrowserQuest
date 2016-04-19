@@ -29,7 +29,10 @@ define(['character'], function (Character) {
       'It\'s all happening in a single web page! Isn\'t it crazy?',
       'It\'s all made possible thanks to WebSockets.',
       'I don\'t know much about it, after all I\'m just a program.',
-      'Why don&#x27;t you read this <a target="_blank" href="http://hacks.mozilla.org/2012/03/browserquest/">blog post</a> and learn all about it?'
+      ['Why don&#x27;t you read this ',
+        '<a target="_blank" href="http://hacks.mozilla.org/2012/03/browserquest/">blog post</a>',
+        ' and learn all about it?'
+      ].join('')
     ],
 
     villager: [
@@ -81,17 +84,7 @@ define(['character'], function (Character) {
       'nyan nyan nyan nyan nyan nyan nyan nyan'
     ],
 
-    beachnpc: [
-      'lorem ipsum dolor sit amet',
-      'consectetur adipisicing elit, sed do eiusmod tempor'
-    ],
-
     forestnpc: [
-      'lorem ipsum dolor sit amet',
-      'consectetur adipisicing elit, sed do eiusmod tempor'
-    ],
-
-    desertnpc: [
       'lorem ipsum dolor sit amet',
       'consectetur adipisicing elit, sed do eiusmod tempor'
     ],
@@ -131,7 +124,8 @@ define(['character'], function (Character) {
     octocat: [
       'Welcome to BrowserQuest!',
       'Want to see the source code?',
-      'Check out <a target="_blank" href="http://github.com/mozilla/BrowserQuest">the repository on GitHub</a>'
+      'Check out <a target="_blank"' +
+        ' href="http://github.com/mozilla/BrowserQuest">the repository on GitHub</a>'
     ],
 
     coder: [

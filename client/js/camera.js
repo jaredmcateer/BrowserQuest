@@ -40,17 +40,23 @@ define(function () {
     },
 
     lookAt: function (entity) {
-      var r = this.renderer,
-        x = Math.round(entity.x - (Math.floor(this.gridW / 2) * r.tilesize)),
-        y = Math.round(entity.y - (Math.floor(this.gridH / 2) * r.tilesize));
+      var r = this.renderer;
+      var x = Math.round(entity.x - (Math.floor(this.gridW / 2) * r.tilesize));
+      var y = Math.round(entity.y - (Math.floor(this.gridH / 2) * r.tilesize));
 
       this.setPosition(x, y);
     },
 
     forEachVisiblePosition: function (callback, extra) {
-      var extra = extra || 0;
-      for (var y = this.gridY - extra, maxY = this.gridY + this.gridH + (extra * 2); y < maxY; y += 1) {
-        for (var x = this.gridX - extra, maxX = this.gridX + this.gridW + (extra * 2); x < maxX; x += 1) {
+      extra = extra || 0;
+
+      var y = this.gridY - extra;
+      var x = this.gridY - extra;
+      var maxY = this.gridY + this.gridH + (extra * 2);
+      var maxX = this.gridX + this.gridW + (extra * 2);
+
+      for (; y < maxY; y++) {
+        for (; x < maxX; x++) {
           callback(x, y);
         }
       }
@@ -69,11 +75,11 @@ define(function () {
       }
     },
 
-    focusEntity: function (entity) {
-      var w = this.gridW - 2,
-        h = this.gridH - 2,
-        x = Math.floor((entity.gridX - 1) / w) * w,
-        y = Math.floor((entity.gridY - 1) / h) * h;
+    focusEntity: function (entity) {
+      var w = this.gridW - 2;
+      var h = this.gridH - 2;
+      var x = Math.floor((entity.gridX - 1) / w) * w;
+      var y = Math.floor((entity.gridY - 1) / h) * h;
 
       this.setGridPosition(x, y);
     }

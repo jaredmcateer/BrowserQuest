@@ -35,9 +35,9 @@ define(['jquery', 'storage'], function ($, Storage) {
       }
     },
 
-    tryStartingGame: function (username, starting_callback) {
-      var self = this,
-        $play = this.$playButton;
+    tryStartingGame: function (username, startingCallback) {
+      var self = this;
+      var $play = this.$playButton;
 
       if (username !== '') {
         if (!this.ready || !this.canStartGame()) {
@@ -57,21 +57,21 @@ define(['jquery', 'storage'], function ($, Storage) {
               }, 1500);
 
               clearInterval(watchCanStart);
-              self.startGame(username, starting_callback);
+              self.startGame(username, startingCallback);
             }
           }, 100);
         } else {
           this.$playDiv.unbind('click');
-          this.startGame(username, starting_callback);
+          this.startGame(username, startingCallback);
         }
       }
     },
 
-    startGame: function (username, starting_callback) {
+    startGame: function (username, startingCallback) {
       var self = this;
 
-      if (starting_callback) {
-        starting_callback();
+      if (startingCallback) {
+        startingCallback();
       }
 
       this.hideIntro(function () {
@@ -86,12 +86,12 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     start: function (username) {
-      var self = this,
-        firstTimePlaying = !self.storage.hasAlreadyPlayed();
+      var self = this;
+      var firstTimePlaying = !self.storage.hasAlreadyPlayed();
 
       if (username && !this.game.started) {
-        var optionsSet = false,
-          config = this.config;
+        var optionsSet = false;
+        var config = this.config;
 
         //>>includeStart("devHost", pragmas.devHost);
         if (config.local) {
@@ -103,13 +103,16 @@ define(['jquery', 'storage'], function ($, Storage) {
         }
 
         optionsSet = true;
+
         //>>includeEnd("devHost");
 
         //>>includeStart("prodHost", pragmas.prodHost);
+
         if (!optionsSet) {
           log.debug('Starting game with build config.');
           this.game.setServerOptions(config.build.host, config.build.port, username);
         }
+
         //>>includeEnd("prodHost");
 
         this.center();
@@ -123,11 +126,11 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     setMouseCoordinates: function (event) {
-      var gamePos = $('#container').offset(),
-        scale = this.game.renderer.getScaleFactor(),
-        width = this.game.renderer.getWidth(),
-        height = this.game.renderer.getHeight(),
-        mouse = this.game.mouse;
+      var gamePos = $('#container').offset();
+      var scale = this.game.renderer.getScaleFactor();
+      var width = this.game.renderer.getWidth();
+      var height = this.game.renderer.getHeight();
+      var mouse = this.game.mouse;
 
       mouse.x = event.pageX - gamePos.left - (this.isMobile ? 0 : 5 * scale);
       mouse.y = event.pageY - gamePos.top - (this.isMobile ? 0 : 7 * scale);
@@ -146,8 +149,8 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     initHealthBar: function () {
-      var scale = this.game.renderer.getScaleFactor(),
-        healthMaxWidth = $('#healthbar').width() - (12 * scale);
+      var scale = this.game.renderer.getScaleFactor();
+      var healthMaxWidth = $('#healthbar').width() - (12 * scale);
 
       this.game.onPlayerHealthChange(function (hp, maxHp) {
         var barWidth = Math.round((healthMaxWidth / maxHp) * (hp > 0 ? hp : 0));
@@ -167,8 +170,8 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     toggleButton: function () {
-      var name = $('#parchment input').val(),
-        $play = $('#createcharacter .play');
+      var name = $('#parchment input').val();
+      var $play = $('#createcharacter .play');
 
       if (name && name.length > 0) {
         $play.removeClass('disabled');
@@ -179,12 +182,12 @@ define(['jquery', 'storage'], function ($, Storage) {
       }
     },
 
-    hideIntro: function (hidden_callback) {
+    hideIntro: function (hiddenCallback) {
       clearInterval(this.watchNameInputInterval);
       $('body').removeClass('intro');
       setTimeout(function () {
         $('body').addClass('game');
-        hidden_callback();
+        hiddenCallback();
       }, 1000);
     },
 
@@ -224,8 +227,8 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     resetPage: function () {
-      var self = this,
-        $achievements = $('#achievements');
+      var self = this;
+      var $achievements = $('#achievements');
 
       if ($achievements.hasClass('active')) {
         $achievements.bind(TRANSITIONEND, function () {
@@ -239,13 +242,13 @@ define(['jquery', 'storage'], function ($, Storage) {
     initEquipmentIcons: function () {
       var scale = this.game.renderer.getScaleFactor();
       var getIconPath = function (spriteName) {
-          return 'img/' + scale + '/item-' + spriteName + '.png';
-        },
+        return 'img/' + scale + '/item-' + spriteName + '.png';
+      };
 
-        weapon = this.game.player.getWeaponName(),
-        armor = this.game.player.getSpriteName(),
-        weaponPath = getIconPath(weapon),
-        armorPath = getIconPath(armor);
+      var weapon = this.game.player.getWeaponName();
+      var armor = this.game.player.getSpriteName();
+      var weaponPath = getIconPath(weapon);
+      var armorPath = getIconPath(armor);
 
       $('#weapon').css('background-image', 'url("' + weaponPath + '")');
       if (armor !== 'firefox') {
@@ -274,9 +277,9 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     showAchievementNotification: function (id, name) {
-      var $notif = $('#achievement-notification'),
-        $name = $notif.find('.name'),
-        $button = $('#achievementsbutton');
+      var $notif = $('#achievement-notification');
+      var $name = $notif.find('.name');
+      var $button = $('#achievementsbutton');
 
       $notif.removeClass().addClass('active achievement' + id);
       $name.text(name);
@@ -312,13 +315,13 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     initAchievementList: function (achievements) {
-      var self = this,
-        $lists = $('#lists'),
-        $page = $('#page-tmpl'),
-        $achievement = $('#achievement-tmpl'),
-        page = 0,
-        count = 0,
-        $p = null;
+      var self = this;
+      var $lists = $('#lists');
+      var $page = $('#page-tmpl');
+      var $achievement = $('#achievement-tmpl');
+      var page = 0;
+      var count = 0;
+      var $p = null;
 
       _.each(achievements, function (achievement) {
         count++;
@@ -330,7 +333,14 @@ define(['jquery', 'storage'], function ($, Storage) {
           self.setAchievementData($a, achievement.name, achievement.desc);
         }
 
-        $a.find('.twitter').attr('href', 'http://twitter.com/share?url=http%3A%2F%2Fbrowserquest.mozilla.org&text=I%20unlocked%20the%20%27' + achievement.name + '%27%20achievement%20on%20Mozilla%27s%20%23BrowserQuest%21&related=glecollinet:Creators%20of%20BrowserQuest%2Cwhatthefranck');
+        $a.find('.twitter').attr('href', [
+          'http://twitter.com/share?url=http%3A%2F%2Fbrowserquest.mozilla.org',
+          '&text=I%20unlocked%20the%20%27',
+          achievement.name,
+          '%27%20achievement%20on%20Mozilla%27s%20%23BrowserQuest%21',
+          '&related=glecollinet:Creators%20of%20BrowserQuest%2Cwhatthefranck'
+        ].join(''));
+
         $a.show();
         $a.find('a').click(function () {
           var url = $(this).attr('href');
@@ -448,12 +458,12 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     openPopup: function (type, url) {
-      var h = $(window).height(),
-        w = $(window).width(),
-        popupHeight,
-        popupWidth,
-        top,
-        left;
+      var h = $(window).height();
+      var w = $(window).width();
+      var popupHeight;
+      var popupWidth;
+      var top;
+      var left;
 
       switch (type) {
       case 'twitter':
@@ -464,19 +474,23 @@ define(['jquery', 'storage'], function ($, Storage) {
         popupHeight = 400;
         popupWidth = 580;
         break;
-    }
+      }
 
       top = (h / 2) - (popupHeight / 2);
       left = (w / 2) - (popupWidth / 2);
 
-      newwindow = window.open(url, 'name', 'height=' + popupHeight + ',width=' + popupWidth + ',top=' + top + ',left=' + left);
+      var newwindow = window.open(
+        url,
+        'name',
+        'height=' + popupHeight + ',width=' + popupWidth + ',top=' + top + ',left=' + left
+      );
       if (window.focus) {newwindow.focus();}
     },
 
     animateParchment: function (origin, destination) {
-      var self = this,
-        $parchment = $('#parchment'),
-        duration = 1;
+      var self = this;
+      var $parchment = $('#parchment');
+      var duration = 1;
 
       if (this.isMobile) {
         $parchment.removeClass(origin).addClass(destination);
@@ -518,8 +532,8 @@ define(['jquery', 'storage'], function ($, Storage) {
     },
 
     showMessage: function (message) {
-      var $wrapper = $('#notifications div'),
-        $message = $('#notifications #message2');
+      var $wrapper = $('#notifications div');
+      var $message = $('#notifications #message2');
 
       this.animateMessages();
       $message.text(message);

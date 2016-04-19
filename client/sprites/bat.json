@@ -1,1 +1,45 @@
-{	"id": "bat",	"width": 32,	"height": 48,	"animations": {		"atk_right": {			"length": 5,			"row": 0		},		"walk_right": {			"length": 5,			"row": 1		},		"idle_right": {			"length": 5,			"row": 2		},		"atk_up": {			"length": 5,			"row": 3		},		"walk_up": {			"length": 5,			"row": 4		},		"idle_up": {			"length": 5,			"row": 5		},		"atk_down": {			"length": 5,			"row": 6		},		"walk_down": {			"length": 5,			"row": 7		},		"idle_down": {			"length": 5,			"row": 8		}	},	"offset_x": -8,	"offset_y": -24}
+{
+    "animations": {
+        "atkDown": {
+            "length": 5,
+            "row": 6
+        },
+        "atkRight": {
+            "length": 5,
+            "row": 0
+        },
+        "atkUp": {
+            "length": 5,
+            "row": 3
+        },
+        "idleDown": {
+            "length": 5,
+            "row": 8
+        },
+        "idleRight": {
+            "length": 5,
+            "row": 2
+        },
+        "idleUp": {
+            "length": 5,
+            "row": 5
+        },
+        "walkDown": {
+            "length": 5,
+            "row": 7
+        },
+        "walkRight": {
+            "length": 5,
+            "row": 1
+        },
+        "walkUp": {
+            "length": 5,
+            "row": 4
+        }
+    },
+    "height": 48,
+    "id": "bat",
+    "offsetX": -8,
+    "offsetY": -24,
+    "width": 32
+}

@@ -82,18 +82,19 @@ define(['character', 'timer'], function (Character, Timer) {
     },
 
     updateZoning: function () {
-      var g = this.game,
-        c = g.camera,
-        z = g.currentZoning,
-        s = 3,
-        ts = 16,
-        speed = 500;
+      var g = this.game;
+      var c = g.camera;
+      var z = g.currentZoning;
+      var ts = 16;
+      var speed = 500;
 
       if (z && z.inProgress === false) {
-        var orientation = this.game.zoningOrientation,
-          startValue = endValue = offset = 0,
-          updateFunc = null,
-          endFunc = null;
+        var orientation = this.game.zoningOrientation;
+        var startValue = 0 ;
+        var endValue = 0;
+        var offset = 0;
+        var updateFunc = null;
+        var endFunc = null;
 
         if (orientation === Types.Orientations.LEFT || orientation === Types.Orientations.RIGHT) {
           offset = (c.gridW - 2) * ts;
@@ -130,8 +131,6 @@ define(['character', 'timer'], function (Character, Timer) {
     },
 
     updateCharacter: function (c) {
-      var self = this;
-
       // Estimate of the movement distance for one update
       var tick = Math.round(16 / Math.round((c.moveSpeed / (1000 / this.game.renderer.FPS))));
 
