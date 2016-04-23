@@ -1,11 +1,13 @@
 
-var cls = require('./lib/class'),
-  _ = require('underscore'),
-  Messages = require('./message'),
-  Properties = require('./properties'),
-  Types = require('../../shared/js/gametypes');
+var Character = require('./character.js');
+var _ = require('underscore');
+var Messages = require('./message');
+var Properties = require('./properties');
+var MobArea = require('./mobarea');
+var ChestArea = require('./chestarea');
+var Utils = require('./utils');
 
-module.exports = Mob = Character.extend({
+var Mob = Character.extend({
   init: function (id, kind, x, y) {
     this._super(id, 'mob', kind, x, y);
 
@@ -18,7 +20,7 @@ module.exports = Mob = Character.extend({
     this.respawnTimeout = null;
     this.returnTimeout = null;
     this.isDead = false;
-  },
+ },
 
   destroy: function () {
     this.isDead = true;
@@ -30,7 +32,7 @@ module.exports = Mob = Character.extend({
     this.handleRespawn();
   },
 
-  receiveDamage: function (points, playerId) {
+  receiveDamage: function (points) {
     this.hitPoints -= points;
   },
 
@@ -114,15 +116,15 @@ module.exports = Mob = Character.extend({
       }
 
       setTimeout(function () {
-        if (self.respawn_callback) {
-          self.respawn_callback();
+        if (self.respawnCallback) {
+          self.respawnCallback();
         }
       }, delay);
     }
   },
 
   onRespawn: function (callback) {
-    this.respawn_callback = callback;
+    this.respawnCallback = callback;
   },
 
   resetPosition: function () {
@@ -142,13 +144,13 @@ module.exports = Mob = Character.extend({
   },
 
   onMove: function (callback) {
-    this.move_callback = callback;
+    this.moveCallback = callback;
   },
 
   move: function (x, y) {
     this.setPosition(x, y);
-    if (this.move_callback) {
-      this.move_callback(this);
+    if (this.moveCallback) {
+      this.moveCallback(this);
     }
   },
 
@@ -160,3 +162,5 @@ module.exports = Mob = Character.extend({
     return Utils.distanceTo(x, y, this.spawningX, this.spawningY);
   }
 });
+
+module.exports = Mob;

@@ -1,9 +1,9 @@
 
-var cls = require('./lib/class'),
-  Messages = require('./message'),
-  Utils = require('./utils');
+var cls = require('./lib/class');
+var Messages = require('./message');
+var Utils = require('./utils');
 
-module.exports = Entity = cls.Class.extend({
+var Entity = cls.Class.extend({
   init: function (id, type, kind, x, y) {
     this.id = parseInt(id);
     this.type = type;
@@ -65,3 +65,5 @@ module.exports = Entity = cls.Class.extend({
     return pos;
   }
 });
+
+module.exports = Entity;

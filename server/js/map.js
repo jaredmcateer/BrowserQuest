@@ -1,10 +1,10 @@
 
 var cls = require('./lib/class');
-path = require('path'),
-  fs = require('fs'),
-  _ = require('underscore'),
-  Utils = require('./utils'),
-  Checkpoint = require('./checkpoint');
+var path = require('path');
+var fs = require('fs');
+var _ = require('underscore');
+var Utils = require('./utils');
+var Checkpoint = require('./checkpoint');
 
 module.exports = Map = cls.Class.extend({
   init: function (filepath) {
@@ -45,18 +45,18 @@ module.exports = Map = cls.Class.extend({
     this.initConnectedGroups(map.doors);
     this.initCheckpoints(map.checkpoints);
 
-    if (this.ready_func) {
-      this.ready_func();
+    if (this.readyFunc) {
+      this.readyFunc();
     }
   },
 
   ready: function (f) {
-    this.ready_func = f;
+    this.readyFunc = f;
   },
 
   tileIndexToGridPosition: function (tileNum) {
-    var x = 0,
-      y = 0;
+    var x = 0;
+    var y = 0;
 
     var getX = function (num, w) {
       if (num == 0) {
@@ -206,8 +206,8 @@ module.exports = Map = cls.Class.extend({
 
   getRandomStartingPosition: function () {
     var nbAreas = _.size(this.startingAreas);
-    i = Utils.randomInt(0, nbAreas - 1);
-    area = this.startingAreas[i];
+    var i = Utils.randomInt(0, nbAreas - 1);
+    var area = this.startingAreas[i];
 
     return area.getRandomPosition();
   }

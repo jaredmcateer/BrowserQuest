@@ -19,6 +19,7 @@ rules:
   semi:
     - error
     - always
+  "no-console": off
 globals:
   define: false
   Class: false

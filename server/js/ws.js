@@ -23,14 +23,14 @@ var Server = cls.Class.extend({
   },
 
   onConnect: function (callback) {
-    this.connection_callback = callback;
+    this.connectionCallback = callback;
   },
 
   onError: function (callback) {
-    this.error_callback = callback;
+    this.errorCallback = callback;
   },
 
-  broadcast: function (message) {
+  broadcast: function () {
     throw 'Not implemented';
   },
 
@@ -42,7 +42,7 @@ var Server = cls.Class.extend({
     this._connections[connection.id] = connection;
   },
 
-  removeConnection: function (id) {
+  removeConnection: function (id) {
     delete this._connections[id];
   },
 
@@ -59,22 +59,22 @@ var Connection = cls.Class.extend({
   },
 
   onClose: function (callback) {
-    this.close_callback = callback;
+    this.closeCallback = callback;
   },
 
   listen: function (callback) {
-    this.listen_callback = callback;
+    this.listenCallback = callback;
   },
 
-  broadcast: function (message) {
+  broadcast: function () {
     throw 'Not implemented';
   },
 
-  send: function (message) {
+  send: function () {
     throw 'Not implemented';
   },
 
-  sendUTF8: function (data) {
+  sendUTF8: function () {
     throw 'Not implemented';
   },
 
@@ -118,17 +118,16 @@ WS.MultiVersionWebsocketServer = Server.extend({
 
     this._httpServer = http.createServer(function (request, response) {
       var path = url.parse(request.url).pathname;
-      switch (path) {
+      switch (path) {
       case '/status':
-        if (self.status_callback) {
+        if (self.statusCallback) {
           response.writeHead(200);
-          response.write(self.status_callback());
-          break;
+          response.write(self.statusCallback());
         }
+        break;
 
-      default:
-        response.writeHead(404);
-    }
+      default: response.writeHead(404);
+      }
       response.end();
     });
 
@@ -146,8 +145,8 @@ WS.MultiVersionWebsocketServer = Server.extend({
       connection.sendUTF = connection.send;
       var c = new WS.miksagoWebSocketConnection(self._createId(), connection, self);
 
-      if (self.connection_callback) {
-        self.connection_callback(c);
+      if (self.connectionCallback) {
+        self.connectionCallback(c);
       }
 
       self.addConnection(c);
@@ -161,8 +160,8 @@ WS.MultiVersionWebsocketServer = Server.extend({
           wsRequest.readHandshake();
           var wsConnection = wsRequest.accept(wsRequest.requestedProtocols[0], wsRequest.origin);
           var c = new WS.worlizeWebSocketConnection(self._createId(), wsConnection, self);
-          if (self.connection_callback) {
-            self.connection_callback(c);
+          if (self.connectionCallback) {
+            self.connectionCallback(c);
           }
 
           self.addConnection(c);
@@ -193,8 +192,8 @@ WS.MultiVersionWebsocketServer = Server.extend({
     });
   },
 
-  onRequestStatus: function (status_callback) {
-    this.status_callback = status_callback;
+  onRequestStatus: function (statusCallback) {
+    this.statusCallback = statusCallback;
   }
 });
 
@@ -210,13 +209,13 @@ WS.worlizeWebSocketConnection = Connection.extend({
     this._super(id, connection, server);
 
     this._connection.on('message', function (message) {
-      if (self.listen_callback) {
+      if (self.listenCallback) {
         if (message.type === 'utf8') {
           if (useBison) {
-            self.listen_callback(BISON.decode(message.utf8Data));
+            self.listenCallback(BISON.decode(message.utf8Data));
           } else {
             try {
-              self.listen_callback(JSON.parse(message.utf8Data));
+              self.listenCallback(JSON.parse(message.utf8Data));
             } catch (e) {
               if (e instanceof SyntaxError) {
                 self.close('Received message was not valid JSON.');
@@ -229,9 +228,9 @@ WS.worlizeWebSocketConnection = Connection.extend({
       }
     });
 
-    this._connection.on('close', function (connection) {
-      if (self.close_callback) {
-        self.close_callback();
+    this._connection.on('close', function () {
+      if (self.closeCallback) {
+        self.closeCallback();
       }
 
       delete self._server.removeConnection(self.id);
@@ -266,18 +265,18 @@ WS.miksagoWebSocketConnection = Connection.extend({
     this._super(id, connection, server);
 
     this._connection.addListener('message', function (message) {
-      if (self.listen_callback) {
+      if (self.listenCallback) {
         if (useBison) {
-          self.listen_callback(BISON.decode(message));
+          self.listenCallback(BISON.decode(message));
         } else {
-          self.listen_callback(JSON.parse(message));
+          self.listenCallback(JSON.parse(message));
         }
       }
     });
 
-    this._connection.on('close', function (connection) {
-      if (self.close_callback) {
-        self.close_callback();
+    this._connection.on('close', function () {
+      if (self.closeCallback) {
+        self.closeCallback();
       }
 
       delete self._server.removeConnection(self.id);

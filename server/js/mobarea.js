@@ -1,9 +1,11 @@
 
-var Area = require('./area'),
-  _ = require('underscore'),
-  Types = require('../../shared/js/gametypes');
+var Area = require('./area');
+var _ = require('underscore');
+var Types = require('../../shared/js/gametypes');
+var Mob = require('./mob');
+var Utils = require('./utils');
 
-module.exports = MobArea = Area.extend({
+var MobArea = Area.extend({
   init: function (id, nb, kind, x, y, width, height, world) {
     this._super(id, x, y, width, height, world);
     this.nb = nb;
@@ -46,7 +48,7 @@ module.exports = MobArea = Area.extend({
     }, delay);
   },
 
-  initRoaming: function (mob) {
+  initRoaming: function () {
     var self = this;
 
     setInterval(function () {
@@ -70,3 +72,5 @@ module.exports = MobArea = Area.extend({
     return { x: pos.x, y: pos.y, kind: Types.Entities.CHEST };
   }
 });
+
+module.exports = MobArea;

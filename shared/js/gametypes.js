@@ -283,14 +283,14 @@ Types.forEachArmorKind = function (callback) {
 
 Types.getOrientationAsString = function (orientation) {
   switch (orientation) {
-  case Types.Orientations.LEFT: return 'Left'; break;
-  case Types.Orientations.RIGHT: return 'Right'; break;
-  case Types.Orientations.UP: return 'Up'; break;
-  case Types.Orientations.DOWN: return 'Down'; break;
-}
+  case Types.Orientations.LEFT: return 'Left';
+  case Types.Orientations.RIGHT: return 'Right';
+  case Types.Orientations.UP: return 'Up';
+  case Types.Orientations.DOWN: return 'Down';
+  }
 };
 
-Types.getRandomItemKind = function (item) {
+Types.getRandomItemKind = function () {
   var all = _.union(this.rankedWeapons, this.rankedArmors),
     forbidden = [Types.Entities.SWORD1, Types.Entities.CLOTHARMOR],
     itemKinds = _.difference(all, forbidden),

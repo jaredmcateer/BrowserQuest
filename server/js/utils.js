@@ -1,7 +1,7 @@
 
-var Utils = {},
-  sanitizer = require('sanitizer'),
-  Types = require('../../shared/js/gametypes');
+var Utils = {};
+var sanitizer = require('sanitizer');
+var Types = require('../../shared/js/gametypes');
 
 module.exports = Utils;
 

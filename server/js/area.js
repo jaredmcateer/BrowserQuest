@@ -1,10 +1,10 @@
 
-var cls = require('./lib/class'),
-  _ = require('underscore'),
-  Utils = require('./utils'),
-  Types = require('../../shared/js/gametypes');
+var cls = require('./lib/class');
+var _ = require('underscore');
+var Utils = require('./utils');
+var Mob = require('./mob');
 
-module.exports = Area = cls.Class.extend({
+var Area = cls.Class.extend({
   init: function (id, x, y, width, height, world) {
     this.id = id;
     this.x = x;
@@ -33,9 +33,9 @@ module.exports = Area = cls.Class.extend({
     var i = _.indexOf(_.pluck(this.entities, 'id'), entity.id);
     this.entities.splice(i, 1);
 
-    if (this.isEmpty() && this.hasCompletelyRespawned && this.empty_callback) {
+    if (this.isEmpty() && this.hasCompletelyRespawned && this.emptyCallback) {
       this.hasCompletelyRespawned = false;
-      this.empty_callback();
+      this.emptyCallback();
     }
   },
 
@@ -66,6 +66,8 @@ module.exports = Area = cls.Class.extend({
   },
 
   onEmpty: function (callback) {
-    this.empty_callback = callback;
+    this.emptyCallback = callback;
   }
 });
+
+module.exports = Area;

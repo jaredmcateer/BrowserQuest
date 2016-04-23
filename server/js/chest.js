@@ -1,8 +1,9 @@
 
-var Utils = require('./utils'),
-  Types = require('../../shared/js/gametypes');
+var Utils = require('./utils');
+var Types = require('../../shared/js/gametypes');
+var Item = require('./item.js');
 
-module.exports = Chest = Item.extend({
+var Chest = Item.extend({
   init: function (id, x, y) {
     this._super(id, Types.Entities.CHEST, x, y);
   },
@@ -22,3 +23,5 @@ module.exports = Chest = Item.extend({
     return item;
   }
 });
+
+module.exports = Chest;

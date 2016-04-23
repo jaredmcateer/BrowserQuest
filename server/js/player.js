@@ -1,14 +1,16 @@
 
-var cls = require('./lib/class'),
-  _ = require('underscore'),
-  Messages = require('./message'),
-  Utils = require('./utils'),
-  Properties = require('./properties'),
-  Formulas = require('./formulas'),
-  check = require('./format').check,
-  Types = require('../../shared/js/gametypes');
+var Character = require('./character');
+var _ = require('underscore');
+var Messages = require('./message');
+var Utils = require('./utils');
+var Properties = require('./properties');
+var Formulas = require('./formulas');
+var check = require('./format').check;
+var Types = require('../../shared/js/gametypes');
+var FormatChecker = require('./format');
+var Chest = require('./chest');
 
-module.exports = Player = Character.extend({
+var Player = Character.extend({
   init: function (connection, worldServer) {
     var self = this;
 
@@ -47,6 +49,10 @@ module.exports = Player = Character.extend({
 
       if (action === Types.Messages.HELLO) {
         var name = Utils.sanitize(message[1]);
+        var mob;
+        var item;
+        var x;
+        var y;
 
         // If name was cleared by the sanitizer, give a default name.
         // Always ensure that the name is not longer than a maximum length.
@@ -61,7 +67,7 @@ module.exports = Player = Character.extend({
         self.updatePosition();
 
         self.server.addPlayer(self);
-        self.server.enter_callback(self);
+        self.server.enterCallback(self);
 
         self.send([Types.Messages.WELCOME, self.id, self.name, self.x, self.y, self.hitPoints]);
         self.hasEnteredGame = true;
@@ -70,7 +76,7 @@ module.exports = Player = Character.extend({
         message.shift();
         self.server.pushSpawnsToPlayer(self, message);
       } else if (action === Types.Messages.ZONE) {
-        self.zone_callback();
+        self.zoneCallback();
       } else if (action === Types.Messages.CHAT) {
         var msg = Utils.sanitize(message[1]);
 
@@ -80,43 +86,43 @@ module.exports = Player = Character.extend({
           self.broadcastToZone(new Messages.Chat(self, msg), false);
         }
       } else if (action === Types.Messages.MOVE) {
-        if (self.move_callback) {
-          var x = message[1],
-            y = message[2];
+        if (self.moveCallback) {
+          x = message[1];
+          y = message[2];
 
           if (self.server.isValidPosition(x, y)) {
             self.setPosition(x, y);
             self.clearTarget();
 
             self.broadcast(new Messages.Move(self));
-            self.move_callback(self.x, self.y);
+            self.moveCallback(self.x, self.y);
           }
         }
       } else if (action === Types.Messages.LOOTMOVE) {
-        if (self.lootmove_callback) {
+        if (self.lootmoveCallback) {
           self.setPosition(message[1], message[2]);
 
-          var item = self.server.getEntityById(message[3]);
+          item = self.server.getEntityById(message[3]);
           if (item) {
             self.clearTarget();
 
             self.broadcast(new Messages.LootMove(self, item));
-            self.lootmove_callback(self.x, self.y);
+            self.lootmoveCallback(self.x, self.y);
           }
         }
       } else if (action === Types.Messages.AGGRO) {
-        if (self.move_callback) {
+        if (self.moveCallback) {
           self.server.handleMobHate(message[1], self.id, 5);
         }
       } else if (action === Types.Messages.ATTACK) {
-        var mob = self.server.getEntityById(message[1]);
+        mob = self.server.getEntityById(message[1]);
 
         if (mob) {
           self.setTarget(mob);
           self.server.broadcastAttacker(self);
         }
       } else if (action === Types.Messages.HIT) {
-        var mob = self.server.getEntityById(message[1]);
+        mob = self.server.getEntityById(message[1]);
         if (mob) {
           var dmg = Formulas.dmg(self.weaponLevel, mob.armorLevel);
 
@@ -127,7 +133,7 @@ module.exports = Player = Character.extend({
           }
         }
       } else if (action === Types.Messages.HURT) {
-        var mob = self.server.getEntityById(message[1]);
+        mob = self.server.getEntityById(message[1]);
         if (mob && self.hitPoints > 0) {
           self.hitPoints -= Formulas.dmg(mob.weaponLevel, self.armorLevel);
           self.server.handleHurtEntity(self);
@@ -140,7 +146,7 @@ module.exports = Player = Character.extend({
           }
         }
       } else if (action === Types.Messages.LOOT) {
-        var item = self.server.getEntityById(message[1]);
+        item = self.server.getEntityById(message[1]);
 
         if (item) {
           var kind = item.kind;
@@ -168,7 +174,7 @@ module.exports = Player = Character.extend({
               case Types.Entities.BURGER:
                 amount = 100;
                 break;
-            }
+              }
 
               if (!self.hasFullHealth()) {
                 self.regenHealthBy(amount);
@@ -181,8 +187,8 @@ module.exports = Player = Character.extend({
           }
         }
       } else if (action === Types.Messages.TELEPORT) {
-        var x = message[1],
-          y = message[2];
+        x = message[1],
+        y = message[2];
 
         if (self.server.isValidPosition(x, y)) {
           self.setPosition(x, y);
@@ -204,8 +210,8 @@ module.exports = Player = Character.extend({
           self.lastCheckpoint = checkpoint;
         }
       } else {
-        if (self.message_callback) {
-          self.message_callback(message);
+        if (self.messageCallback) {
+          self.messageCallback(message);
         }
       }
     });
@@ -216,8 +222,8 @@ module.exports = Player = Character.extend({
       }
 
       clearTimeout(self.disconnectTimeout);
-      if (self.exit_callback) {
-        self.exit_callback();
+      if (self.exitCallback) {
+        self.exitCallback();
       }
     });
 
@@ -256,47 +262,47 @@ module.exports = Player = Character.extend({
   },
 
   broadcast: function (message, ignoreSelf) {
-    if (this.broadcast_callback) {
-      this.broadcast_callback(message, ignoreSelf === undefined ? true : ignoreSelf);
+    if (this.broadcastCallback) {
+      this.broadcastCallback(message, ignoreSelf === undefined ? true : ignoreSelf);
     }
   },
 
   broadcastToZone: function (message, ignoreSelf) {
-    if (this.broadcastzone_callback) {
-      this.broadcastzone_callback(message, ignoreSelf === undefined ? true : ignoreSelf);
+    if (this.broadcastzoneCallback) {
+      this.broadcastzoneCallback(message, ignoreSelf === undefined ? true : ignoreSelf);
     }
   },
 
   onExit: function (callback) {
-    this.exit_callback = callback;
+    this.exitCallback = callback;
   },
 
   onMove: function (callback) {
-    this.move_callback = callback;
+    this.moveCallback = callback;
   },
 
   onLootMove: function (callback) {
-    this.lootmove_callback = callback;
+    this.lootmoveCallback = callback;
   },
 
   onZone: function (callback) {
-    this.zone_callback = callback;
+    this.zoneCallback = callback;
   },
 
   onOrient: function (callback) {
-    this.orient_callback = callback;
+    this.orientCallback = callback;
   },
 
   onMessage: function (callback) {
-    this.message_callback = callback;
+    this.messageCallback = callback;
   },
 
   onBroadcast: function (callback) {
-    this.broadcast_callback = callback;
+    this.broadcastCallback = callback;
   },
 
   onBroadcastToZone: function (callback) {
-    this.broadcastzone_callback = callback;
+    this.broadcastzoneCallback = callback;
   },
 
   equip: function (item) {
@@ -352,14 +358,14 @@ module.exports = Player = Character.extend({
   },
 
   updatePosition: function () {
-    if (this.requestpos_callback) {
-      var pos = this.requestpos_callback();
+    if (this.requestposCallback) {
+      var pos = this.requestposCallback();
       this.setPosition(pos.x, pos.y);
     }
   },
 
   onRequestPosition: function (callback) {
-    this.requestpos_callback = callback;
+    this.requestposCallback = callback;
   },
 
   resetTimeout: function () {
@@ -372,3 +378,5 @@ module.exports = Player = Character.extend({
     this.connection.close('Player was idle for too long');
   }
 });
+
+module.exports = Player;

@@ -1,9 +1,9 @@
 
-var _ = require('underscore'),
-  Types = require('../../shared/js/gametypes');
+var _ = require('underscore');
+var Types = require('../../shared/js/gametypes');
 
 (function () {
-  FormatChecker = Class.extend({
+  var FormatChecker = Class.extend({
     init: function () {
       this.formats = [];
       this.formats[Types.Messages.HELLO] = ['s', 'n', 'n'],

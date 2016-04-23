@@ -1,59 +1,61 @@
 
-var fs = require('fs'),
-  Metrics = require('./metrics');
+var fs = require('fs');
+var Metrics = require('./metrics');
+var Player = require('./player');
 
 function main(config) {
-  var ws = require('./ws'),
-    WorldServer = require('./worldserver'),
-    Log = require('log'),
-    _ = require('underscore'),
-    server = new ws.MultiVersionWebsocketServer(config.port),
-    metrics = config.metrics_enabled ? new Metrics(config) : null;
-  worlds = [],
-    lastTotalPlayers = 0,
-    checkPopulationInterval = setInterval(function () {
-      if (metrics && metrics.isReady) {
-        metrics.getTotalPlayers(function (totalPlayers) {
-          if (totalPlayers !== lastTotalPlayers) {
-            lastTotalPlayers = totalPlayers;
-            _.each(worlds, function (world) {
-              world.updatePopulation(totalPlayers);
-            });
-          }
-        });
-      }
-    }, 1000);
+  var ws = require('./ws');
+  var WorldServer = require('./worldserver');
+  var Log = require('log');
+  var _ = require('underscore');
+  var server = new ws.MultiVersionWebsocketServer(config.port);
+  var metrics = config.metricsEnabled ? new Metrics(config) : null;
+  var worlds = [];
+  var lastTotalPlayers = 0;
 
-  switch (config.debug_level) {
+  setInterval(function () {
+    if (metrics && metrics.isReady) {
+      metrics.getTotalPlayers(function (totalPlayers) {
+        if (totalPlayers !== lastTotalPlayers) {
+          lastTotalPlayers = totalPlayers;
+          _.each(worlds, function (world) {
+            world.updatePopulation(totalPlayers);
+          });
+        }
+      });
+    }
+  }, 1000);
+
+  switch (config.debugLevel) {
   case 'error':
     log = new Log(Log.ERROR); break;
   case 'debug':
     log = new Log(Log.DEBUG); break;
   case 'info':
     log = new Log(Log.INFO); break;
-}
+  }
 
   log.info('Starting BrowserQuest game server...');
 
   server.onConnect(function (connection) {
-    var world, // the one in which the player will be spawned
-      connect = function () {
+    var world; // the one in which the player will be spawned
+    var connect = function () {
       if (world) {
-        world.connect_callback(new Player(connection, world));
+        world.connectCallback(new Player(connection, world));
       }
     };
 
     if (metrics) {
-      metrics.getOpenWorldCount(function (open_world_count) {
+      metrics.getOpenWorldCount(function (openWorldCount) {
         // choose the least populated world among open worlds
-        world = _.min(_.first(worlds, open_world_count), function (w) { return w.playerCount; });
+        world = _.min(_.first(worlds, openWorldCount), function (w) { return w.playerCount; });
 
         connect();
       });
     } else {
       // simply fill each world sequentially until they are full
       world = _.detect(worlds, function (world) {
-        return world.playerCount < config.nb_players_per_world;
+        return world.playerCount < config.nbPlayersPerWorld;
       });
 
       world.updatePopulation();
@@ -75,9 +77,9 @@ function main(config) {
     metrics.updateWorldDistribution(getWorldDistribution(worlds));
   };
 
-  _.each(_.range(config.nb_worlds), function (i) {
-    var world = new WorldServer('world' + (i + 1), config.nb_players_per_world, server);
-    world.run(config.map_filepath);
+  _.each(_.range(config.nbWorlds), function (i) {
+    var world = new WorldServer('world' + (i + 1), config.nbPlayersPerWorld, server);
+    world.run(config.mapFilepath);
     worlds.push(world);
     if (metrics) {
       world.onPlayerAdded(onPopulationChange);
@@ -89,7 +91,7 @@ function main(config) {
     return JSON.stringify(getWorldDistribution(worlds));
   });
 
-  if (config.metrics_enabled) {
+  if (config.metricsEnabled) {
     metrics.ready(function () {
       onPopulationChange(); // initialize all counters to 0 when the server starts
     });
@@ -111,20 +113,20 @@ function getWorldDistribution(worlds) {
 }
 
 function getConfigFile(path, callback) {
-  fs.readFile(path, 'utf8', function (err, json_string) {
+  fs.readFile(path, 'utf8', function (err, jsonString) {
     if (err) {
       console.error('Could not open config file:', err.path);
       callback(null);
     } else {
-      callback(JSON.parse(json_string));
+      callback(JSON.parse(jsonString));
     }
   });
 }
 
-var defaultConfigPath = './server/config.json',
-  customConfigPath = './server/config_local.json';
+var defaultConfigPath = './server/config.json';
+var customConfigPath = './server/config_local.json';
 
-process.argv.forEach(function (val, index, array) {
+process.argv.forEach(function (val, index) {
   if (index === 2) {
     customConfigPath = val;
   }

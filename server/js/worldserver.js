@@ -1,25 +1,22 @@
 
-var cls = require('./lib/class'),
-  _ = require('underscore'),
-  Log = require('log'),
-  Entity = require('./entity'),
-  Character = require('./character'),
-  Mob = require('./mob'),
-  Map = require('./map'),
-  Npc = require('./npc'),
-  Player = require('./player'),
-  Item = require('./item'),
-  MobArea = require('./mobarea'),
-  ChestArea = require('./chestarea'),
-  Chest = require('./chest'),
-  Messages = require('./message'),
-  Properties = require('./properties'),
-  Utils = require('./utils'),
-  Types = require('../../shared/js/gametypes');
+var cls = require('./lib/class');
+var _ = require('underscore');
+var Mob = require('./mob');
+var Map = require('./map');
+var Npc = require('./npc');
+var Player = require('./player');
+var Item = require('./item');
+var MobArea = require('./mobarea');
+var ChestArea = require('./chestarea');
+var Chest = require('./chest');
+var Messages = require('./message');
+var Properties = require('./properties');
+var Utils = require('./utils');
+var Types = require('../../shared/js/gametypes');
 
 // ======= GAME SERVER ========
 
-module.exports = World = cls.Class.extend({
+var World = cls.Class.extend({
   init: function (id, maxPlayers, websocketServer) {
     var self = this;
 
@@ -70,7 +67,7 @@ module.exports = World = cls.Class.extend({
       self.pushToPlayer(player, new Messages.Population(self.playerCount));
       self.pushRelevantEntityListTo(player);
 
-      var move_callback = function (x, y) {
+      var moveCallback = function (x, y) {
         log.debug(player.name + ' is moving to (' + x + ', ' + y + ').');
 
         player.forEachAttacker(function (mob) {
@@ -88,8 +85,8 @@ module.exports = World = cls.Class.extend({
         });
       };
 
-      player.onMove(move_callback);
-      player.onLootMove(move_callback);
+      player.onMove(moveCallback);
+      player.onLootMove(moveCallback);
 
       player.onZone(function () {
         var hasChangedGroups = self.handleEntityGroupMembership(player);
@@ -113,13 +110,13 @@ module.exports = World = cls.Class.extend({
         self.removePlayer(player);
         self.decrementPlayerCount();
 
-        if (self.removed_callback) {
-          self.removed_callback();
+        if (self.removedCallback) {
+          self.removedCallback();
         }
       });
 
-      if (self.added_callback) {
-        self.added_callback();
+      if (self.addedCallback) {
+        self.addedCallback();
       }
     });
 
@@ -195,8 +192,8 @@ module.exports = World = cls.Class.extend({
       if (updateCount < regenCount) {
         updateCount += 1;
       } else {
-        if (self.regen_callback) {
-          self.regen_callback();
+        if (self.regenCallback) {
+          self.regenCallback();
         }
 
         updateCount = 0;
@@ -211,27 +208,27 @@ module.exports = World = cls.Class.extend({
   },
 
   onInit: function (callback) {
-    this.init_callback = callback;
+    this.initCallback = callback;
   },
 
   onPlayerConnect: function (callback) {
-    this.connect_callback = callback;
+    this.connectCallback = callback;
   },
 
   onPlayerEnter: function (callback) {
-    this.enter_callback = callback;
+    this.enterCallback = callback;
   },
 
   onPlayerAdded: function (callback) {
-    this.added_callback = callback;
+    this.addedCallback = callback;
   },
 
   onPlayerRemoved: function (callback) {
-    this.removed_callback = callback;
+    this.removedCallback = callback;
   },
 
   onRegenTick: function (callback) {
-    this.regen_callback = callback;
+    this.regenCallback = callback;
   },
 
   pushRelevantEntityListTo: function (player) {
@@ -297,7 +294,7 @@ module.exports = World = cls.Class.extend({
 
     // Push this message to all groups which are not going to be updated anymore,
     // since the player left them.
-    _.each(player.recentlyLeftGroups, function (id) {
+    _.each(player.recentlyLeftGroups, function (id) {
       self.pushToGroup(id, message);
     });
 
@@ -312,9 +309,8 @@ module.exports = World = cls.Class.extend({
     }
   },
 
-  processQueues: function () {
-    var self = this,
-      connection;
+  processQueues: function () {
+    var connection;
 
     for (var id in this.outgoingQueues) {
       if (this.outgoingQueues[id].length > 0) {
@@ -470,9 +466,8 @@ module.exports = World = cls.Class.extend({
   },
 
   handleMobHate: function (mobId, playerId, hatePoints) {
-    var mob = this.getEntityById(mobId),
-      player = this.getEntityById(playerId),
-      mostHated;
+    var mob = this.getEntityById(mobId);
+    var player = this.getEntityById(playerId);
 
     if (player && mob) {
       mob.increaseHateFor(playerId, hatePoints);
@@ -500,7 +495,7 @@ module.exports = World = cls.Class.extend({
   },
 
   onEntityAttack: function (callback) {
-    this.attack_callback = callback;
+    this.attackCallback = callback;
   },
 
   getEntityById: function (id) {
@@ -523,18 +518,16 @@ module.exports = World = cls.Class.extend({
   },
 
   broadcastAttacker: function (character) {
-    if (character) {
+    if (character) {
       this.pushToAdjacentGroups(character.group, character.attack(), character.id);
     }
 
-    if (this.attack_callback) {
-      this.attack_callback(character);
+    if (this.attackCallback) {
+      this.attackCallback(character);
     }
   },
 
   handleHurtEntity: function (entity, attacker, damage) {
-    var self = this;
-
     if (entity.type === 'player') {
       // A player is only aware of his own hitpoints
       this.pushToPlayer(entity, entity.health());
@@ -800,9 +793,8 @@ module.exports = World = cls.Class.extend({
 
     if (this.zoneGroupsReady) {
       this.map.forEachGroup(function (id) {
-        var spawns = [];
         if (self.groups[id].incoming.length > 0) {
-          spawns = _.each(self.groups[id].incoming, function (entity) {
+          _.each(self.groups[id].incoming, function (entity) {
             if (entity instanceof Player) {
               self.pushToGroup(id, new Messages.Spawn(entity), entity.id);
             } else {
@@ -842,7 +834,7 @@ module.exports = World = cls.Class.extend({
     }
   },
 
-  handleEmptyMobArea: function (area) {
+  handleEmptyMobArea: function () {
 
   },
 
@@ -853,7 +845,7 @@ module.exports = World = cls.Class.extend({
     }
   },
 
-  handleOpenedChest: function (chest, player) {
+  handleOpenedChest: function (chest) {
     this.pushToAdjacentGroups(chest.group, chest.despawn());
     this.removeEntity(chest);
 
@@ -876,3 +868,5 @@ module.exports = World = cls.Class.extend({
     this.pushBroadcast(new Messages.Population(this.playerCount, totalPlayers ? totalPlayers : this.playerCount));
   }
 });
+
+module.exports = World;

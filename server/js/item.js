@@ -1,5 +1,6 @@
+var Entity = require('./entity.js');
 
-module.exports = Item = Entity.extend({
+var Item = Entity.extend({
   init: function (id, kind, x, y) {
     this._super(id, 'item', kind, x, y);
     this.isStatic = false;
@@ -32,13 +33,15 @@ module.exports = Item = Entity.extend({
   scheduleRespawn: function (delay) {
     var self = this;
     setTimeout(function () {
-      if (self.respawn_callback) {
-        self.respawn_callback();
+      if (self.respawnCallback) {
+        self.respawnCallback();
       }
     }, delay);
   },
 
   onRespawn: function (callback) {
-    this.respawn_callback = callback;
+    this.respawnCallback = callback;
   }
 });
+
+module.exports = Item;
