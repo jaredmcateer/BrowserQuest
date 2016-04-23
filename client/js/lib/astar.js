@@ -43,7 +43,7 @@ define(function() {
 
     function successors(find, x, y, grid, rows, cols){
       var
-      N = y - 1,
+        N = y - 1,
         S = y + 1,
         E = x + 1,
         W = x - 1,
@@ -53,7 +53,7 @@ define(function() {
         $W = W > -1 && !grid[y][W],
         result = [],
         i = 0
-      ;
+        ;
       $N && (result[i++] = {x:x, y:N});
       $E && (result[i++] = {x:E, y:y});
       $S && (result[i++] = {x:x, y:S});
@@ -67,7 +67,7 @@ define(function() {
 
     function euclidean(start, end, f1, f2) {
       var
-      x = start.x - end.x,
+        x = start.x - end.x,
         y = start.y - end.y
       ;
       return f2(x * x + y * y);
@@ -79,7 +79,7 @@ define(function() {
 
     function AStar(grid, start, end, f) {
       var
-      cols = grid[0].length,
+        cols = grid[0].length,
         rows = grid.length,
         limit = cols * rows,
         f1 = Math.abs,
@@ -89,22 +89,22 @@ define(function() {
         open = [{x:start[0], y:start[1], f:0, g:0, v:start[0]+start[1]*cols}],
         length = 1,
         adj, distance, find, i, j, max, min, current, next
-      ;
+        ;
       end = {x:end[0], y:end[1], v:end[0]+end[1]*cols};
       switch (f) {
-        case "Diagonal":
-          find = diagonalSuccessors;
-        case "DiagonalFree":
-          distance = diagonal;
+      case 'Diagonal':
+        find = diagonalSuccessors;
+      case 'DiagonalFree':
+        distance = diagonal;
         break;
-        case "Euclidean":
-          find = diagonalSuccessors;
-        case "EuclideanFree":
-          f2 = Math.sqrt;
+      case 'Euclidean':
+        find = diagonalSuccessors;
+      case 'EuclideanFree':
+        f2 = Math.sqrt;
         distance = euclidean;
         break;
-        default:
-          distance = manhattan;
+      default:
+        distance = manhattan;
         find = nothingToDo;
         break;
       }
@@ -117,7 +117,7 @@ define(function() {
             max = f;
             min = i;
           }
-        };
+        }
         current = open.splice(min, 1)[0];
         if (current.v != end.v) {
           --length;

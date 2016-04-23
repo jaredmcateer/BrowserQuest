@@ -72,11 +72,11 @@ define(
     'text!../sprites/villager.json',
     'text!../sprites/wizard.json'
   ],
-  function() {
+  function () {
 
     var sprites = {};
 
-    _.each(arguments, function(spriteJson) {
+    _.each(arguments, function (spriteJson) {
       var sprite = JSON.parse(spriteJson);
 
       sprites[sprite.id] = sprite;

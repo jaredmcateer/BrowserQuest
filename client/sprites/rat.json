@@ -1,1 +1,47 @@
-{	"id": "rat",	"width": 48,	"height": 48,	"animations": {		"death": {			"length": 4,			"row": 0		},		"atk_right": {			"length": 6,			"row": 1		},		"walk_right": {			"length": 3,			"row": 2		},		"idle_right": {			"length": 2,			"row": 3		},		"atk_up": {			"length": 4,			"row": 4		},		"walk_up": {			"length": 4,			"row": 5		},		"idle_up": {			"length": 4,			"row": 6		},		"atk_down": {			"length": 4,			"row": 7		},		"walk_down": {			"length": 4,			"row": 8		},		"idle_down": {			"length": 4,			"row": 9		}	}}
+{
+    "animations": {
+        "atkDown": {
+            "length": 4,
+            "row": 7
+        },
+        "atkRight": {
+            "length": 6,
+            "row": 1
+        },
+        "atkUp": {
+            "length": 4,
+            "row": 4
+        },
+        "death": {
+            "length": 4,
+            "row": 0
+        },
+        "idleDown": {
+            "length": 4,
+            "row": 9
+        },
+        "idleRight": {
+            "length": 2,
+            "row": 3
+        },
+        "idleUp": {
+            "length": 4,
+            "row": 6
+        },
+        "walkDown": {
+            "length": 4,
+            "row": 8
+        },
+        "walkRight": {
+            "length": 3,
+            "row": 2
+        },
+        "walkUp": {
+            "length": 4,
+            "row": 5
+        }
+    },
+    "height": 48,
+    "id": "rat",
+    "width": 48
+}

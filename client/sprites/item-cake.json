@@ -1,1 +1,13 @@
-{	"id": "item-cake",	"width": 24,	"height": 24,	"animations": {		"idle": {			"length": 3,			"row": 0		}	},	"offset_x": -4,	"offset_y": -6}
+{
+    "animations": {
+        "idle": {
+            "length": 3,
+            "row": 0
+        }
+    },
+    "height": 24,
+    "id": "item-cake",
+    "offsetX": -4,
+    "offsetY": -6,
+    "width": 24
+}

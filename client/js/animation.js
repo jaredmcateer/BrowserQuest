@@ -1,8 +1,8 @@
 
-define(function() {
+define(function () {
 
   var Animation = Class.extend({
-    init: function(name, length, row, width, height) {
+    init: function (name, length, row, width, height) {
       this.name = name;
       this.length = length;
       this.row = row;
@@ -11,17 +11,17 @@ define(function() {
       this.reset();
     },
 
-    tick: function() {
+    tick: function () {
       var i = this.currentFrame.index;
 
       i = (i < this.length - 1) ? i + 1 : 0;
 
-      if(this.count > 0) {
-        if(i === 0) {
+      if (this.count > 0) {
+        if (i === 0) {
           this.count -= 1;
-          if(this.count === 0) {
+          if (this.count === 0) {
             this.currentFrame.index = 0;
-            this.endcount_callback();
+            this.endcountCallback();
             return;
           }
         }
@@ -32,25 +32,25 @@ define(function() {
       this.currentFrame.index = i;
     },
 
-    setSpeed: function(speed) {
+    setSpeed: function (speed) {
       this.speed = speed;
     },
 
-    setCount: function(count, onEndCount) {
+    setCount: function (count, onEndCount) {
       this.count = count;
-      this.endcount_callback = onEndCount;
+      this.endcountCallback = onEndCount;
     },
 
-    isTimeToAnimate: function(time) {
+    isTimeToAnimate: function (time) {
       return (time - this.lastTime) > this.speed;
     },
 
-    update: function(time) {
-      if(this.lastTime === 0 && this.name.substr(0, 3) === "atk") {
+    update: function (time) {
+      if (this.lastTime === 0 && this.name.substr(0, 3) === 'atk') {
         this.lastTime = time;
       }
 
-      if(this.isTimeToAnimate(time)) {
+      if (this.isTimeToAnimate(time)) {
         this.lastTime = time;
         this.tick();
         return true;
@@ -59,7 +59,7 @@ define(function() {
       }
     },
 
-    reset: function() {
+    reset: function () {
       this.lastTime = 0;
       this.currentFrame = { index: 0, x: 0, y: this.row * this.height };
     }

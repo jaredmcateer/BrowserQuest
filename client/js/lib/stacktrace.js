@@ -70,12 +70,12 @@ printStackTrace.implementation.prototype = {
     } else {
       ex = ex ||
         (function() {
-        try {
+          try {
           var _err = __undef__ << 1;
         } catch (e) {
           return e;
         }
-      })();
+        })();
       return this[mode](ex);
     }
   },
@@ -83,8 +83,8 @@ printStackTrace.implementation.prototype = {
   /**
    * @return {String} mode of operation for the environment in question.
    */
-mode: function() {
-        try {
+  mode: function() {
+  try {
           var _err = __undef__ << 1;
         } catch (e) {
           if (e['arguments']) {
@@ -97,8 +97,8 @@ mode: function() {
             return (this._mode = 'opera');
           }
         }
-        return (this._mode = 'other');
-      },
+  return (this._mode = 'other');
+},
 
       /**
        * Given a context, function name, and callback function, overwrite it so that it calls
@@ -126,13 +126,13 @@ mode: function() {
    * @param {Object} context of execution (e.g. window)
    * @param {String} functionName to de-instrument
    */
-deinstrumentFunction: function(context, functionName) {
-                        if (context[functionName].constructor === Function &&
+  deinstrumentFunction: function(context, functionName) {
+  if (context[functionName].constructor === Function &&
                             context[functionName]._instrumented &&
                             context['_old' + functionName].constructor === Function) {
                           context[functionName] = context['_old' + functionName];
                         }
-                      },
+},
 
                       /**
                        * Given an Error object, return a formatted Array based on Chrome's stack string.
@@ -150,9 +150,9 @@ deinstrumentFunction: function(context, functionName) {
    * @param e - Error object to inspect
    * @return Array<String> of function calls, files and line numbers
    */
-firefox: function(e) {
-           return e.stack.replace(/^[^\n]*\n/, '').replace(/(?:\n@:0)?\s+$/m, '').replace(/^\(/gm, '{anonymous}(').split('\n');
-               },
+  firefox: function(e) {
+  return e.stack.replace(/^[^\n]*\n/, '').replace(/(?:\n@:0)?\s+$/m, '').replace(/^\(/gm, '{anonymous}(').split('\n');
+},
 
                /**
                 * Given an Error object, return a formatted Array based on Opera 10's stacktrace string.
@@ -164,7 +164,7 @@ firefox: function(e) {
     var stack = e.stacktrace;
     var lines = stack.split('\n'), ANON = '{anonymous}',
       lineRE = /.*line (\d+), column (\d+) in ((<anonymous function\:?\s*(\S+))|([^\(]+)\([^\)]*\))(?: in )?(.*)\s*$/i, i, j, len;
-      for (i = 2, j = 0, len = lines.length; i < len - 2; i++) {
+    for (i = 2, j = 0, len = lines.length; i < len - 2; i++) {
         if (lineRE.test(lines[i])) {
           var location = RegExp.$6 + ':' + RegExp.$1 + ':' + RegExp.$2;
           var fnName = RegExp.$3;
@@ -173,8 +173,8 @@ firefox: function(e) {
         }
       }
 
-      lines.splice(j, lines.length - j);
-      return lines;
+    lines.splice(j, lines.length - j);
+    return lines;
   },
 
   // Opera 7.x-9.x only!
@@ -215,8 +215,8 @@ firefox: function(e) {
    * @param {Arguments} object
    * @return {Array} of Strings with stringified arguments
    */
-stringifyArguments: function(args) {
-                      for (var i = 0; i < args.length; ++i) {
+  stringifyArguments: function(args) {
+  for (var i = 0; i < args.length; ++i) {
                         var arg = args[i];
                         if (arg === undefined) {
                           args[i] = 'undefined';
@@ -238,10 +238,10 @@ stringifyArguments: function(args) {
                           }
                         }
                       }
-                      return args.join(',');
-                    },
+  return args.join(',');
+},
 
-sourceCache: {},
+  sourceCache: {},
 
              /**
               * @return the text from a given URL.
@@ -262,9 +262,9 @@ sourceCache: {},
    *
    * @return <Function> XHR function or equivalent
    */
-createXMLHTTPObject: function() {
-                       var xmlhttp, XMLHttpFactories = [
-                         function() {
+  createXMLHTTPObject: function() {
+  var xmlhttp, XMLHttpFactories = [
+                           function() {
                            return new XMLHttpRequest();
                          }, function() {
                            return new ActiveXObject('Msxml2.XMLHTTP');
@@ -273,8 +273,8 @@ createXMLHTTPObject: function() {
                          }, function() {
                            return new ActiveXObject('Microsoft.XMLHTTP');
                          }
-                       ];
-                       for (var i = 0; i < XMLHttpFactories.length; i++) {
+                         ];
+  for (var i = 0; i < XMLHttpFactories.length; i++) {
                          try {
                            xmlhttp = XMLHttpFactories[i]();
                            // Use memoization to cache the factory
@@ -282,7 +282,7 @@ createXMLHTTPObject: function() {
                            return xmlhttp;
                          } catch (e) {}
                        }
-                     },
+},
 
                      /**
                       * Given a URL, check if it is in the same domain (so we can get the source
@@ -301,15 +301,15 @@ createXMLHTTPObject: function() {
    * @param url <String> JS source URL
    * @return <String> Source code
    */
-getSource: function(url) {
-             if (!(url in this.sourceCache)) {
+  getSource: function(url) {
+  if (!(url in this.sourceCache)) {
                this.sourceCache[url] = this.ajax(url).split('\n');
              }
-             return this.sourceCache[url];
-           },
+  return this.sourceCache[url];
+},
 
-guessFunctions: function(stack) {
-                  for (var i = 0; i < stack.length; ++i) {
+  guessFunctions: function(stack) {
+  for (var i = 0; i < stack.length; ++i) {
                     var reStack = /\{anonymous\}\(.*\)@(\w+:\/\/([\-\w\.]+)+(:\d+)?[^:]+):(\d+):?(\d+)?/;
                     var frame = stack[i], m = reStack.exec(frame);
                     if (m) {
@@ -320,24 +320,24 @@ guessFunctions: function(stack) {
                       }
                     }
                   }
-                  return stack;
-                },
+  return stack;
+},
 
-guessFunctionName: function(url, lineNo) {
-                     try {
+  guessFunctionName: function(url, lineNo) {
+  try {
                        return this.guessFunctionNameFromLines(lineNo, this.getSource(url));
                      } catch (e) {
                        return 'getSource failed with url: ' + url + ', exception: ' + e.toString();
                      }
-                   },
+},
 
-guessFunctionNameFromLines: function(lineNo, source) {
-                              var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
-                              var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
+  guessFunctionNameFromLines: function(lineNo, source) {
+  var reFunctionArgNames = /function ([^(]*)\(([^)]*)\)/;
+  var reGuessFunction = /['"]?([0-9A-Za-z_]+)['"]?\s*[:=]\s*(function|eval|new Function)/;
                               // Walk backwards from the first line in the function until we find the line which
                               // matches the pattern above, which is the function definition
-                              var line = "", maxLines = 10;
-                              for (var i = 0; i < maxLines; ++i) {
+  var line = '', maxLines = 10;
+  for (var i = 0; i < maxLines; ++i) {
                                 line = source[lineNo - i] + line;
                                 if (line !== undefined) {
                                   var m = reGuessFunction.exec(line);
@@ -351,6 +351,6 @@ guessFunctionNameFromLines: function(lineNo, source) {
                                   }
                                 }
                               }
-                              return '(?)';
-                            }
+  return '(?)';
+}
 };

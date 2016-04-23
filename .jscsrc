@@ -1,0 +1,7 @@
+{
+  "preset": "airbnb",
+  "requireTrailingComma": null,
+  "safeContextKeyword": "self",
+  "validateIndentation": null
+  "excludeFiles": ["./client/js/text.js"]
+}

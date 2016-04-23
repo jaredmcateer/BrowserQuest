@@ -159,8 +159,8 @@
         dec !== undefined ? f instanceof Array ? f.push(e)
           : f[key] = e : dec = e;
 
-          stack.push(e);
-          i++;
+        stack.push(e);
+        i++;
 
       } else if (t === 11 || t === 9) {
         stack.pop();
@@ -231,8 +231,8 @@
         f instanceof Array ? f.push(data.substr(p, e))
           : f[key] = data.substr(p, e);
 
-          p += e;
-          set = true;
+        p += e;
+        set = true;
       }
     }
     return dec;

@@ -1,68 +1,66 @@
 
-define(function() {
+define(function () {
 
   var InfoManager = Class.extend({
-    init: function(game) {
+    init: function (game) {
       this.game = game;
       this.infos = {};
       this.destroyQueue = [];
     },
 
-    addDamageInfo: function(value, x, y, type) {
-      var time = this.game.currentTime,
-        id = time+""+Math.abs(value)+""+x+""+y,
-        self = this,
-        info = new DamageInfo(id, value, x, y, DamageInfo.DURATION, type);
+    addDamageInfo: function (value, x, y, type) {
+      var time = this.game.currentTime;
+      var id = time + '' + Math.abs(value) + '' + x + '' + y;
+      var self = this;
+      var info = new DamageInfo(id, value, x, y, DamageInfo.DURATION, type);
 
-      info.onDestroy(function(id) {
+      info.onDestroy(function (id) {
         self.destroyQueue.push(id);
       });
+
       this.infos[id] = info;
     },
 
-    forEachInfo: function(callback) {
-      var self = this;
-
-      _.each(this.infos, function(info, id) {
+    forEachInfo: function (callback) {
+      _.each(this.infos, function (info) {
         callback(info);
       });
     },
 
-    update: function(time) {
+    update: function (time) {
       var self = this;
 
-      this.forEachInfo(function(info) {
+      this.forEachInfo(function (info) {
         info.update(time);
       });
 
-      _.each(this.destroyQueue, function(id) {
+      _.each(this.destroyQueue, function (id) {
         delete self.infos[id];
       });
+
       this.destroyQueue = [];
     }
   });
 
-
   var damageInfoColors = {
-    "received": {
-      fill: "rgb(255, 50, 50)",
-      stroke: "rgb(255, 180, 180)"
+    received: {
+      fill: 'rgb(255, 50, 50)',
+      stroke: 'rgb(255, 180, 180)'
     },
-    "inflicted": {
-      fill: "white",
-      stroke: "#373737"
+    inflicted: {
+      fill: 'white',
+      stroke: '#373737'
     },
-    "healed": {
-      fill: "rgb(80, 255, 80)",
-      stroke: "rgb(50, 120, 50)"
+    healed: {
+      fill: 'rgb(80, 255, 80)',
+      stroke: 'rgb(50, 120, 50)'
     }
   };
-
 
   var DamageInfo = Class.extend({
     DURATION: 1000,
 
-    init: function(id, value, x, y, duration, type) {
+    init: function (id, value, x, y, duration, type) {
       this.id = id;
       this.value = value;
       this.duration = duration;
@@ -75,32 +73,32 @@ define(function() {
       this.strokeColor = damageInfoColors[type].stroke;
     },
 
-    isTimeToAnimate: function(time) {
+    isTimeToAnimate: function (time) {
       return (time - this.lastTime) > this.speed;
     },
 
-    update: function(time) {
-      if(this.isTimeToAnimate(time)) {
+    update: function (time) {
+      if (this.isTimeToAnimate(time)) {
         this.lastTime = time;
         this.tick();
       }
     },
 
-    tick: function() {
+    tick: function () {
       this.y -= 1;
       this.opacity -= 0.07;
-      if(this.opacity < 0) {
+      if (this.opacity < 0) {
         this.destroy();
       }
     },
 
-    onDestroy: function(callback) {
-      this.destroy_callback = callback;
+    onDestroy: function (callback) {
+      this.destroyCallback = callback;
     },
 
-    destroy: function() {
-      if(this.destroy_callback) {
-        this.destroy_callback(this.id);
+    destroy: function () {
+      if (this.destroyCallback) {
+        this.destroyCallback(this.id);
       }
     }
   });

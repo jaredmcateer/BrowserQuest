@@ -1,9 +1,9 @@
 
-define(['mob', 'timer'], function(Mob, Timer) {
+define(['mob', 'timer'], function (Mob, Timer) {
 
   var Mobs = {
     Rat: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.RAT);
         this.moveSpeed = 350;
         this.idleSpeed = 700;
@@ -13,7 +13,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Skeleton: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.SKELETON);
         this.moveSpeed = 350;
         this.atkSpeed = 100;
@@ -24,7 +24,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Skeleton2: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.SKELETON2);
         this.moveSpeed = 200;
         this.atkSpeed = 100;
@@ -36,7 +36,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Spectre: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.SPECTRE);
         this.moveSpeed = 150;
         this.atkSpeed = 50;
@@ -48,7 +48,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Deathknight: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.DEATHKNIGHT);
         this.atkSpeed = 50;
         this.moveSpeed = 220;
@@ -58,8 +58,8 @@ define(['mob', 'timer'], function(Mob, Timer) {
         this.aggroRange = 3;
       },
 
-      idle: function(orientation) {
-        if(!this.hasTarget()) {
+      idle: function (orientation) {
+        if (!this.hasTarget()) {
           this._super(Types.Orientations.DOWN);
         } else {
           this._super(orientation);
@@ -68,7 +68,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Goblin: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.GOBLIN);
         this.moveSpeed = 150;
         this.atkSpeed = 60;
@@ -78,7 +78,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Ogre: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.OGRE);
         this.moveSpeed = 300;
         this.atkSpeed = 100;
@@ -87,7 +87,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Crab: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.CRAB);
         this.moveSpeed = 200;
         this.atkSpeed = 40;
@@ -96,7 +96,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Snake: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.SNAKE);
         this.moveSpeed = 200;
         this.atkSpeed = 40;
@@ -107,7 +107,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Eye: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.EYE);
         this.moveSpeed = 200;
         this.atkSpeed = 40;
@@ -116,7 +116,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Bat: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.BAT);
         this.moveSpeed = 120;
         this.atkSpeed = 90;
@@ -127,7 +127,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Wizard: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.WIZARD);
         this.moveSpeed = 200;
         this.atkSpeed = 100;
@@ -136,7 +136,7 @@ define(['mob', 'timer'], function(Mob, Timer) {
     }),
 
     Boss: Mob.extend({
-      init: function(id) {
+      init: function (id) {
         this._super(id, Types.Entities.BOSS);
         this.moveSpeed = 300;
         this.atkSpeed = 50;
@@ -146,8 +146,8 @@ define(['mob', 'timer'], function(Mob, Timer) {
         this.aggroRange = 3;
       },
 
-      idle: function(orientation) {
-        if(!this.hasTarget()) {
+      idle: function (orientation) {
+        if (!this.hasTarget()) {
           this._super(Types.Orientations.DOWN);
         } else {
           this._super(orientation);

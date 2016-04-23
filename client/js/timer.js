@@ -1,19 +1,20 @@
 
-define(function() {
+define(function () {
 
   var Timer = Class.extend({
-    init: function(duration, startTime) {
+    init: function (duration, startTime) {
       this.lastTime = startTime || 0;
       this.duration = duration;
     },
 
-    isOver: function(time) {
+    isOver: function (time) {
       var over = false;
 
-      if((time - this.lastTime) > this.duration) {
+      if ((time - this.lastTime) > this.duration) {
         over = true;
         this.lastTime = time;
       }
+
       return over;
     }
   });

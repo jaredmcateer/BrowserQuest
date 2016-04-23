@@ -1,10 +1,7 @@
-
-define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
+define(['entity', 'transition', 'timer'], function (Entity, Transition, Timer) {
 
   var Character = Entity.extend({
-    init: function(id, kind) {
-      var self = this;
-
+    init: function (id, kind) {
       this._super(id, kind);
 
       // Position and orientation
@@ -40,40 +37,42 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
       this.followingMode = false;
     },
 
-    clean: function() {
-      this.forEachAttacker(function(attacker) {
+    clean: function () {
+      this.forEachAttacker(function (attacker) {
         attacker.disengage();
         attacker.idle();
       });
     },
 
-    setMaxHitPoints: function(hp) {
+    setMaxHitPoints: function (hp) {
       this.maxHitPoints = hp;
       this.hitPoints = hp;
     },
 
-    setDefaultAnimation: function() {
+    setDefaultAnimation: function () {
       this.idle();
     },
 
-    hasWeapon: function() {
+    hasWeapon: function () {
       return false;
     },
 
-    hasShadow: function() {
+    hasShadow: function () {
       return true;
     },
 
-    animate: function(animation, speed, count, onEndCount) {
+    animate: function (animation, speed, count, onEndCount) {
       var oriented = ['atk', 'walk', 'idle'];
-      o = this.orientation;
+      var o = this.orientation;
 
-      if(!(this.currentAnimation && this.currentAnimation.name === "death")) { // don't change animation if the character is dying
+      // don't change animation if the character is dying
+      if (!(this.currentAnimation && this.currentAnimation.name === 'death')) {
         this.flipSpriteX = false;
         this.flipSpriteY = false;
 
-        if(_.indexOf(oriented, animation) >= 0) {
-          animation += "_" + (o === Types.Orientations.LEFT ? "right" : Types.getOrientationAsString(o));
+        if (_.indexOf(oriented, animation) >= 0) {
+          animation += 
+            (o === Types.Orientations.LEFT ? 'Right' : Types.getOrientationAsString(o));
           this.flipSpriteX = (this.orientation === Types.Orientations.LEFT) ? true : false;
         }
 
@@ -81,286 +80,292 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
       }
     },
 
-    turnTo: function(orientation) {
+    turnTo: function (orientation) {
       this.orientation = orientation;
       this.idle();
     },
 
-    setOrientation: function(orientation) {
-      if(orientation) {
+    setOrientation: function (orientation) {
+      if (orientation) {
         this.orientation = orientation;
       }
     },
 
-    idle: function(orientation) {
+    idle: function (orientation) {
       this.setOrientation(orientation);
-      this.animate("idle", this.idleSpeed);
+      this.animate('idle', this.idleSpeed);
     },
 
-    hit: function(orientation) {
+    hit: function (orientation) {
       this.setOrientation(orientation);
-      this.animate("atk", this.atkSpeed, 1);
+      this.animate('atk', this.atkSpeed, 1);
     },
 
-    walk: function(orientation) {
+    walk: function (orientation) {
       this.setOrientation(orientation);
-      this.animate("walk", this.walkSpeed);
+      this.animate('walk', this.walkSpeed);
     },
 
-    moveTo_: function(x, y, callback) {
+    moveTo_: function (x, y) {
       this.destination = { gridX: x, gridY: y };
       this.adjacentTiles = {};
 
-      if(this.isMoving()) {
+      if (this.isMoving()) {
         this.continueTo(x, y);
-      }
-      else {
+      } else {
         var path = this.requestPathfindingTo(x, y);
 
         this.followPath(path);
       }
     },
 
-    requestPathfindingTo: function(x, y) {
-      if(this.request_path_callback) {
-        return this.request_path_callback(x, y);
+    requestPathfindingTo: function (x, y) {
+      if (this.requestPathCallback) {
+        return this.requestPathCallback(x, y);
       } else {
-        log.error(this.id + " couldn't request pathfinding to "+x+", "+y);
+        log.error(this.id + ' couldn\'t request pathfinding to ' + x + ', ' + y);
         return [];
       }
     },
 
-    onRequestPath: function(callback) {
-      this.request_path_callback = callback;
+    onRequestPath: function (callback) {
+      this.requestPathCallback = callback;
     },
 
-    onStartPathing: function(callback) {
-      this.start_pathing_callback = callback;
+    onStartPathing: function (callback) {
+      this.startPathingCallback = callback;
     },
 
-    onStopPathing: function(callback) {
-      this.stop_pathing_callback = callback;
+    onStopPathing: function (callback) {
+      this.stopPathingCallback = callback;
     },
 
-    followPath: function(path) {
-      if(path.length > 1) { // Length of 1 means the player has clicked on himself
+    followPath: function (path) {
+      if (path.length > 1) { // Length of 1 means the player has clicked on himself
         this.path = path;
         this.step = 0;
 
-        if(this.followingMode) { // following a character
+        if (this.followingMode) { // following a character
           path.pop();
         }
 
-        if(this.start_pathing_callback) {
-          this.start_pathing_callback(path);
+        if (this.startPathingCallback) {
+          this.startPathingCallback(path);
         }
+
         this.nextStep();
       }
     },
 
-    continueTo: function(x, y) {
+    continueTo: function (x, y) {
       this.newDestination = { x: x, y: y };
     },
 
-    updateMovement: function() {
-      var p = this.path,
-        i = this.step;
+    updateMovement: function () {
+      var p = this.path;
+      var i = this.step;
 
-      if(p[i][0] < p[i-1][0]) {
+      if (p[i][0] < p[i - 1][0]) {
         this.walk(Types.Orientations.LEFT);
       }
-      if(p[i][0] > p[i-1][0]) {
+
+      if (p[i][0] > p[i - 1][0]) {
         this.walk(Types.Orientations.RIGHT);
       }
-      if(p[i][1] < p[i-1][1]) {
+
+      if (p[i][1] < p[i - 1][1]) {
         this.walk(Types.Orientations.UP);
       }
-      if(p[i][1] > p[i-1][1]) {
+
+      if (p[i][1] > p[i - 1][1]) {
         this.walk(Types.Orientations.DOWN);
       }
     },
 
-    updatePositionOnGrid: function() {
+    updatePositionOnGrid: function () {
       this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     },
 
-    nextStep: function() {
-      var stop = false,
-        x, y, path;
+    nextStep: function () {
+      var stop = false;
+      var x;
+      var y;
+      var path;
 
-      if(this.isMoving()) {
-        if(this.before_step_callback) {
-          this.before_step_callback();
+      if (this.isMoving()) {
+        if (this.beforeStepCallback) {
+          this.beforeStepCallback();
         }
 
         this.updatePositionOnGrid();
         this.checkAggro();
 
-        if(this.interrupted) { // if Character.stop() has been called
+        if (this.interrupted) { // if Character.stop() has been called
           stop = true;
           this.interrupted = false;
-        }
-        else {
-          if(this.hasNextStep()) {
-            this.nextGridX = this.path[this.step+1][0];
-            this.nextGridY = this.path[this.step+1][1];
+        } else {
+          if (this.hasNextStep()) {
+            this.nextGridX = this.path[this.step + 1][0];
+            this.nextGridY = this.path[this.step + 1][1];
           }
 
-          if(this.step_callback) {
-            this.step_callback();
+          if (this.stepCallback) {
+            this.stepCallback();
           }
 
-          if(this.hasChangedItsPath()) {
+          if (this.hasChangedItsPath()) {
             x = this.newDestination.x;
             y = this.newDestination.y;
             path = this.requestPathfindingTo(x, y);
 
             this.newDestination = null;
-            if(path.length < 2) {
+            if (path.length < 2) {
               stop = true;
-            }
-            else {
+            } else {
               this.followPath(path);
             }
-          }
-          else if(this.hasNextStep()) {
+          } else if (this.hasNextStep()) {
             this.step += 1;
             this.updateMovement();
-          }
-          else {
+          } else {
             stop = true;
           }
         }
 
-        if(stop) { // Path is complete or has been interrupted
+        if (stop) { // Path is complete or has been interrupted
           this.path = null;
           this.idle();
 
-          if(this.stop_pathing_callback) {
-            this.stop_pathing_callback(this.gridX, this.gridY);
+          if (this.stopPathingCallback) {
+            this.stopPathingCallback(this.gridX, this.gridY);
           }
         }
       }
     },
 
-    onBeforeStep: function(callback) {
-      this.before_step_callback = callback;
+    onBeforeStep: function (callback) {
+      this.beforeStepCallback = callback;
     },
 
-    onStep: function(callback) {
-      this.step_callback = callback;
+    onStep: function (callback) {
+      this.stepCallback = callback;
     },
 
-    isMoving: function() {
+    isMoving: function () {
       return !(this.path === null);
     },
 
-    hasNextStep: function() {
+    hasNextStep: function () {
       return (this.path.length - 1 > this.step);
     },
 
-    hasChangedItsPath: function() {
+    hasChangedItsPath: function () {
       return !(this.newDestination === null);
     },
 
-    isNear: function(character, distance) {
-      var dx, dy, near = false;
+    isNear: function (character, distance) {
+      var dx;
+      var dy;
+      var near = false;
 
       dx = Math.abs(this.gridX - character.gridX);
       dy = Math.abs(this.gridY - character.gridY);
 
-      if(dx <= distance && dy <= distance) {
+      if (dx <= distance && dy <= distance) {
         near = true;
       }
+
       return near;
     },
 
-    onAggro: function(callback) {
-      this.aggro_callback = callback;
+    onAggro: function (callback) {
+      this.aggroCallback = callback;
     },
 
-    onCheckAggro: function(callback) {
-      this.checkaggro_callback = callback;
+    onCheckAggro: function (callback) {
+      this.checkaggroCallback = callback;
     },
 
-    checkAggro: function() {
-      if(this.checkaggro_callback) {
-        this.checkaggro_callback();
+    checkAggro: function () {
+      if (this.checkaggroCallback) {
+        this.checkaggroCallback();
       }
     },
 
-    aggro: function(character) {
-      if(this.aggro_callback) {
-        this.aggro_callback(character);
+    aggro: function (character) {
+      if (this.aggroCallback) {
+        this.aggroCallback(character);
       }
     },
 
-    onDeath: function(callback) {
-      this.death_callback = callback;
+    onDeath: function (callback) {
+      this.deathCallback = callback;
     },
 
     /**
      * Changes the character's orientation so that it is facing its target.
      */
-lookAtTarget: function() {
-                if(this.target) {
-                  this.turnTo(this.getOrientationTo(this.target));
-                }
-              },
-
-              /**
-               * 
-               */
-    go: function(x, y) {
-      if(this.isAttacking()) {
-        this.disengage();
+    lookAtTarget: function () {
+      if (this.target) {
+        this.turnTo(this.getOrientationTo(this.target));
       }
-      else if(this.followingMode) {
+    },
+
+    /**
+           *
+           */
+    go: function (x, y) {
+      if (this.isAttacking()) {
+        this.disengage();
+      } else if (this.followingMode) {
         this.followingMode = false;
         this.target = null;
       }
+
       this.moveTo_(x, y);
     },
 
     /**
      * Makes the character follow another one.
      */
-follow: function(entity) {
-          if(entity) {
-            this.followingMode = true;
-            this.moveTo_(entity.gridX, entity.gridY);
-          }
-        },
+    follow: function (entity) {
+      if (entity) {
+        this.followingMode = true;
+        this.moveTo_(entity.gridX, entity.gridY);
+      }
+    },
 
-        /**
-         * Stops a moving character.
-         */
-    stop: function() {
-      if(this.isMoving()) {
+    /**
+     * Stops a moving character.
+     */
+    stop: function () {
+      if (this.isMoving()) {
         this.interrupted = true;
       }
     },
 
     /**
-     * Makes the character attack another character. Same as Character.follow but with an auto-attacking behavior.
+     * Makes the character attack another character. Same as Character.follow
+     * but with an auto-attacking behavior.
+     *
      * @see Character.follow
      */
-engage: function(character) {
-          this.attackingMode = true;
-          this.setTarget(character);
-          this.follow(character);
-        },
+    engage: function (character) {
+      this.attackingMode = true;
+      this.setTarget(character);
+      this.follow(character);
+    },
 
-disengage: function() {
-             this.attackingMode = false;
-             this.followingMode = false;
-             this.removeTarget();
-           },
+    disengage: function () {
+      this.attackingMode = false;
+      this.followingMode = false;
+      this.removeTarget();
+    },
 
-           /**
-            * Returns true if the character is currently attacking.
-            */
-    isAttacking: function() {
+    /**
+        * Returns true if the character is currently attacking.
+        */
+    isAttacking: function () {
       return this.attackingMode;
     },
 
@@ -373,28 +378,28 @@ disengage: function() {
      *  S T S
      *    S
      * (where S is self, T is target character)
-     * 
+     *
      * @param {Character} character The character to face.
      * @returns {String} The orientation.
      */
-getOrientationTo: function(character) {
-                    if(this.gridX < character.gridX) {
-                      return Types.Orientations.RIGHT;
-                    } else if(this.gridX > character.gridX) {
-                      return Types.Orientations.LEFT;
-                    } else if(this.gridY > character.gridY) {
-                      return Types.Orientations.UP;
-                    } else {
-                      return Types.Orientations.DOWN;
-                    }
-                  },
+    getOrientationTo: function (character) {
+      if (this.gridX < character.gridX) {
+        return Types.Orientations.RIGHT;
+      } else if (this.gridX > character.gridX) {
+        return Types.Orientations.LEFT;
+      } else if (this.gridY > character.gridY) {
+        return Types.Orientations.UP;
+      } else {
+        return Types.Orientations.DOWN;
+      }
+    },
 
-                  /**
-                   * Returns true if this character is currently attacked by a given character.
-                   * @param {Character} character The attacking character.
-                   * @returns {Boolean} Whether this is an attacker of this character.
-                   */
-    isAttackedBy: function(character) {
+    /**
+               * Returns true if this character is currently attacked by a given character.
+               * @param {Character} character The attacking character.
+               * @returns {Boolean} Whether this is an attacker of this character.
+               */
+    isAttackedBy: function (character) {
       return (character.id in this.attackers);
     },
 
@@ -402,150 +407,150 @@ getOrientationTo: function(character) {
      * Registers a character as a current attacker of this one.
      * @param {Character} character The attacking character.
      */
-addAttacker: function(character) {
-               if(!this.isAttackedBy(character)) {
-                 this.attackers[character.id] = character;
-               } else {
-                 log.error(this.id + " is already attacked by " + character.id);
-               }
-             },
-
-             /**
-              * Unregisters a character as a current attacker of this one.
-              * @param {Character} character The attacking character.
-              */
-  removeAttacker: function(character) {
-    if(this.isAttackedBy(character)) {
-      delete this.attackers[character.id];
-    } else {
-      log.error(this.id + " is not attacked by " + character.id);
-    }
-  },
-
-  /**
-   * Loops through all the characters currently attacking this one.
-   * @param {Function} callback Function which must accept one character argument.
-   */
-forEachAttacker: function(callback) {
-                   _.each(this.attackers, function(attacker) {
-                       callback(attacker);
-                       });
-                 },
-
-                 /**
-                  * Sets this character's attack target. It can only have one target at any time.
-                  * @param {Character} character The target character.
-                  */
-  setTarget: function(character) {
-    if(this.target !== character) { // If it's not already set as the target
-      if(this.hasTarget()) {
-        this.removeTarget(); // Cleanly remove the previous one
+    addAttacker: function (character) {
+      if (!this.isAttackedBy(character)) {
+        this.attackers[character.id] = character;
+      } else {
+        log.error(this.id + ' is already attacked by ' + character.id);
       }
-      this.unconfirmedTarget = null;
-      this.target = character;
-    } else {
-      log.debug(character.id + " is already the target of " + this.id);
+    },
+
+    /**
+          * Unregisters a character as a current attacker of this one.
+          * @param {Character} character The attacking character.
+          */
+    removeAttacker: function (character) {
+      if (this.isAttackedBy(character)) {
+        delete this.attackers[character.id];
+      } else {
+        log.error(this.id + ' is not attacked by ' + character.id);
+      }
+    },
+
+    /**
+     * Loops through all the characters currently attacking this one.
+     * @param {Function} callback Function which must accept one character argument.
+     */
+    forEachAttacker: function (callback) {
+      _.each(this.attackers, function (attacker) {
+        callback(attacker);
+      });
+    },
+
+    /**
+              * Sets this character's attack target. It can only have one target at any time.
+              * @param {Character} character The target character.
+              */
+    setTarget: function (character) {
+      if (this.target !== character) { // If it's not already set as the target
+        if (this.hasTarget()) {
+          this.removeTarget(); // Cleanly remove the previous one
+        }
+
+        this.unconfirmedTarget = null;
+        this.target = character;
+      } else {
+        log.debug(character.id + ' is already the target of ' + this.id);
+      }
+    },
+
+    /**
+     * Removes the current attack target.
+     */
+    removeTarget: function () {
+      if (this.target) {
+        if (this.target instanceof Character) {
+          this.target.removeAttacker(this);
+        }
+
+        this.target = null;
+      }
+    },
+
+    /**
+     * Returns true if this character has a current attack target.
+     * @returns {Boolean} Whether this character has a target.
+     */
+    hasTarget: function () {
+      return !(this.target === null);
+    },
+
+    /**
+        * Marks this character as waiting to attack a target.
+        * By sending an "attack" message, the server will later confirm (or not)
+        * that this character is allowed to acquire this target.
+        *
+        * @param {Character} character The target character
+        */
+    waitToAttack: function (character) {
+      this.unconfirmedTarget = character;
+    },
+
+    /**
+     * Returns true if this character is currently waiting to attack the target character.
+     * @param {Character} character The target character.
+     * @returns {Boolean} Whether this character is waiting to attack.
+     */
+    isWaitingToAttack: function (character) {
+      return (this.unconfirmedTarget === character);
+    },
+
+    /**
+                *
+                */
+    canAttack: function (time) {
+      if (this.canReachTarget() && this.attackCooldown.isOver(time)) {
+        return true;
+      }
+
+      return false;
+    },
+
+    canReachTarget: function () {
+      if (this.hasTarget() && this.isAdjacentNonDiagonal(this.target)) {
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
+     *
+     */
+    die: function () {
+      this.removeTarget();
+      this.isDead = true;
+
+      if (this.deathCallback) {
+        this.deathCallback();
+      }
+    },
+
+    onHasMoved: function (callback) {
+      this.hasmovedCallback = callback;
+    },
+
+    hasMoved: function () {
+      this.setDirty();
+      if (this.hasmovedCallback) {
+        this.hasmovedCallback(this);
+      }
+    },
+
+    hurt: function () {
+      this.stopHurting();
+      this.sprite = this.hurtSprite;
+      this.hurting = setTimeout(this.stopHurting.bind(this), 75);
+    },
+
+    stopHurting: function () {
+      this.sprite = this.normalSprite;
+      clearTimeout(this.hurting);
+    },
+
+    setAttackRate: function (rate) {
+      this.attackCooldown = new Timer(rate);
     }
-  },
-
-  /**
-   * Removes the current attack target.
-   */
-removeTarget: function() {
-                var self = this;
-
-                if(this.target) {
-                  if(this.target instanceof Character) {
-                    this.target.removeAttacker(this);
-                  }
-                  this.target = null;
-                }
-              },
-
-  /**
-   * Returns true if this character has a current attack target.
-   * @returns {Boolean} Whether this character has a target.
-   */
-hasTarget: function() {
-             return !(this.target === null);
-           },
-
-           /**
-            * Marks this character as waiting to attack a target.
-            * By sending an "attack" message, the server will later confirm (or not)
-            * that this character is allowed to acquire this target.
-            *
-            * @param {Character} character The target character
-            */
-  waitToAttack: function(character) {
-    this.unconfirmedTarget = character;
-  },
-
-  /**
-   * Returns true if this character is currently waiting to attack the target character.
-   * @param {Character} character The target character.
-   * @returns {Boolean} Whether this character is waiting to attack.
-   */
-isWaitingToAttack: function(character) {
-                     return (this.unconfirmedTarget === character);
-                   },
-
-                   /**
-                    * 
-                    */
-  canAttack: function(time) {
-    if(this.canReachTarget() && this.attackCooldown.isOver(time)) {
-      return true;
-    }
-    return false;
-  },
-
-  canReachTarget: function() {
-    if(this.hasTarget() && this.isAdjacentNonDiagonal(this.target)) {
-      return true;
-    }
-    return false;
-  },
-
-  /**
-   * 
-   */
-die: function() {
-       this.removeTarget();
-       this.isDead = true;
-
-       if(this.death_callback) {
-         this.death_callback();
-       }
-     },
-
-onHasMoved: function(callback) {
-              this.hasmoved_callback = callback;
-            },
-
-hasMoved: function() {
-            this.setDirty();
-            if(this.hasmoved_callback) {
-              this.hasmoved_callback(this);
-            }
-          },
-
-hurt: function() {
-        var self = this;
-
-        this.stopHurting();
-        this.sprite = this.hurtSprite;
-        this.hurting = setTimeout(this.stopHurting.bind(this), 75);
-      },
-
-stopHurting: function() {
-               this.sprite = this.normalSprite;
-               clearTimeout(this.hurting);
-             },
-
-setAttackRate: function(rate) {
-                 this.attackCooldown = new Timer(rate);
-               }
   });
 
   return Character;
