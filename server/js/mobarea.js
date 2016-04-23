@@ -7,7 +7,8 @@ var Utils = require('./utils');
 
 var MobArea = Area.extend({
   init: function (id, nb, kind, x, y, width, height, world) {
-    this._super(id, x, y, width, height, world);
+    this._super(id, x, y, width, height);
+    this.world = world;
     this.nb = nb;
     this.kind = kind;
     this.respawns = [];
@@ -31,6 +32,20 @@ var MobArea = Area.extend({
 
     return mob;
   },
+
+  _getRandomPositionInsideArea: function () {
+    var pos = {},
+      valid = false;
+
+    while (!valid) {
+      pos.x = this.x + Utils.random(this.width + 1);
+      pos.y = this.y + Utils.random(this.height + 1);
+      valid = this.world.isValidPosition(pos.x, pos.y);
+    }
+
+    return pos;
+  },
+
 
   respawnMob: function (mob, delay) {
     var self = this;

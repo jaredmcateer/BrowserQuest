@@ -1,68 +1,76 @@
-
-/* Simple JavaScript Inheritance
- * By John Resig http://ejohn.org/
+/* Simple JavaScript Inheritance for ES 5.1
+ * based on http://ejohn.org/blog/simple-javascript-inheritance/
+ *  (inspired by base2 and Prototype)
  * MIT Licensed.
  */
-// Inspired by base2 and Prototype
-var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+(function () {
+  'use strict';
+  let fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 
-// The base Class implementation (does nothing)
-Class = function() {};
+  // The base Class implementation (does nothing)
+  function BaseClass(){}
 
-// Create a new Class that inherits from this class
-Class.extend = function(prop) {
-  var _super = this.prototype;
+  // Create a new Class that inherits from this class
+  BaseClass.extend = function(props) {
+    let _super = this.prototype;
 
-  // Instantiate a base class (but only create the instance,
-  // don't run the init constructor)
-  initializing = true;
-  var prototype = new this();
-  initializing = false;
+    // Set up the prototype to inherit from the base class
+    // (but without running the init constructor)
+    let proto = Object.create(_super);
 
-  // Copy the properties over onto the new prototype
-  for (var name in prop) {
-    // Check if we're overwriting an existing function
-    prototype[name] = typeof prop[name] == 'function' &&
-      typeof _super[name] == 'function' && fnTest.test(prop[name]) ?
-      (function(name, fn){
-        return function() {
-        var tmp = this._super;
+    // Copy the properties over onto the new prototype
+    for (let name in props) {
+      // Check if we're overwriting an existing function
+      if (typeof props[name] === 'function'
+          && typeof _super[name] == 'function'
+          && fnTest.test(props[name])
+      ) {
+        proto[name] = (function(name, fn){
+          return function() {
+            let tmp = this._super;
 
-        // Add a new ._super() method that is the same method
-        // but on the super-class
-        this._super = _super[name];
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
 
-        // The method only need to be bound temporarily, so we
-        // remove it when we're done executing
-        var ret = fn.apply(this, arguments);
-        this._super = tmp;
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            let ret = fn.apply(this, arguments);
+            this._super = tmp;
 
-        return ret;
-      };
-      })(name, prop[name]) :
-      prop[name];
-  }
+            return ret;
+          };
+        }(name, props[name]));
+      } else {
+        proto[name] = props[name];
+      }
+    }
 
-  // The dummy class constructor
-  Class = function () {
-    // All construction is actually done in the init method
-    if ( !initializing && this.init )
-      this.init.apply(this, arguments);
+    let newClass;
+    if (typeof proto.init === 'function') {
+      if (proto.hasOwnProperty('init')) {
+        newClass = proto.init;
+      } else {
+        newClass = function SubClass(){ _super.init.apply(this, arguments); };
+      }
+    } else {
+      newClass = function EmptyClass() {};
+    }
+
+    // Populate our constructed prototype object
+    newClass.prototype = proto;
+
+    // Enforce the constructor to be what we expect
+    proto.constructor = newClass;
+
+    // And make this class extendable
+    newClass.extend = BaseClass.extend;
+
+    return newClass;
   };
 
-  // Populate our constructed prototype object
-  Class.prototype = prototype;
-
-  // Enforce the constructor to be what we expect
-  Class.constructor = Class;
-
-  // And make this class extendable
-  Class.extend = arguments.callee;
-
-  return Class;
-};
-
-if(!(typeof exports === 'undefined')) {
-  exports.Class = Class;
-}
+  if(!(typeof exports === 'undefined')) {
+    module.exports = BaseClass;
+  }
+}(this));
 

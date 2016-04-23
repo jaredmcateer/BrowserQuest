@@ -1,5 +1,5 @@
 
-Types = {
+var Types = {
   Messages: {
     HELLO: 0,
     WELCOME: 1,
