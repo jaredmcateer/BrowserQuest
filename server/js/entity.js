@@ -1,4 +1,3 @@
-
 var Class = require('./lib/class');
 var Messages = require('./message');
 var Utils = require('./utils');
@@ -10,10 +9,8 @@ var Entity = Class.extend({
     this.kind = kind;
     this.x = x;
     this.y = y;
-  },
-
-  destroy: function () {
-
+    this.Messages = Messages;
+    this.destroy = function () {};
   },
 
   _getBaseState: function () {
@@ -30,11 +27,11 @@ var Entity = Class.extend({
   },
 
   spawn: function () {
-    return new Messages.Spawn(this);
+    return new this.Messages.Spawn(this);
   },
 
   despawn: function () {
-    return new Messages.Despawn(this.id);
+    return new this.Messages.Despawn(this.id);
   },
 
   setPosition: function (x, y) {
@@ -46,6 +43,7 @@ var Entity = Class.extend({
     var pos = null;
     if (entity) {
       pos = {};
+
       // This is a quick & dirty way to give mobs a random position
       // close to another entity.
       var r = Utils.random(4);
