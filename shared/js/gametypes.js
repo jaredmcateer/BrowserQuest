@@ -31,6 +31,8 @@ var Types = {
   },
 
   Entities: {
+    // non-entity
+    GENERIC: 0,
     WARRIOR: 1,
 
     // Mobs
@@ -101,6 +103,8 @@ var Types = {
 };
 
 var kinds = {
+  generic: [Types.Entities.GENERIC, 'generic'],
+
   warrior: [Types.Entities.WARRIOR, 'player'],
 
   rat: [Types.Entities.RAT, 'mob'],
