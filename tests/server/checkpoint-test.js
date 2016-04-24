@@ -22,8 +22,10 @@ describe('Server Class: Checkpoint', () => {
   });
 
   it('should get a random poisition', () => {
-    let pos = checkpoint.getRandomPosition();
-    expect(pos.x).to.be.within(0, w - 1);
-    expect(pos.y).to.be.within(0, h - 1);
+    for (let i = 0; i < 100; i++) {
+      let pos = checkpoint.getRandomPosition();
+      expect(pos.x).to.be.within(0, x + w - 1);
+      expect(pos.y).to.be.within(0, y + h - 1);
+    }
   });
 });
