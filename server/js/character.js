@@ -1,7 +1,9 @@
 
 var Messages = require('./message');
 var Utils = require('./utils');
-var Entity = require('./entity.js');
+var Entity = require('./entity');
+var Log = require('log');
+var log = new Log();
 
 var Character = Entity.extend({
   init: function (id, type, kind, x, y) {
@@ -13,8 +15,8 @@ var Character = Entity.extend({
   },
 
   getState: function () {
-    var basestate = this._getBaseState(),
-      state = [];
+    var basestate = this._getBaseState();
+    var state = [];
 
     state.push(this.orientation);
     if (this.target) {
@@ -30,8 +32,8 @@ var Character = Entity.extend({
   },
 
   regenHealthBy: function (value) {
-    var hp = this.hitPoints,
-      max = this.maxHitPoints;
+    var hp = this.hitPoints;
+    var max = this.maxHitPoints;
 
     if (hp < max) {
       if (hp + value <= max) {
@@ -59,15 +61,15 @@ var Character = Entity.extend({
   },
 
   attack: function () {
-    return new Messages.Attack(this.id, this.target);
+    return new this.Messages.Attack(this.id, this.target);
   },
 
   health: function () {
-    return new Messages.Health(this.hitPoints, false);
+    return new this.Messages.Health(this.hitPoints, false);
   },
 
   regen: function () {
-    return new Messages.Health(this.hitPoints, true);
+    return new this.Messages.Health(this.hitPoints, true);
   },
 
   addAttacker: function (entity) {
