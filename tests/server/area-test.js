@@ -3,7 +3,7 @@ import Area from '../../server/js/area';
 
 const expect = chai.expect;
 
-describe('Class: Area', () => {
+describe('Server Class: Area', () => {
   let area;
   const areaId = 'areaId';
   const x = 10;

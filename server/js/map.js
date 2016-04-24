@@ -1,18 +1,19 @@
 
-var cls = require('./lib/class');
-var path = require('path');
+var Class = require('./lib/class');
 var fs = require('fs');
 var _ = require('underscore');
 var Utils = require('./utils');
 var Checkpoint = require('./checkpoint');
+var Log = require('log');
+var log = new Log();
 
-module.exports = Map = cls.Class.extend({
+var MapClass = Class.extend({
   init: function (filepath) {
     var self = this;
 
     this.isLoaded = false;
 
-    path.exists(filepath, function (exists) {
+    fs.exists(filepath, function (exists) {
       if (!exists) {
         log.error(filepath + ' doesn\'t exist.');
         return;
@@ -220,3 +221,5 @@ var pos = function (x, y) {
 var equalPositions = function (pos1, pos2) {
   return pos1.x === pos2.x && pos2.y === pos2.y;
 };
+
+module.exports = MapClass;

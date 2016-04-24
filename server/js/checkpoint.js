@@ -1,8 +1,8 @@
 
-var cls = require('./lib/class');
+var Class = require('./lib/class');
 var Utils = require('./utils');
 
-var Checkpoint = cls.Class.extend({
+var Checkpoint = Class.extend({
   init: function (id, x, y, width, height) {
     this.id = id;
     this.x = x;

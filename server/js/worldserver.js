@@ -1,8 +1,8 @@
 
-var cls = require('./lib/class');
+var Class = require('./lib/class');
 var _ = require('underscore');
 var Mob = require('./mob');
-var Map = require('./map');
+var MapClass = require('./map');
 var Npc = require('./npc');
 var Player = require('./player');
 var Item = require('./item');
@@ -16,7 +16,7 @@ var Types = require('../../shared/js/gametypes');
 
 // ======= GAME SERVER ========
 
-var World = cls.Class.extend({
+var World = Class.extend({
   init: function (id, maxPlayers, websocketServer) {
     var self = this;
 
@@ -145,7 +145,7 @@ var World = cls.Class.extend({
   run: function (mapFilePath) {
     var self = this;
 
-    this.map = new Map(mapFilePath);
+    this.map = new MapClass(mapFilePath);
 
     this.map.ready(function () {
       self.initZoneGroups();

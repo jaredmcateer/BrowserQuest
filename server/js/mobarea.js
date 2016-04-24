@@ -24,9 +24,9 @@ var MobArea = Area.extend({
   },
 
   _createMobInsideArea: function () {
-    var k = Types.getKindFromString(this.kind),
-      pos = this._getRandomPositionInsideArea(),
-      mob = new Mob('1' + this.id + '' + k + '' + this.entities.length, k, pos.x, pos.y);
+    var k = Types.getKindFromString(this.kind);
+    var pos = this._getRandomPositionInsideArea();
+    var mob = new Mob('1' + this.id + '' + k + '' + this.entities.length, k, pos.x, pos.y);
 
     mob.onMove(this.world.onMobMoveCallback.bind(this.world));
 
@@ -34,8 +34,8 @@ var MobArea = Area.extend({
   },
 
   _getRandomPositionInsideArea: function () {
-    var pos = {},
-      valid = false;
+    var pos = {};
+    var valid = false;
 
     while (!valid) {
       pos.x = this.x + Utils.random(this.width + 1);
@@ -45,7 +45,6 @@ var MobArea = Area.extend({
 
     return pos;
   },
-
 
   respawnMob: function (mob, delay) {
     var self = this;
@@ -63,13 +62,14 @@ var MobArea = Area.extend({
     }, delay);
   },
 
-  initRoaming: function () {
+  initRoaming: function (delay, forceRoam) {
     var self = this;
+    delay = delay || 500;
 
-    setInterval(function () {
+    this.intervalId = setInterval(function () {
       _.each(self.entities, function (mob) {
-        var canRoam = (Utils.random(20) === 1),
-          pos;
+        var canRoam = forceRoam || (Utils.random(20) === 1);
+        var pos;
 
         if (canRoam) {
           if (!mob.hasTarget() && !mob.isDead) {
@@ -78,7 +78,13 @@ var MobArea = Area.extend({
           }
         }
       });
-    }, 500);
+    }, delay);
+  },
+
+  stopRoaming: function () {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   },
 
   createReward: function () {
