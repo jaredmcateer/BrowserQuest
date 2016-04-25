@@ -10,8 +10,9 @@ var Entity = Class.extend({
     this.x = x;
     this.y = y;
     this.Messages = Messages;
-    this.destroy = function () {};
   },
+
+  destroy: function () {},
 
   _getBaseState: function () {
     return [

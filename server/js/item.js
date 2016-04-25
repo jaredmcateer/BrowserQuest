@@ -5,6 +5,7 @@ var Item = Entity.extend({
     this._super(id, 'item', kind, x, y);
     this.isStatic = false;
     this.isFromChest = false;
+    this.respawnDelay = 30000;
   },
 
   handleDespawn: function (params) {
@@ -12,7 +13,10 @@ var Item = Entity.extend({
 
     this.blinkTimeout = setTimeout(function () {
       params.blinkCallback();
-      self.despawnTimeout = setTimeout(params.despawnCallback, params.blinkingDuration);
+      self.despawnTimeout = setTimeout(
+        params.despawnCallback,
+        params.blinkingDuration
+      );
     }, params.beforeBlinkDelay);
   },
 
@@ -26,12 +30,14 @@ var Item = Entity.extend({
     }
 
     if (this.isStatic) {
-      this.scheduleRespawn(30000);
+      this.scheduleRespawn();
     }
   },
 
   scheduleRespawn: function (delay) {
     var self = this;
+    delay = delay || this.delay;
+
     setTimeout(function () {
       if (self.respawnCallback) {
         self.respawnCallback();
