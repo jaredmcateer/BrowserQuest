@@ -1,10 +1,7 @@
-
-var Character = require('./character.js');
+var Character = require('./character');
 var _ = require('underscore');
 var Messages = require('./message');
 var Properties = require('./properties');
-var MobArea = require('./mobarea');
-var ChestArea = require('./chestarea');
 var Utils = require('./utils');
 
 var Mob = Character.extend({
@@ -20,7 +17,7 @@ var Mob = Character.extend({
     this.respawnTimeout = null;
     this.returnTimeout = null;
     this.isDead = false;
- },
+  },
 
   destroy: function () {
     this.isDead = true;
@@ -66,10 +63,11 @@ var Mob = Character.extend({
   },
 
   getHatedPlayerId: function (hateRank) {
-    var i, playerId,
-      sorted = _.sortBy(this.hatelist, function (obj) { return obj.hate; }),
+    var i;
+    var playerId;
+    var sorted = _.sortBy(this.hatelist, function (obj) { return obj.hate; });
 
-      size = _.size(this.hatelist);
+    var size = _.size(this.hatelist);
 
     if (hateRank && hateRank <= size) {
       i = size - hateRank;
@@ -104,14 +102,14 @@ var Mob = Character.extend({
   },
 
   handleRespawn: function () {
-    var delay = 30000,
-      self = this;
+    var delay = 30000;
+    var self = this;
 
-    if (this.area && this.area instanceof MobArea) {
+    if (this.area && this.area.constructor.name === 'MobArea') {
       // Respawn inside the area if part of a MobArea
       this.area.respawnMob(this, delay);
     } else {
-      if (this.area && this.area instanceof ChestArea) {
+      if (this.area && this.area.constructor.name === 'ChestArea') {
         this.area.removeFromArea(this);
       }
 
@@ -132,8 +130,8 @@ var Mob = Character.extend({
   },
 
   returnToSpawningPosition: function (waitDuration) {
-    var self = this,
-      delay = waitDuration || 4000;
+    var self = this;
+    var delay = waitDuration || 4000;
 
     this.clearTarget();
 
