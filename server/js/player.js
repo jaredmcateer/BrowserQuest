@@ -7,7 +7,6 @@ var Properties = require('./properties');
 var Formulas = require('./formulas');
 var check = require('./format').check;
 var Types = require('../../shared/js/gametypes');
-var FormatChecker = require('./format');
 var Chest = require('./chest');
 
 var Player = Character.extend({
@@ -23,7 +22,6 @@ var Player = Character.extend({
     this.isDead = false;
     this.haters = {};
     this.lastCheckpoint = null;
-    this.formatChecker = new FormatChecker();
     this.disconnectTimeout = null;
 
     this.connection.listen(function (message) {
