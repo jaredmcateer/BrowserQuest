@@ -68,8 +68,12 @@ describe('Server Class: Entity', () => {
   });
 
   it('should find a positon close to another entity', () => {
-    let pos = entity.getPositionNextTo(entity);
-    expect(pos.x).to.be.within(entity.x - 1, entity.x + 1);
-    expect(pos.y).to.be.within(entity.y - 1, entity.y + 1);
+    let pos;
+
+    for (let i = 0; i < 50; i++) {
+      pos = entity.getPositionNextTo(entity);
+      expect(pos.x).to.be.within(entity.x - 1, entity.x + 1);
+      expect(pos.y).to.be.within(entity.y - 1, entity.y + 1);
+    }
   });
 });
