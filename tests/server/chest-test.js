@@ -34,16 +34,17 @@ describe('Server Class: Chest', () => {
     chest.setItems(items);
 
     let results = {};
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       let item = chest.getRandomItem();
       let key = `item${item.id}`;
       (key in results) ? results[key]++ : results[key] = 1;
     }
 
     // Should get a somewhat even distribution of items 
-    expect(results.item1).to.be.within(15,25);
-    expect(results.item2).to.be.within(15,25);
-    expect(results.item3).to.be.within(15,25);
-    expect(results.item4).to.be.within(15,25);
+    expect(results.item1 / 1000).to.be.approximately(0.20, 0.15);
+    expect(results.item2 / 1000).to.be.approximately(0.20, 0.15);
+    expect(results.item3 / 1000).to.be.approximately(0.20, 0.15);
+    expect(results.item4 / 1000).to.be.approximately(0.20, 0.15);
+    expect(results.item5 / 1000).to.be.approximately(0.20, 0.15);
   });
 });
