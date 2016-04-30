@@ -2,6 +2,7 @@
 var Utils = require('./utils');
 var Types = require('../../shared/js/gametypes');
 var Item = require('./item.js');
+var _ = require('underscore');
 
 var Chest = Item.extend({
   init: function (id, x, y) {
@@ -13,8 +14,8 @@ var Chest = Item.extend({
   },
 
   getRandomItem: function () {
-    var nbItems = _.size(this.items),
-      item = null;
+    var nbItems = _.size(this.items);
+    var item = null;
 
     if (nbItems > 0) {
       item = this.items[Utils.random(nbItems)];
