@@ -13,6 +13,7 @@ var MobArea = Area.extend({
     this.kind = kind;
     this.respawns = [];
     this.setNumberOfEntities(this.nb);
+    this.areaType = 'MobArea';
 
     //this.initRoaming();
   },

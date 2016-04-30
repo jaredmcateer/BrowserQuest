@@ -8,6 +8,7 @@ var ChestArea = Area.extend({
     this.chestX = cx;
     this.chestY = cy;
     this.world = world;
+    this.areaType = 'ChestArea';
   },
 
   contains: function (entity) {

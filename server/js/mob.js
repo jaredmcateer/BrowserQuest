@@ -105,11 +105,11 @@ var Mob = Character.extend({
     var delay = 30000;
     var self = this;
 
-    if (this.area && this.area.constructor.name === 'MobArea') {
+    if (this.area && this.area.areaType === 'MobArea') {
       // Respawn inside the area if part of a MobArea
       this.area.respawnMob(this, delay);
     } else {
-      if (this.area && this.area.constructor.name === 'ChestArea') {
+      if (this.area && this.area.areaType === 'ChestArea') {
         this.area.removeFromArea(this);
       }
 

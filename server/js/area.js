@@ -11,6 +11,7 @@ var Area = Class.extend({
     this.width = width;
     this.height = height;
 
+    this.areaType = 'Area';
     this.world = null;
     this.entities = [];
     this.hasCompletelyRespawned = true;
