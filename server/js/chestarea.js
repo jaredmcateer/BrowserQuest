@@ -3,10 +3,11 @@ var Area = require('./area');
 
 var ChestArea = Area.extend({
   init: function (id, x, y, width, height, cx, cy, items, world) {
-    this._super(id, x, y, width, height, world);
+    this._super(id, x, y, width, height);
     this.items = items;
     this.chestX = cx;
     this.chestY = cy;
+    this.world = world;
   },
 
   contains: function (entity) {
