@@ -19,7 +19,7 @@ describe('Server Class: ChestArea', () => {
     chestArea = new ChestArea(areaId, x, y, w, h, cx, cy, items, world);
   });
 
-  it('should initialize', function () {
+  it('should initialize', () => {
     expect(chestArea.id).to.equal(areaId);
     expect(chestArea.x).to.equal(x);
     expect(chestArea.y).to.equal(y);
@@ -31,7 +31,7 @@ describe('Server Class: ChestArea', () => {
     expect(chestArea.world).to.eql(world);
   });
 
-  it('should be able to tell when it contains an entity', function () {
+  it('should be able to tell when it contains an entity', () => {
     let item1 = new Item(12, Types.Entities.GENERIC, x, y);
     let item2 = new Item(12, Types.Entities.GENERIC, x + w - 1, y);
     let item3 = new Item(12, Types.Entities.GENERIC, x, y + h - 1);
@@ -45,7 +45,7 @@ describe('Server Class: ChestArea', () => {
     expect(chestArea.contains(item5)).to.be.true;
   });
 
-  it('should be able to tell when it does not contain an entity', function () {
+  it('should be able to tell when it does not contain an entity', () => {
     let item1 = new Item(12, Types.Entities.GENERIC, x - 1, y);
     let item2 = new Item(12, Types.Entities.GENERIC, x, y - 1);
     let item3 = new Item(12, Types.Entities.GENERIC, x + w, y);
