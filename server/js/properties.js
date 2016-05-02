@@ -1,4 +1,5 @@
-
+var Log = require('log');
+var log = new Log();
 var Types = require('../../shared/js/gametypes');
 
 var Properties = {

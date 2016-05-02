@@ -8,6 +8,8 @@ var Formulas = require('./formulas');
 var check = require('./format').check;
 var Types = require('../../shared/js/gametypes');
 var Chest = require('./chest');
+var Log = require('log');
+var log = new Log();
 
 var Player = Character.extend({
   init: function (connection, worldServer) {
@@ -16,7 +18,7 @@ var Player = Character.extend({
     this.server = worldServer;
     this.connection = connection;
 
-    this._super(this.connection.id, 'player', Types.Entities.WARRIOR, 0, 0, '');
+    this._super(this.connection.id, 'player', Types.Entities.WARRIOR, 0, 0);
 
     this.hasEnteredGame = false;
     this.isDead = false;
@@ -29,16 +31,19 @@ var Player = Character.extend({
 
       log.debug('Received: ' + message);
       if (!check(message)) {
-        self.connection.close('Invalid ' + Types.getMessageTypeAsString(action) + ' message format: ' + message);
+        var msgType = Types.getMessageTypeAsString(action);
+        self.connection.close('Invalid ' + msgType + ' message format: ' + message);
         return;
       }
 
-      if (!self.hasEnteredGame && action !== Types.Messages.HELLO) { // HELLO must be the first message
+      // HELLO must be the first message
+      if (!self.hasEnteredGame && action !== Types.Messages.HELLO) {
         self.connection.close('Invalid handshake message: ' + message);
         return;
       }
 
-      if (self.hasEnteredGame && !self.isDead && action === Types.Messages.HELLO) { // HELLO can be sent only once
+      // HELLO can be sent only once
+      if (self.hasEnteredGame && !self.isDead && action === Types.Messages.HELLO) {
         self.connection.close('Cannot initiate handshake twice: ' + message);
         return;
       }
@@ -46,16 +51,16 @@ var Player = Character.extend({
       self.resetTimeout();
 
       if (action === Types.Messages.HELLO) {
-        var name = Utils.sanitize(message[1]);
+        // If name was cleared by the sanitizer, give a default name.
+        var name = Utils.sanitize(message[1]) || 'Lorem Ipsum';
         var mob;
         var item;
         var x;
         var y;
 
-        // If name was cleared by the sanitizer, give a default name.
         // Always ensure that the name is not longer than a maximum length.
         // (also enforced by the maxlength attribute of the name input element).
-        self.name = (name === '') ? 'lorem ipsum' : name.substr(0, 15);
+        self.name = name.substr(0, 15);
 
         self.kind = Types.Entities.WARRIOR;
         self.equipArmor(message[2]);
@@ -146,42 +151,40 @@ var Player = Character.extend({
       } else if (action === Types.Messages.LOOT) {
         item = self.server.getEntityById(message[1]);
 
-        if (item) {
+        if (item && item.kind && Types.isItem(item.kind)) {
           var kind = item.kind;
 
-          if (Types.isItem(kind)) {
-            self.broadcast(item.despawn());
-            self.server.removeEntity(item);
+          self.broadcast(item.despawn());
+          self.server.removeEntity(item);
 
-            if (kind === Types.Entities.FIREPOTION) {
-              self.updateHitPoints();
-              self.broadcast(self.equip(Types.Entities.FIREFOX));
-              self.firepotionTimeout = setTimeout(function () {
-                self.broadcast(self.equip(self.armor)); // return to normal after 15 sec
-                self.firepotionTimeout = null;
-              }, 15000);
+          if (kind === Types.Entities.FIREPOTION) {
+            self.updateHitPoints();
+            self.broadcast(self.equip(Types.Entities.FIREFOX));
+            self.firepotionTimeout = setTimeout(function () {
+              self.broadcast(self.equip(self.armor)); // return to normal after 15 sec
+              self.firepotionTimeout = null;
+            }, 15000);
 
-              self.send(new Messages.HitPoints(self.maxHitPoints).serialize());
-            } else if (Types.isHealingItem(kind)) {
-              var amount;
+            self.send(new Messages.HitPoints(self.maxHitPoints).serialize());
+          } else if (Types.isHealingItem(kind)) {
+            var amount;
 
-              switch (kind) {
-              case Types.Entities.FLASK:
-                amount = 40;
-                break;
-              case Types.Entities.BURGER:
-                amount = 100;
-                break;
-              }
-
-              if (!self.hasFullHealth()) {
-                self.regenHealthBy(amount);
-                self.server.pushToPlayer(self, self.health());
-              }
-            } else if (Types.isArmor(kind) || Types.isWeapon(kind)) {
-              self.equipItem(item);
-              self.broadcast(self.equip(kind));
+            switch (kind) {
+            case Types.Entities.FLASK:
+              amount = 40;
+              break;
+            case Types.Entities.BURGER:
+              amount = 100;
+              break;
             }
+
+            if (!self.hasFullHealth()) {
+              self.regenHealthBy(amount);
+              self.server.pushToPlayer(self, self.health());
+            }
+          } else if (Types.isArmor(kind) || Types.isWeapon(kind)) {
+            self.equipItem(item);
+            self.broadcast(self.equip(kind));
           }
         }
       } else if (action === Types.Messages.TELEPORT) {
@@ -229,8 +232,6 @@ var Player = Character.extend({
   },
 
   destroy: function () {
-    var self = this;
-
     this.forEachAttacker(function (mob) {
       mob.clearTarget();
     });
@@ -238,15 +239,15 @@ var Player = Character.extend({
     this.attackers = {};
 
     this.forEachHater(function (mob) {
-      mob.forgetPlayer(self.id);
-    });
+      mob.forgetPlayer(this.id);
+    }.bind(this));
 
     this.haters = {};
   },
 
   getState: function () {
-    var basestate = this._getBaseState(),
-      state = [this.name, this.orientation, this.armor, this.weapon];
+    var basestate = this._getBaseState();
+    var state = [this.name, this.orientation, this.armor, this.weapon];
 
     if (this.target) {
       state.push(this.target);

@@ -1,6 +1,8 @@
 var Class = require('./lib/class');
 var _ = require('underscore');
 var Types = require('../../shared/js/gametypes');
+var Log = require('log');
+var log = new Log();
 
 (function () {
   var FormatChecker = Class.extend({
@@ -22,9 +24,9 @@ var Types = require('../../shared/js/gametypes');
     },
 
     check: function (msg) {
-      var message = msg.slice(0),
-        type = message[0],
-        format = this.formats[type];
+      var message = msg.slice(0);
+      var type = message[0];
+      var format = this.formats[type];
 
       message.shift();
 
