@@ -8,6 +8,8 @@ import WorldServer from '../../server/js/worldserver';
 import Mob from '../../server/js/mob';
 import Properties from '../../server/js/properties';
 import Item from '../../server/js/item';
+import Chest from '../../server/js/chest';
+import Checkpoint from '../../server/js/checkpoint';
 
 chai.use(sinonChai);
 
@@ -890,6 +892,96 @@ describe('Server Class: Player', () => {
 
           expect(player.weapon).to.equal(Types.Entities.SWORD2);
           expect(player.broadcast).to.be.calledWith(player.equip(Types.Entities.SWORD2));
+        });
+      });
+
+      describe('a TELEPORT message', () => {
+        let message = [Types.Messages.TELEPORT, 9, 2];
+
+        beforeEach(() => {
+          sandbox.stub(player.server, 'isValidPosition');
+          sandbox.stub(player.server, 'handlePlayerVanish');
+          sandbox.stub(player.server, 'pushRelevantEntityListTo');
+        });
+
+        it('should do nothing if not a valid position', () => {
+          player.server.isValidPosition.returns(false);
+          sandbox.spy(player, 'setPosition');
+          sandbox.spy(player, 'clearTarget');
+          sandbox.spy(player, 'broadcast');
+          player.connection.listenCallback(message);
+          expect(player.setPosition).to.have.callCount(0);
+          expect(player.clearTarget).to.have.callCount(0);
+          expect(player.broadcast).to.have.callCount(0);
+          expect(player.server.handlePlayerVanish).to.have.callCount(0);
+          expect(player.server.pushRelevantEntityListTo).to.have.callCount(0);
+        });
+
+        it('should teleport the player if the position is valid', () => {
+          let called = false;
+
+          expect(player.x).to.eql(0);
+          expect(player.y).to.eql(0);
+
+          player.onBroadcast(() => called = true);
+          player.server.isValidPosition.returns(true);
+
+          player.connection.listenCallback(message);
+
+          expect(player.x).to.equal(message[1]);
+          expect(player.y).to.equal(message[2]);
+          expect(called).to.be.true;
+          expect(player.server.isValidPosition).to.be.calledWith(message[1], message[2]);
+          expect(player.server.handlePlayerVanish).to.be.calledWith(player);
+          expect(player.server.pushRelevantEntityListTo).to.be.calledWith(player);
+        });
+      });
+
+      describe('a OPEN message', () => {
+        let message = [Types.Messages.OPEN, 12];
+
+        beforeEach(() => {
+          sandbox.stub(player.server, 'handleOpenedChest');
+          sandbox.stub(player.server, 'getEntityById');
+        });
+
+        it('should do nothing if not a chest', () => {
+          player.server.getEntityById.returns(null);
+          player.connection.listenCallback(message);
+          expect(player.server.handleOpenedChest).to.have.callCount(0);
+        });
+
+        it('should handle opening a chest', () => {
+          let chest = new Chest(message[1], 9, 2);
+          player.server.getEntityById.returns(chest);
+          player.connection.listenCallback(message);
+          expect(player.server.getEntityById).to.have.calledWith(message[1]);
+          expect(player.server.handleOpenedChest).to.have.calledWith(chest, player);
+        });
+      });
+
+      describe('a CHECK message', () => {
+        let message = [Types.Messages.CHECK, 1];
+
+        beforeEach(() => {
+          player.server.map = {
+            getCheckpoint: sinon.stub()
+          };
+        });
+
+        it('should do nothing if not a valid checkpoint', () => {
+          player.server.map.getCheckpoint.returns(null);
+          player.lastCheckpoint = null;
+          player.connection.listenCallback(message);
+          expect(player.lastCheckpoint).to.be.null;
+        });
+
+        it('should set a valid checkpoint', () => {
+          let checkpoint = new Checkpoint(10, 2, 4, 10, 11);
+          player.server.map.getCheckpoint.returns(checkpoint);
+          player.lastCheckpoint = null;
+          player.connection.listenCallback(message);
+          expect(player.lastCheckpoint).to.eql(checkpoint);
         });
       });
     });
