@@ -9,8 +9,8 @@ parserOptions:
   sourceType: module
 rules:
   indent:
-    - error
     - 2
+    - error 
   linebreak-style:
     - error
     - unix
