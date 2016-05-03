@@ -22,8 +22,8 @@
     "log": "^1.4.0",
     "sanitizer": "^0.1.3",
     "underscore": "^1.8.3",
-    "websocket": "git+https://github.com/theturtle32/WebSocket-Node.git",
-    "websocket-server": "git+https://github.com/miksago/node-websocket-server.git"
+    "websocket": "theturtle32/WebSocket-Node",
+    "websocket-server": "miksago/node-websocket-server"
   },
   "devDependencies": {
     "babel-core": "^6.7.7",
