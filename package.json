@@ -10,6 +10,7 @@
   "scripts": {
     "test": "mocha --compilers js:babel-register tests/**/*.js",
     "coverage": "rm -rf coverage/ && istanbul cover --report html _mocha -- --compilers js:babel-register --recursive tests/",
+    "lcov": "rm -rf coverage/ && istanbul cover --report lcov _mocha -- --compilers js:babel-register --recursive tests/",
     "watch": "npm-scripts-watcher"
   },
   "babel": {
