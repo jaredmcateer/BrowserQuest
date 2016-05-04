@@ -385,7 +385,7 @@ describe('Server Class: Player', () => {
     let helloMessage = [
       Types.Messages.HELLO,
       'bob',
-      Types.Entities.FIREFOX,
+      Types.Entities.CLOTHARMOR,
       Types.Entities.SWORD1
     ];
 
@@ -850,7 +850,6 @@ describe('Server Class: Player', () => {
 
       describe('a LOOT message', () => {
         let message = [Types.Messages.LOOT, 20];
-        let item = new Item(20, Types.Entities.SWORD2, 0, 0);
 
         beforeEach(() => {
           sandbox.stub(player.server, 'getEntityById');
@@ -878,7 +877,8 @@ describe('Server Class: Player', () => {
           expect(player.server.removeEntity).to.have.callCount(0);
         });
 
-        it('should broadcast an item despawn', () => {
+        it('should broadcast an item despawn and equip the item', () => {
+          let item = new Item(20, Types.Entities.SWORD2, 0, 0);
           sandbox.spy(player, 'broadcast');
 
           player.server.getEntityById.returns(item);
@@ -892,6 +892,50 @@ describe('Server Class: Player', () => {
 
           expect(player.weapon).to.equal(Types.Entities.SWORD2);
           expect(player.broadcast).to.be.calledWith(player.equip(Types.Entities.SWORD2));
+        });
+
+        describe('if it is a fire potion', () => {
+          it('should turn the player into a firefox', () => {
+            sandbox.useFakeTimers();
+
+            let item = new Item(20, Types.Entities.FIREPOTION, 0, 0);
+
+            player.server.getEntityById.returns(item);
+            sandbox.spy(player, 'broadcast');
+
+            player.connection.listenCallback(message);
+
+            expect(player.broadcast).to.be.calledWith(player.equip(Types.Entities.FIREFOX));
+            expect(player.firepotionTimeout).to.not.be.null;
+
+            sandbox.clock.tick(15000);
+
+            expect(player.broadcast).to.be.calledWith(player.equip(Types.Entities.CLOTHARMOR));
+            expect(player.firepotionTimeout).to.be.null;
+          });
+        });
+
+        describe('if it is a healing item', () => {
+          it('should heal by 40 when a flask', () => {
+            let item = new Item(20, Types.Entities.FLASK, 0, 0);
+            player.server.getEntityById.returns(item);
+            player.hitPoints = 1;
+
+            player.connection.listenCallback(message);
+
+            expect(player.hitPoints).to.eql(41);
+          });
+
+          it('should heal by 100 when a burger', () => {
+            let item = new Item(20, Types.Entities.BURGER, 0, 0);
+            player.server.getEntityById.returns(item);
+            player.equipItem(new Item(21, Types.Entities.GOLDENARMOR, 0, 0));
+            player.hitPoints = 1;
+
+            player.connection.listenCallback(message);
+
+            expect(player.hitPoints).to.eql(101);
+          });
         });
       });
 

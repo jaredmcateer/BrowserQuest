@@ -13,6 +13,8 @@ var Messages = require('./message');
 var Properties = require('./properties');
 var Utils = require('./utils');
 var Types = require('../../shared/js/gametypes');
+var Log = require('log');
+var log = new Log();
 
 // ======= GAME SERVER ========
 
