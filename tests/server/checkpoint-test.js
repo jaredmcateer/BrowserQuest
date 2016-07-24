@@ -21,7 +21,7 @@ describe('Server Class: Checkpoint', () => {
     expect(checkpoint.height).to.equal(h);
   });
 
-  it('should get a random poisition', () => {
+  it('should get a random position', () => {
     for (let i = 0; i < 100; i++) {
       let pos = checkpoint.getRandomPosition();
       expect(pos.x).to.be.within(0, x + w - 1);
