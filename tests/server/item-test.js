@@ -19,7 +19,8 @@ describe('Server Class: Item', () => {
     expect(item.isFromChest).to.be.false;
   });
 
-  it('should handle despawning', (done) => {
+  it('should handle despawning', () => {
+    let clock = sinon.useFakeTimers();
     let params = {
       blinkCallback: sinon.spy(),
       beforeBlinkDelay: 10,
@@ -29,16 +30,15 @@ describe('Server Class: Item', () => {
 
     item.handleDespawn(params);
 
-    setTimeout(() => {
-      expect(params.blinkCallback.calledOnce).to.be.true;
-      expect(params.despawnCallback.calledOnce).to.be.false;
-    }, 15);
+    clock.tick(15);
+    expect(params.blinkCallback.calledOnce).to.be.true;
+    expect(params.despawnCallback.calledOnce).to.be.false;
 
-    setTimeout(() => {
-      expect(params.blinkCallback.calledOnce).to.be.true;
-      expect(params.despawnCallback.calledOnce).to.be.true;
-      done();
-    }, 35);
+    clock.tick(35);
+    expect(params.blinkCallback.calledOnce).to.be.true;
+    expect(params.despawnCallback.calledOnce).to.be.true;
+
+    clock.restore();
   });
 
   it('should schedule respawns of static items', (done) => {

@@ -7,13 +7,15 @@ import Checkpoint from '../../server/js/checkpoint';
 const expect = chai.expect;
 chai.use(chaiString);
 
-describe.only('Server Class: Area', () => {
-  beforeEach(() => {
+describe('Server Class: Area', () => {
+  before(() => {
     mockFs({
       'config/map.json': JSON.stringify(require('../test_world_server.json')),
       'config/map.txt': 'asdf'
     });
   });
+
+  after(() => mockFs.restore());
 
   describe('on initalization it', () => {
     it('should callback with an eror if file is not found', (done) => {
