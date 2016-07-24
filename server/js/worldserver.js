@@ -147,9 +147,7 @@ var World = Class.extend({
   run: function (mapFilePath) {
     var self = this;
 
-    this.map = new MapClass(mapFilePath);
-
-    this.map.ready(function () {
+    this.map = new MapClass(mapFilePath, function () {
       self.initZoneGroups();
 
       self.map.generateCollisionGrid();

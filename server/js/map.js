@@ -8,21 +8,33 @@ var Log = require('log');
 var log = new Log();
 
 var MapClass = Class.extend({
-  init: function (filepath) {
+  init: function (filepath, callback) {
     var self = this;
 
     this.isLoaded = false;
 
     fs.exists(filepath, function (exists) {
       if (!exists) {
-        log.error(filepath + ' doesn\'t exist.');
-        return;
+        var error = filepath + ' doesn\'t exist.';
+        log.error(error);
+        return callback(error);
       }
 
       fs.readFile(filepath, function (err, file) {
-        var json = JSON.parse(file.toString());
+        if (err) {
+          return callback(err);
+        }
+
+        try {
+          var json = JSON.parse(file.toString());
+        } catch (ex) {
+          var error = 'Could not parse JSON file: ' + filepath;
+          log.error(error);
+          return callback(error);
+        }
 
         self.initMap(json);
+        callback();
       });
     });
   },
@@ -45,14 +57,6 @@ var MapClass = Class.extend({
 
     this.initConnectedGroups(map.doors);
     this.initCheckpoints(map.checkpoints);
-
-    if (this.readyFunc) {
-      this.readyFunc();
-    }
-  },
-
-  ready: function (f) {
-    this.readyFunc = f;
   },
 
   tileIndexToGridPosition: function (tileNum) {
@@ -74,26 +78,29 @@ var MapClass = Class.extend({
     return { x: x, y: y };
   },
 
-  GridPositionToTileIndex: function (x, y) {
+  gridPositionToTileIndex: function (x, y) {
     return (y * this.width) + x + 1;
   },
 
+  // TODO this is a very inefficient method, it takes about 2.7 seconds
+  // to run, refactor or remove. Possible soluton, use gridPositionToTileIndex
+  // and only loop through collisions.
   generateCollisionGrid: function () {
     this.grid = [];
 
-    if (this.isLoaded) {
-      var tileIndex = 0;
-      for (var	j, i = 0; i < this.height; i++) {
-        this.grid[i] = [];
-        for (j = 0; j < this.width; j++) {
-          if (_.include(this.collisions, tileIndex)) {
-            this.grid[i][j] = 1;
-          } else {
-            this.grid[i][j] = 0;
-          }
+    if (!this.isLoaded) { return; }
 
-          tileIndex += 1;
+    var tileIndex = 0;
+    for (var j, i = 0; i < this.height; i++) {
+      this.grid[i] = [];
+      for (j = 0; j < this.width; j++) {
+        if (_.include(this.collisions, tileIndex)) {
+          this.grid[i][j] = 1;
+        } else {
+          this.grid[i][j] = 0;
         }
+
+        tileIndex += 1;
       }
       //log.info("Collision grid generated.");
     }
@@ -111,15 +118,15 @@ var MapClass = Class.extend({
     return this.grid[y][x] === 1;
   },
 
-  GroupIdToGroupPosition: function (id) {
+  groupIdToGroupPosition: function (id) {
     var posArray = id.split('-');
 
     return pos(parseInt(posArray[0]), parseInt(posArray[1]));
   },
 
   forEachGroup: function (callback) {
-    var width = this.groupWidth,
-      height = this.groupHeight;
+    var width = this.groupWidth;
+    var height = this.groupHeight;
 
     for (var x = 0; x < width; x += 1) {
       for (var y = 0; y < height; y += 1) {
@@ -129,29 +136,36 @@ var MapClass = Class.extend({
   },
 
   getGroupIdFromPosition: function (x, y) {
-    var w = this.zoneWidth,
-      h = this.zoneHeight,
-      gx = Math.floor((x - 1) / w),
-      gy = Math.floor((y - 1) / h);
+    var w = this.zoneWidth;
+    var h = this.zoneHeight;
+    var gx = Math.floor((x - 1) / w);
+    var gy = Math.floor((y - 1) / h);
 
     return gx + '-' + gy;
   },
 
   getAdjacentGroupPositions: function (id) {
-    var self = this,
-      position = this.GroupIdToGroupPosition(id),
-      x = position.x,
-      y = position.y,
-      // surrounding groups
-      list = [pos(x - 1, y - 1), pos(x, y - 1), pos(x + 1, y - 1),
-        pos(x - 1, y),   pos(x, y),   pos(x + 1, y),
-    pos(x - 1, y + 1), pos(x, y + 1), pos(x + 1, y + 1)];
+    var self = this;
+    var position = this.groupIdToGroupPosition(id);
+    var x = position.x;
+    var y = position.y;
+    // surrounding groups
+    var list = [
+      pos(x - 1, y - 1),
+      pos(x, y - 1),
+      pos(x + 1, y - 1),
+      pos(x - 1, y),
+      pos(x, y),
+      pos(x + 1, y),
+      pos(x - 1, y + 1),
+      pos(x, y + 1),
+      pos(x + 1, y + 1)
+    ];
 
     // groups connected via doors
     _.each(this.connectedGroups[id], function (position) {
       // don't add a connected group if it's already part of the surrounding ones.
       if (!_.any(list, function (groupPos) { return equalPositions(groupPos, position); })) {
-
         list.push(position);
       }
     });
@@ -176,7 +190,7 @@ var MapClass = Class.extend({
     _.each(doors, function (door) {
       var groupId = self.getGroupIdFromPosition(door.x, door.y),
         connectedGroupId = self.getGroupIdFromPosition(door.tx, door.ty),
-        connectedPosition = self.GroupIdToGroupPosition(connectedGroupId);
+        connectedPosition = self.groupIdToGroupPosition(connectedGroupId);
 
       if (groupId in self.connectedGroups) {
         self.connectedGroups[groupId].push(connectedPosition);
