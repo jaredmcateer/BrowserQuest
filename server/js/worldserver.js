@@ -207,10 +207,6 @@ var World = Class.extend({
     this.ups = ups;
   },
 
-  onInit: function (callback) {
-    this.initCallback = callback;
-  },
-
   onPlayerConnect: function (callback) {
     this.connectCallback = callback;
   },
@@ -268,8 +264,8 @@ var World = Class.extend({
   },
 
   pushToGroup: function (groupId, message, ignoredPlayer) {
-    var self = this,
-      group = this.groups[groupId];
+    var self = this;
+    var group = this.groups[groupId];
 
     if (group) {
       _.each(group.players, function (playerId) {
@@ -773,7 +769,7 @@ var World = Class.extend({
     if (entity) {
       var groupId = this.map.getGroupIdFromPosition(entity.x, entity.y);
       if (!entity.group || (entity.group && entity.group !== groupId)) {
-        hasChangedGroups = true;
+        hasChangedGsroups = true;
         this.addAsIncomingToGroup(entity, groupId);
         var oldGroups = this.removeFromGroups(entity);
         var newGroups = this.addToGroup(entity, groupId);
